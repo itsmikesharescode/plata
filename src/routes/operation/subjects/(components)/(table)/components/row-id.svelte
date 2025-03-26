@@ -3,13 +3,13 @@
 	import type { Row } from '@tanstack/table-core';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
-	import type { DepartmentTable } from '../schema';
+	import type { SubjectTable } from '../schema';
 	import Eye from '@lucide/svelte/icons/eye';
 	import EyeOff from '@lucide/svelte/icons/eye-off';
 	import Copy from '@lucide/svelte/icons/copy';
 	import { toast } from 'svelte-sonner';
 
-	let { row }: { row: Row<DepartmentTable> } = $props();
+	let { row }: { row: Row<SubjectTable> } = $props();
 
 	let open = $state(false);
 
@@ -36,7 +36,7 @@
 				{:else}
 					<Eye class="size-4" />
 				{/if}
-				<span class="sr-only">View department id</span>
+				<span class="sr-only">View subject id</span>
 			</Button>
 		{/snippet}
 	</DropdownMenu.Trigger>
