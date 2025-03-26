@@ -3,33 +3,31 @@
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
 	import * as Form from '$lib/components/ui/form/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
-	import { createSubSchema, type CreateSubSchema } from '../schema';
+	import { createYnsSchema, type CreateYnsSchema } from '../schema';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { type SuperValidated, superForm } from 'sveltekit-superforms';
 	import ReqLoader from '$lib/components/general/spinners/req-loader.svelte';
-	import { Textarea } from '$lib/components/ui/textarea/index.js';
 	import { toast } from 'svelte-sonner';
 
 	interface Props {
-		createSubForm: SuperValidated<CreateSubSchema>;
+		createYnsForm: SuperValidated<CreateYnsSchema>;
 	}
 </script>
 
 <script lang="ts">
-	const { createSubForm }: Props = $props();
+	const { createYnsForm }: Props = $props();
 
-	const form = superForm(createSubForm, {
-		validators: zodClient(createSubSchema),
+	const form = superForm(createYnsForm, {
+		validators: zodClient(createYnsSchema),
 		id: crypto.randomUUID(),
 		onUpdate: async ({ result }) => {
 			const { status, data } = result;
 
 			switch (status) {
 				case 200:
-					toast.success('Subject created successfully');
+					toast.success('Year and Section created successfully');
 
 					reset();
-
 					break;
 				case 401:
 					toast.error(data.msg);
@@ -47,46 +45,32 @@
 	}}
 >
 	<AlertDialog.Trigger class={buttonVariants({ variant: 'default' })}
-		>Create Subject</AlertDialog.Trigger
+		>Create Year and Section</AlertDialog.Trigger
 	>
 	<AlertDialog.Content>
 		<AlertDialog.Header>
-			<AlertDialog.Title>Create Subject</AlertDialog.Title>
+			<AlertDialog.Title>Create Year and Section</AlertDialog.Title>
 			<AlertDialog.Description>
-				Fill the form below to create a new subject.
+				Fill the form below to create a new year and section.
 			</AlertDialog.Description>
 		</AlertDialog.Header>
 
-		<form method="POST" action="?/createSubEvent" use:enhance>
-			<Form.Field {form} name="name">
+		<form method="POST" action="?/createYnsEvent" use:enhance>
+			<Form.Field {form} name="year">
 				<Form.Control>
 					{#snippet children({ props })}
-						<Form.Label>Name</Form.Label>
-						<Input {...props} bind:value={$formData.name} placeholder="Subject Name" />
+						<Form.Label>Year</Form.Label>
+						<Input {...props} bind:value={$formData.year} placeholder="Year" />
 					{/snippet}
 				</Form.Control>
 				<Form.FieldErrors />
 			</Form.Field>
 
-			<Form.Field {form} name="code">
+			<Form.Field {form} name="section">
 				<Form.Control>
 					{#snippet children({ props })}
-						<Form.Label>Code</Form.Label>
-						<Input {...props} bind:value={$formData.code} placeholder="Subject Code" />
-					{/snippet}
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
-
-			<Form.Field {form} name="description">
-				<Form.Control>
-					{#snippet children({ props })}
-						<Form.Label>Description</Form.Label>
-						<Textarea
-							{...props}
-							bind:value={$formData.description}
-							placeholder="Subject Description"
-						/>
+						<Form.Label>Section</Form.Label>
+						<Input {...props} bind:value={$formData.section} placeholder="Section" />
 					{/snippet}
 				</Form.Control>
 				<Form.FieldErrors />

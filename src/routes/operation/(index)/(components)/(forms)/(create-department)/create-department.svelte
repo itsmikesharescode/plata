@@ -7,6 +7,7 @@
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { type SuperValidated, superForm } from 'sveltekit-superforms';
 	import ReqLoader from '$lib/components/general/spinners/req-loader.svelte';
+	import { toast } from 'svelte-sonner';
 
 	interface Props {
 		createDepForm: SuperValidated<CreateDepSchema>;
@@ -18,7 +19,21 @@
 
 	const form = superForm(createDepForm, {
 		validators: zodClient(createDepSchema),
-		id: crypto.randomUUID()
+		id: crypto.randomUUID(),
+		onUpdate: async ({ result }) => {
+			const { status, data } = result;
+
+			switch (status) {
+				case 200:
+					toast.success('Department created successfully');
+					reset();
+
+					break;
+				case 401:
+					toast.error(data.msg);
+					break;
+			}
+		}
 	});
 
 	const { form: formData, enhance, reset, submitting } = form;

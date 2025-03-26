@@ -11,6 +11,7 @@
 	import type { DepartmentTable } from '../../(table)/schema';
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
+	import { toast } from 'svelte-sonner';
 
 	interface Props {
 		updateDepForm: SuperValidated<UpdateDepSchema>;
@@ -28,7 +29,22 @@
 
 	const form = superForm(updateDepForm, {
 		validators: zodClient(updateDepSchema),
-		id: crypto.randomUUID()
+		id: crypto.randomUUID(),
+		onUpdate: async ({ result }) => {
+			const { status, data } = result;
+
+			switch (status) {
+				case 200:
+					toast.success('Department updated successfully');
+					rowState.setActiveRow(null);
+					reset();
+					await goto('/operation');
+					break;
+				case 401:
+					toast.error(data.msg);
+					break;
+			}
+		}
 	});
 
 	const { form: formData, enhance, reset, submitting } = form;

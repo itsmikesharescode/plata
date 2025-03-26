@@ -3,43 +3,42 @@
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
 	import * as Form from '$lib/components/ui/form/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
-	import { updateSubSchema, type UpdateSubSchema } from '../schema';
+	import { updateYnsSchema, type UpdateYnsSchema } from '../schema';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { type SuperValidated, superForm } from 'sveltekit-superforms';
 	import ReqLoader from '$lib/components/general/spinners/req-loader.svelte';
 	import { useRowState } from '$lib/states/row-state.svelte';
-	import type { SubjectTable } from '../../(table)/schema';
+	import type { YnsTable } from '../../(table)/schema';
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
-	import { Textarea } from '$lib/components/ui/textarea/index.js';
 	import { toast } from 'svelte-sonner';
 
 	interface Props {
-		updateSubForm: SuperValidated<UpdateSubSchema>;
+		updateYnsForm: SuperValidated<UpdateYnsSchema>;
 	}
 </script>
 
 <script lang="ts">
-	const { updateSubForm }: Props = $props();
+	const { updateYnsForm }: Props = $props();
 
 	const rowState = useRowState();
 
 	const id = $derived(page.url.searchParams.get('id'));
 	const deletionId = $derived(page.url.searchParams.get('deletion_id'));
-	const activeRow = $derived(rowState.getActiveRow()) as SubjectTable | null;
+	const activeRow = $derived(rowState.getActiveRow()) as YnsTable | null;
 
-	const form = superForm(updateSubForm, {
-		validators: zodClient(updateSubSchema),
+	const form = superForm(updateYnsForm, {
+		validators: zodClient(updateYnsSchema),
 		id: crypto.randomUUID(),
 		onUpdate: async ({ result }) => {
 			const { status, data } = result;
 
 			switch (status) {
 				case 200:
-					toast.success('Subject updated successfully');
+					toast.success('Year and Section deleted successfully');
 					rowState.setActiveRow(null);
 					reset();
-					await goto('/operation/subjects');
+					await goto('/operation/year-and-sections');
 					break;
 				case 401:
 					toast.error(data.msg);
@@ -54,9 +53,8 @@
 		if (id) {
 			if (activeRow) {
 				$formData.id = activeRow.id;
-				$formData.name = activeRow.name;
-				$formData.code = activeRow.code;
-				$formData.description = activeRow.description;
+				$formData.year = activeRow.year;
+				$formData.section = activeRow.section;
 			}
 		}
 	});
@@ -71,42 +69,30 @@
 >
 	<AlertDialog.Content>
 		<AlertDialog.Header>
-			<AlertDialog.Title>Update Subject</AlertDialog.Title>
-			<AlertDialog.Description>Fill the form below to update the subject.</AlertDialog.Description>
+			<AlertDialog.Title>Update Year and Section</AlertDialog.Title>
+			<AlertDialog.Description
+				>Fill the form below to update the year and section.</AlertDialog.Description
+			>
 		</AlertDialog.Header>
 
-		<form method="POST" action="?/updateSubEvent" use:enhance>
+		<form method="POST" action="?/updateYnsEvent" use:enhance>
 			<input name="id" type="hidden" value={$formData.id} />
 
-			<Form.Field {form} name="name">
+			<Form.Field {form} name="year">
 				<Form.Control>
 					{#snippet children({ props })}
-						<Form.Label>Name</Form.Label>
-						<Input {...props} bind:value={$formData.name} placeholder="Subject Name" />
+						<Form.Label>Year</Form.Label>
+						<Input {...props} bind:value={$formData.year} placeholder="Year" />
 					{/snippet}
 				</Form.Control>
 				<Form.FieldErrors />
 			</Form.Field>
 
-			<Form.Field {form} name="code">
+			<Form.Field {form} name="section">
 				<Form.Control>
 					{#snippet children({ props })}
-						<Form.Label>Code</Form.Label>
-						<Input {...props} bind:value={$formData.code} placeholder="Subject Code" />
-					{/snippet}
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
-
-			<Form.Field {form} name="description">
-				<Form.Control>
-					{#snippet children({ props })}
-						<Form.Label>Description</Form.Label>
-						<Textarea
-							{...props}
-							bind:value={$formData.description}
-							placeholder="Subject Description"
-						/>
+						<Form.Label>Section</Form.Label>
+						<Input {...props} bind:value={$formData.section} placeholder="Section" />
 					{/snippet}
 				</Form.Control>
 				<Form.FieldErrors />
@@ -116,7 +102,7 @@
 				<AlertDialog.Cancel
 					type="button"
 					onclick={async () => {
-						await goto('/operation/subjects');
+						await goto('/operation/year-and-sections');
 					}}
 				>
 					Cancel
