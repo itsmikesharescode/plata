@@ -23,7 +23,13 @@
 				{
 					title: 'Year & Sections',
 					url: '/operation/year-and-sections'
-				},
+				}
+			]
+		},
+		{
+			title: 'Sub Entries',
+			icon: Database,
+			items: [
 				{
 					title: 'Classrooms',
 					url: '/operation/classrooms'
