@@ -53,8 +53,8 @@
 					url: '/operation/faculties'
 				},
 				{
-					title: 'Chairperson',
-					url: '/operation/chairperson'
+					title: 'Chairpersons',
+					url: '/operation/chairpersons'
 				}
 			]
 		},

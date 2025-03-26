@@ -1,0 +1,12 @@
+import { z } from 'zod';
+
+export const chairpersonSchema = z.object({
+	id: z.string(),
+	department_id: z.string(),
+	email: z.string(),
+	fullname: z.string(),
+	academic_rank: z.string(),
+	status: z.string()
+});
+
+export type ChairpersonTable = z.output<typeof chairpersonSchema>;
