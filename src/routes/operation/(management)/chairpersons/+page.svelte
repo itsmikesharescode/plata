@@ -2,6 +2,7 @@
 	import CustomTable from '$lib/components/general/custom-table/custom-table.svelte';
 	import CreateChairperson from './(components)/(forms)/(create-cp)/create-cp.svelte';
 	import DeleteChairperson from './(components)/(forms)/(delete-cp)/delete-cp.svelte';
+	import UpdatingCp from './(components)/(forms)/(updating-cp)/updating-cp.svelte';
 	import { columns } from './(components)/(table)/column';
 
 	const { data } = $props();
@@ -18,7 +19,7 @@
 			{columns}
 			data={[
 				{
-					id: crypto.randomUUID(),
+					user_id: crypto.randomUUID(),
 					department_id: 'asdasdasd',
 					email: 'asdasdasd',
 					fullname: 'aSD',
@@ -26,7 +27,7 @@
 					status: 'asdasdasd'
 				},
 				{
-					id: crypto.randomUUID(),
+					user_id: crypto.randomUUID(),
 					department_id: 'asdasdasd',
 					email: 'asdasdasd',
 					fullname: 'aSD',
@@ -38,4 +39,9 @@
 	</section>
 </main>
 
+<UpdatingCp
+	updateChairpersonEmailForm={data.updateChairpersonEmailForm}
+	updateChairpersonInfoForm={data.updateChairpersonInfoForm}
+	updateChairpersonPwdForm={data.updateChairpersonPwdForm}
+/>
 <DeleteChairperson deleteChairpersonForm={data.deleteChairpersonForm} />

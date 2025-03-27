@@ -18,13 +18,43 @@ export const createChairpersonSchema = z
 		message: 'Passwords do not match.',
 		path: ['confirm_password']
 	});
-export const updateChairpersonSchema = z.object(baseSchema).extend({
-	id: z.string()
+
+export const updateChairpersonInfoSchema = z
+	.object(baseSchema)
+	.omit({
+		email: true
+	})
+	.extend({
+		user_id: z.string()
+	});
+
+export const updateChairpersonEmailSchema = z.object({
+	user_id: z.string(),
+	email: z.string().min(1, 'Email is required.')
 });
+
+export const updateChairpersonPwdSchema = z
+	.object({
+		user_id: z.string(),
+		password: z.string().min(8, 'Must choose a strong password.'),
+		confirmPassword: z.string()
+	})
+	.superRefine(({ password, confirmPassword }, ctx) => {
+		if (password !== confirmPassword) {
+			ctx.addIssue({
+				code: 'custom',
+				message: 'Must confirm password.',
+				path: ['confirmPassword']
+			});
+		}
+	});
+
 export const deleteChairpersonSchema = z.object({
 	id: z.string()
 });
 
 export type CreateChairpersonSchema = z.output<typeof createChairpersonSchema>;
-export type UpdateChairpersonSchema = z.output<typeof updateChairpersonSchema>;
+export type UpdateChairpersonEmailSchema = z.output<typeof updateChairpersonEmailSchema>;
+export type UpdateChairpersonInfoSchema = z.output<typeof updateChairpersonInfoSchema>;
+export type UpdateChairpersonPwdSchema = z.output<typeof updateChairpersonPwdSchema>;
 export type DeleteChairpersonSchema = z.output<typeof deleteChairpersonSchema>;

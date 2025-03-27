@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const chairpersonSchema = z.object({
-	id: z.string(),
+	user_id: z.string(),
 	department_id: z.string(),
 	email: z.string(),
 	fullname: z.string(),

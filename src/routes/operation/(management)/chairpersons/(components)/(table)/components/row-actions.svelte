@@ -27,13 +27,13 @@
 		<DropdownMenu.Item
 			onclick={async () => {
 				rowState.setActiveRow(row.original);
-				await goto(`?id=${row.original.id}`);
+				await goto(`?id=${row.original.user_id}`);
 			}}>Edit</DropdownMenu.Item
 		>
 		<DropdownMenu.Item
 			onclick={async () => {
 				rowState.setActiveRow(row.original);
-				await goto(`?deletion_id=${row.original.id}`);
+				await goto(`?deletion_id=${row.original.user_id}`);
 			}}>Delete</DropdownMenu.Item
 		>
 	</DropdownMenu.Content>
