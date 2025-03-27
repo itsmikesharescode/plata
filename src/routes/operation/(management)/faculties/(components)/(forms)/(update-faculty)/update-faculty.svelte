@@ -12,6 +12,7 @@
 	import { goto } from '$app/navigation';
 	import { Textarea } from '$lib/components/ui/textarea/index.js';
 	import { toast } from 'svelte-sonner';
+	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 
 	interface Props {
 		updateFacultyForm: SuperValidated<UpdateFacultySchema>;
@@ -69,64 +70,67 @@
 		rowState.setActiveRow(null);
 	}}
 >
-	<AlertDialog.Content>
-		<AlertDialog.Header>
+	<AlertDialog.Content class="flex max-h-[100dvh] flex-col p-0">
+		<AlertDialog.Header class="px-6 pt-6">
 			<AlertDialog.Title>Update Faculty</AlertDialog.Title>
 			<AlertDialog.Description>Fill the form below to update the faculty.</AlertDialog.Description>
 		</AlertDialog.Header>
 
 		<form method="POST" action="?/updateFacultyEvent" use:enhance>
 			<input name="id" type="hidden" value={$formData.id} />
+			<ScrollArea>
+				<section class="max-h-[60dvh] px-6">
+					<Form.Field {form} name="department_id">
+						<Form.Control>
+							{#snippet children({ props })}
+								<Form.Label>Department</Form.Label>
+								<Input
+									{...props}
+									bind:value={$formData.department_id}
+									placeholder="Department dropdown"
+								/>
+							{/snippet}
+						</Form.Control>
+						<Form.FieldErrors />
+					</Form.Field>
 
-			<Form.Field {form} name="department_id">
-				<Form.Control>
-					{#snippet children({ props })}
-						<Form.Label>Department</Form.Label>
-						<Input
-							{...props}
-							bind:value={$formData.department_id}
-							placeholder="Department dropdown"
-						/>
-					{/snippet}
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
+					<Form.Field {form} name="fullname">
+						<Form.Control>
+							{#snippet children({ props })}
+								<Form.Label>Fullname</Form.Label>
+								<Input {...props} bind:value={$formData.fullname} placeholder="Faculty Fullname" />
+							{/snippet}
+						</Form.Control>
+						<Form.FieldErrors />
+					</Form.Field>
 
-			<Form.Field {form} name="fullname">
-				<Form.Control>
-					{#snippet children({ props })}
-						<Form.Label>Fullname</Form.Label>
-						<Input {...props} bind:value={$formData.fullname} placeholder="Faculty Fullname" />
-					{/snippet}
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
+					<Form.Field {form} name="academic_rank">
+						<Form.Control>
+							{#snippet children({ props })}
+								<Form.Label>Academic Rank</Form.Label>
+								<Textarea
+									{...props}
+									bind:value={$formData.academic_rank}
+									placeholder="Faculty Academic Rank"
+								/>
+							{/snippet}
+						</Form.Control>
+						<Form.FieldErrors />
+					</Form.Field>
 
-			<Form.Field {form} name="academic_rank">
-				<Form.Control>
-					{#snippet children({ props })}
-						<Form.Label>Academic Rank</Form.Label>
-						<Textarea
-							{...props}
-							bind:value={$formData.academic_rank}
-							placeholder="Faculty Academic Rank"
-						/>
-					{/snippet}
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
+					<Form.Field {form} name="status">
+						<Form.Control>
+							{#snippet children({ props })}
+								<Form.Label>Status</Form.Label>
+								<Textarea {...props} bind:value={$formData.status} placeholder="Faculty Status" />
+							{/snippet}
+						</Form.Control>
+						<Form.FieldErrors />
+					</Form.Field>
+				</section>
+			</ScrollArea>
 
-			<Form.Field {form} name="status">
-				<Form.Control>
-					{#snippet children({ props })}
-						<Form.Label>Status</Form.Label>
-						<Textarea {...props} bind:value={$formData.status} placeholder="Faculty Status" />
-					{/snippet}
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
-
-			<AlertDialog.Footer>
+			<AlertDialog.Footer class="mt-2 px-6 pb-6">
 				<AlertDialog.Cancel
 					type="button"
 					onclick={async () => {

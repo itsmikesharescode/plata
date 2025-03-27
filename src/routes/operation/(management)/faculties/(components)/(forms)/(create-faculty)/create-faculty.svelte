@@ -9,6 +9,7 @@
 	import ReqLoader from '$lib/components/general/spinners/req-loader.svelte';
 	import { Textarea } from '$lib/components/ui/textarea/index.js';
 	import { toast } from 'svelte-sonner';
+	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 
 	interface Props {
 		createFacultyForm: SuperValidated<CreateFacultySchema>;
@@ -49,8 +50,8 @@
 	<AlertDialog.Trigger class={buttonVariants({ variant: 'default' })}
 		>Create Faculty</AlertDialog.Trigger
 	>
-	<AlertDialog.Content>
-		<AlertDialog.Header>
+	<AlertDialog.Content class="flex max-h-[100dvh] flex-col p-0">
+		<AlertDialog.Header class="px-6 pt-6">
 			<AlertDialog.Title>Create Faculty</AlertDialog.Title>
 			<AlertDialog.Description>
 				Fill the form below to create a new faculty.
@@ -58,55 +59,59 @@
 		</AlertDialog.Header>
 
 		<form method="POST" action="?/createFacultyEvent" use:enhance>
-			<Form.Field {form} name="department_id">
-				<Form.Control>
-					{#snippet children({ props })}
-						<Form.Label>Department</Form.Label>
-						<Textarea
-							{...props}
-							bind:value={$formData.department_id}
-							placeholder="Department dropdown"
-						/>
-					{/snippet}
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
+			<ScrollArea>
+				<section class="max-h-[60dvh] px-6">
+					<Form.Field {form} name="department_id">
+						<Form.Control>
+							{#snippet children({ props })}
+								<Form.Label>Department</Form.Label>
+								<Textarea
+									{...props}
+									bind:value={$formData.department_id}
+									placeholder="Department dropdown"
+								/>
+							{/snippet}
+						</Form.Control>
+						<Form.FieldErrors />
+					</Form.Field>
 
-			<Form.Field {form} name="fullname">
-				<Form.Control>
-					{#snippet children({ props })}
-						<Form.Label>Fullname</Form.Label>
-						<Input {...props} bind:value={$formData.fullname} placeholder="Faculty Fullname" />
-					{/snippet}
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
+					<Form.Field {form} name="fullname">
+						<Form.Control>
+							{#snippet children({ props })}
+								<Form.Label>Fullname</Form.Label>
+								<Input {...props} bind:value={$formData.fullname} placeholder="Faculty Fullname" />
+							{/snippet}
+						</Form.Control>
+						<Form.FieldErrors />
+					</Form.Field>
 
-			<Form.Field {form} name="academic_rank">
-				<Form.Control>
-					{#snippet children({ props })}
-						<Form.Label>Academic Rank</Form.Label>
-						<Input
-							{...props}
-							bind:value={$formData.academic_rank}
-							placeholder="Faculty Academic Rank"
-						/>
-					{/snippet}
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
+					<Form.Field {form} name="academic_rank">
+						<Form.Control>
+							{#snippet children({ props })}
+								<Form.Label>Academic Rank</Form.Label>
+								<Input
+									{...props}
+									bind:value={$formData.academic_rank}
+									placeholder="Faculty Academic Rank"
+								/>
+							{/snippet}
+						</Form.Control>
+						<Form.FieldErrors />
+					</Form.Field>
 
-			<Form.Field {form} name="status">
-				<Form.Control>
-					{#snippet children({ props })}
-						<Form.Label>Status</Form.Label>
-						<Textarea {...props} bind:value={$formData.status} placeholder="Faculty Status" />
-					{/snippet}
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
+					<Form.Field {form} name="status">
+						<Form.Control>
+							{#snippet children({ props })}
+								<Form.Label>Status</Form.Label>
+								<Textarea {...props} bind:value={$formData.status} placeholder="Faculty Status" />
+							{/snippet}
+						</Form.Control>
+						<Form.FieldErrors />
+					</Form.Field>
+				</section>
+			</ScrollArea>
 
-			<AlertDialog.Footer>
+			<AlertDialog.Footer class="mt-2 px-6 pb-6">
 				<AlertDialog.Cancel type="button">Cancel</AlertDialog.Cancel>
 				<Form.Button disabled={$submitting} class="relative">
 					<ReqLoader isLoader={$submitting} />
