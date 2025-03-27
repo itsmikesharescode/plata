@@ -126,6 +126,6 @@
 			</Sidebar.Menu>
 		</Sidebar.Group>
 	</Sidebar.Content>
-	<Sidebar.Footer>user here</Sidebar.Footer>
+
 	<Sidebar.Rail />
 </Sidebar.Root>

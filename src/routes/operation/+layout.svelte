@@ -3,6 +3,7 @@
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';
 	import OperationSidebar from '$lib/components/general/operation-sidebar/operation-sidebar.svelte';
 	import { initRowState } from '$lib/states/row-state.svelte';
+	import Logout from '$lib/components/general/operation-sidebar/components/logout.svelte';
 
 	const { children } = $props();
 
@@ -12,9 +13,15 @@
 <Sidebar.Provider>
 	<OperationSidebar />
 	<Sidebar.Inset class="min-w-0">
-		<header class="sticky top-0 flex h-16 shrink-0 items-center gap-2 border-b bg-background px-4">
-			<Sidebar.Trigger class="-ml-1" />
-			<Separator orientation="vertical" class="mr-2 h-4" />
+		<header
+			class="sticky top-0 flex h-16 shrink-0 items-center justify-between gap-2 border-b bg-background px-4"
+		>
+			<div class="flex h-full items-center gap-2">
+				<Sidebar.Trigger class="-ml-1" />
+				<Separator orientation="vertical" class="mr-2 h-4" />
+			</div>
+
+			<Logout />
 		</header>
 		<div class="flex flex-1 flex-col gap-4">
 			{@render children()}
