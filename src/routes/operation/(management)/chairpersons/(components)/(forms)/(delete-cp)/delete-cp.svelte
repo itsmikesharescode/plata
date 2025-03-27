@@ -54,7 +54,7 @@
 	$effect(() => {
 		if (deletionId) {
 			if (activeRow) {
-				$formData.id = activeRow.id;
+				$formData.id = activeRow.user_id;
 			}
 		}
 	});
@@ -71,7 +71,7 @@
 		<AlertDialog.Header>
 			<AlertDialog.Title>Delete Chairperson</AlertDialog.Title>
 			<AlertDialog.Description>
-				Are you sure you want to delete this chairperson? with id of {activeRow?.id}
+				Are you sure you want to delete this chairperson? with id of {activeRow?.user_id}
 			</AlertDialog.Description>
 		</AlertDialog.Header>
 

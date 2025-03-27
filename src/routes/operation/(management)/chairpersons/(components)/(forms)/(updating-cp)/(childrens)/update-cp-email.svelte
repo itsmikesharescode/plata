@@ -7,7 +7,7 @@
 	import { toast } from 'svelte-sonner';
 	import { goto } from '$app/navigation';
 	import ReqLoader from '$lib/components/general/spinners/req-loader.svelte';
-
+	import { untrack } from 'svelte';
 	interface Props {
 		stateProp: {
 			user_id: string | undefined;
@@ -43,10 +43,12 @@
 	const { form: formData, enhance, submitting, reset } = form;
 
 	$effect(() => {
-		if (stateProp.email && stateProp.user_id) {
-			$formData.email = stateProp.email;
-			$formData.user_id = stateProp.user_id;
-		}
+		untrack(() => {
+			if (stateProp.email && stateProp.user_id) {
+				$formData.email = stateProp.email;
+				$formData.user_id = stateProp.user_id;
+			}
+		});
 
 		return () => {
 			console.log('Cleaned from update email');

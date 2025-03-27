@@ -7,6 +7,7 @@
 	import { toast } from 'svelte-sonner';
 	import { goto } from '$app/navigation';
 	import ReqLoader from '$lib/components/general/spinners/req-loader.svelte';
+	import { untrack } from 'svelte';
 
 	interface Props {
 		stateProp: {
@@ -46,19 +47,21 @@
 	const { form: formData, enhance, submitting, reset } = form;
 
 	$effect(() => {
-		if (
-			stateProp.academic_rank &&
-			stateProp.department_id &&
-			stateProp.fullname &&
-			stateProp.status &&
-			stateProp.user_id
-		) {
-			$formData.academic_rank = stateProp.academic_rank;
-			$formData.department_id = stateProp.department_id;
-			$formData.fullname = stateProp.fullname;
-			$formData.status = stateProp.status;
-			$formData.user_id = stateProp.user_id;
-		}
+		untrack(() => {
+			if (
+				stateProp.academic_rank &&
+				stateProp.department_id &&
+				stateProp.fullname &&
+				stateProp.status &&
+				stateProp.user_id
+			) {
+				$formData.academic_rank = stateProp.academic_rank;
+				$formData.department_id = stateProp.department_id;
+				$formData.fullname = stateProp.fullname;
+				$formData.status = stateProp.status;
+				$formData.user_id = stateProp.user_id;
+			}
+		});
 
 		return () => {
 			console.log('Cleaned from update information');
