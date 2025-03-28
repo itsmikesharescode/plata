@@ -15,7 +15,8 @@
 			department_id: string | undefined;
 			fullname: string | undefined;
 			academic_rank: string | undefined;
-			status: string | undefined;
+			employment_status: string | undefined;
+			program_id: string | undefined;
 		};
 		updateChairpersonInfoForm: SuperValidated<UpdateChairpersonInfoSchema>;
 	}
@@ -52,13 +53,15 @@
 				stateProp.academic_rank &&
 				stateProp.department_id &&
 				stateProp.fullname &&
-				stateProp.status &&
+				stateProp.employment_status &&
+				stateProp.program_id &&
 				stateProp.user_id
 			) {
 				$formData.academic_rank = stateProp.academic_rank;
 				$formData.department_id = stateProp.department_id;
+				$formData.program_id = stateProp.program_id;
 				$formData.fullname = stateProp.fullname;
-				$formData.status = stateProp.status;
+				$formData.employment_status = stateProp.employment_status;
 				$formData.user_id = stateProp.user_id;
 			}
 		});
@@ -98,7 +101,7 @@
 	<Form.Field {form} name="academic_rank">
 		<Form.Control>
 			{#snippet children({ props })}
-				<Form.Label>Department</Form.Label>
+				<Form.Label>Academic Rank</Form.Label>
 				<Input {...props} bind:value={$formData.academic_rank} placeholder="Academic rank" />
 			{/snippet}
 		</Form.Control>
@@ -106,11 +109,15 @@
 		<Form.FieldErrors />
 	</Form.Field>
 
-	<Form.Field {form} name="status">
+	<Form.Field {form} name="employment_status">
 		<Form.Control>
 			{#snippet children({ props })}
-				<Form.Label>Status</Form.Label>
-				<Input {...props} bind:value={$formData.status} placeholder="Status" />
+				<Form.Label>Employment Status</Form.Label>
+				<Input
+					{...props}
+					bind:value={$formData.employment_status}
+					placeholder="Employment Status"
+				/>
 			{/snippet}
 		</Form.Control>
 

@@ -17,18 +17,18 @@
 			{columns}
 			data={[
 				{
-					id: crypto.randomUUID(),
+					faculty_id: crypto.randomUUID(),
 					department_id: 'asdasdasd',
 					fullname: 'aSD',
 					academic_rank: 'asdasdasd',
-					status: 'asdasdasd'
+					employment_status: 'asdasdasd'
 				},
 				{
-					id: crypto.randomUUID(),
+					faculty_id: crypto.randomUUID(),
 					department_id: 'asdasdasd',
 					fullname: 'aSD',
 					academic_rank: 'asdasdasd',
-					status: 'asdasdasd'
+					employment_status: 'asdasdasd'
 				}
 			]}
 		/>

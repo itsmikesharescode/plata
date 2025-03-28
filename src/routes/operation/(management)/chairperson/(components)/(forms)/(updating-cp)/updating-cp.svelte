@@ -72,7 +72,8 @@
 						fullname: activeRow?.fullname,
 						department_id: activeRow?.department_id,
 						academic_rank: activeRow?.academic_rank,
-						status: activeRow?.status
+						employment_status: activeRow?.employment_status,
+						program_id: activeRow?.program_id
 					}}
 					{updateChairpersonInfoForm}
 				/>

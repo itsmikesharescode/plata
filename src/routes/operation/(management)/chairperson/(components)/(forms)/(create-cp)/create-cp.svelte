@@ -111,11 +111,15 @@
 						<Form.FieldErrors />
 					</Form.Field>
 
-					<Form.Field {form} name="status">
+					<Form.Field {form} name="employment_status">
 						<Form.Control>
 							{#snippet children({ props })}
-								<Form.Label>Status</Form.Label>
-								<Input {...props} bind:value={$formData.status} placeholder="Chairperson Status" />
+								<Form.Label>Employment Status</Form.Label>
+								<Input
+									{...props}
+									bind:value={$formData.employment_status}
+									placeholder="Chairperson Employment Status"
+								/>
 							{/snippet}
 						</Form.Control>
 						<Form.FieldErrors />

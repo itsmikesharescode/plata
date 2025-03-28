@@ -54,7 +54,7 @@
 	$effect(() => {
 		if (deletionId) {
 			if (activeRow) {
-				$formData.id = activeRow.id;
+				$formData.faculty_id = activeRow.faculty_id;
 			}
 		}
 	});
@@ -71,12 +71,12 @@
 		<AlertDialog.Header>
 			<AlertDialog.Title>Delete Faculty</AlertDialog.Title>
 			<AlertDialog.Description>
-				Are you sure you want to delete this faculty? with id of {activeRow?.id}
+				Are you sure you want to delete this faculty? with id of {activeRow?.faculty_id}
 			</AlertDialog.Description>
 		</AlertDialog.Header>
 
 		<form method="POST" action="?/deleteFacultyEvent" use:enhance>
-			<input name="id" type="hidden" value={$formData.id} />
+			<input name="faculty_id" type="hidden" value={$formData.faculty_id} />
 
 			<AlertDialog.Footer>
 				<AlertDialog.Cancel

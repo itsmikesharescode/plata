@@ -53,11 +53,11 @@
 	$effect(() => {
 		if (id) {
 			if (activeRow) {
-				$formData.id = activeRow.id;
+				$formData.faculty_id = activeRow.faculty_id;
 				$formData.department_id = activeRow.department_id;
 				$formData.fullname = activeRow.fullname;
 				$formData.academic_rank = activeRow.academic_rank;
-				$formData.status = activeRow.status;
+				$formData.employment_status = activeRow.employment_status;
 			}
 		}
 	});
@@ -77,7 +77,7 @@
 		</AlertDialog.Header>
 
 		<form method="POST" action="?/updateFacultyEvent" use:enhance>
-			<input name="id" type="hidden" value={$formData.id} />
+			<input name="faculty_id" type="hidden" value={$formData.faculty_id} />
 			<ScrollArea>
 				<section class="max-h-[60dvh] px-6">
 					<Form.Field {form} name="department_id">
@@ -118,11 +118,15 @@
 						<Form.FieldErrors />
 					</Form.Field>
 
-					<Form.Field {form} name="status">
+					<Form.Field {form} name="employment_status">
 						<Form.Control>
 							{#snippet children({ props })}
-								<Form.Label>Status</Form.Label>
-								<Textarea {...props} bind:value={$formData.status} placeholder="Faculty Status" />
+								<Form.Label>Employment Status</Form.Label>
+								<Textarea
+									{...props}
+									bind:value={$formData.employment_status}
+									placeholder="Faculty Employment Status"
+								/>
 							{/snippet}
 						</Form.Control>
 						<Form.FieldErrors />

@@ -44,6 +44,28 @@ export const columns: ColumnDef<ChairpersonTable>[] = [
 	},
 
 	{
+		accessorKey: 'program_id',
+		header: ({ column }) => {
+			return renderComponent(HeaderColumn<ChairpersonTable, unknown>, {
+				column,
+				title: 'PROGRAM'
+			});
+		},
+		cell: ({ row }) => {
+			const programSnippet = createRawSnippet<[string]>((getProgram) => {
+				const program = getProgram();
+				return {
+					render: () => `<div class="w-full">${program}</div>`
+				};
+			});
+
+			return renderSnippet(programSnippet, row.getValue('program_id'));
+		},
+		enableSorting: true,
+		enableHiding: true
+	},
+
+	{
 		accessorKey: 'email',
 		header: ({ column }) => {
 			return renderComponent(HeaderColumn<ChairpersonTable, unknown>, {
@@ -110,22 +132,22 @@ export const columns: ColumnDef<ChairpersonTable>[] = [
 	},
 
 	{
-		accessorKey: 'status',
+		accessorKey: 'employment_status',
 		header: ({ column }) => {
 			return renderComponent(HeaderColumn<ChairpersonTable, unknown>, {
 				column,
-				title: 'STATUS'
+				title: 'EMPLOYMENT STATUS'
 			});
 		},
 		cell: ({ row }) => {
-			const statusSnippet = createRawSnippet<[string]>((getStatus) => {
-				const status = getStatus();
+			const employmentStatusSnippet = createRawSnippet<[string]>((getEmploymentStatus) => {
+				const employmentStatus = getEmploymentStatus();
 				return {
-					render: () => `<div class="w-full">${status}</div>`
+					render: () => `<div class="w-full">${employmentStatus}</div>`
 				};
 			});
 
-			return renderSnippet(statusSnippet, row.getValue('status'));
+			return renderSnippet(employmentStatusSnippet, row.getValue('employment_status'));
 		},
 		enableSorting: true,
 		enableHiding: true

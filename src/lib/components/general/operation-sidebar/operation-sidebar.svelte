@@ -6,6 +6,7 @@
 	import Database from 'lucide-svelte/icons/database';
 	import FolderKanban from 'lucide-svelte/icons/folder-kanban';
 	import History from 'lucide-svelte/icons/history';
+	import Settings from 'lucide-svelte/icons/settings';
 	import Header from './components/header.svelte';
 	export const baseRoutes = [
 		{
@@ -53,15 +54,20 @@
 					url: '/operation/faculties'
 				},
 				{
-					title: 'Chairpersons',
-					url: '/operation/chairpersons'
+					title: 'Chairperson',
+					url: '/operation/chairperson'
 				}
 			]
 		},
 		{
-			title: 'History',
-			icon: History,
-			items: []
+			title: 'Settings',
+			icon: Settings,
+			items: [
+				{
+					title: 'History',
+					url: '/operation/history'
+				}
+			]
 		}
 	];
 </script>

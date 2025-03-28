@@ -9,7 +9,7 @@ import { renderComponent, renderSnippet } from '$lib/components/ui/data-table/in
 
 export const columns: ColumnDef<FacultyTable>[] = [
 	{
-		accessorKey: 'id',
+		accessorKey: 'ID',
 		header: ({ column }) => {
 			return renderComponent(HeaderColumn<FacultyTable, unknown>, {
 				column,

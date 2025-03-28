@@ -21,18 +21,20 @@
 				{
 					user_id: crypto.randomUUID(),
 					department_id: 'asdasdasd',
+					program_id: 'asdasdasd',
 					email: 'asdasdasd',
 					fullname: 'aSD',
 					academic_rank: 'asdasdasd',
-					status: 'asdasdasd'
+					employment_status: 'asdasdasd'
 				},
 				{
 					user_id: crypto.randomUUID(),
 					department_id: 'asdasdasd',
+					program_id: 'asdasdasd',
 					email: 'asdasdasd',
 					fullname: 'aSD',
 					academic_rank: 'asdasdasd',
-					status: 'asdasdasd'
+					employment_status: 'asdasdasd'
 				}
 			]}
 		/>

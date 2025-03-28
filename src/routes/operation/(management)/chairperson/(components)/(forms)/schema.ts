@@ -2,10 +2,11 @@ import { z } from 'zod';
 
 const baseSchema = {
 	department_id: z.string().min(1, 'Department is required.'),
+	program_id: z.string().min(1, 'Program is required.'),
 	email: z.string().min(1, 'Email is required.'),
 	fullname: z.string().min(1, 'Faculty fullname is required.'),
 	academic_rank: z.string().min(1, 'Academic rank is required.'),
-	status: z.string().min(1, 'Status is required.')
+	employment_status: z.string().min(1, 'Employment status is required.')
 };
 
 export const createChairpersonSchema = z

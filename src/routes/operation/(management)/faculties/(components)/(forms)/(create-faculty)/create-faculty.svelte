@@ -99,11 +99,15 @@
 						<Form.FieldErrors />
 					</Form.Field>
 
-					<Form.Field {form} name="status">
+					<Form.Field {form} name="employment_status">
 						<Form.Control>
 							{#snippet children({ props })}
-								<Form.Label>Status</Form.Label>
-								<Textarea {...props} bind:value={$formData.status} placeholder="Faculty Status" />
+								<Form.Label>Employment Status</Form.Label>
+								<Textarea
+									{...props}
+									bind:value={$formData.employment_status}
+									placeholder="Faculty Employment Status"
+								/>
 							{/snippet}
 						</Form.Control>
 						<Form.FieldErrors />
