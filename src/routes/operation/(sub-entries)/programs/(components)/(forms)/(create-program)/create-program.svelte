@@ -8,7 +8,7 @@
 	import { type SuperValidated, superForm } from 'sveltekit-superforms';
 	import ReqLoader from '$lib/components/general/spinners/req-loader.svelte';
 	import { toast } from 'svelte-sonner';
-
+	import SimplePicker from '$lib/components/general/custom-pickers/simple-picker.svelte';
 	interface Props {
 		createProgramForm: SuperValidated<CreateProgramSchema>;
 	}
@@ -57,6 +57,37 @@
 		</AlertDialog.Header>
 
 		<form method="POST" action="?/createProgramEvent" use:enhance>
+			<Form.Field {form} name="department_id">
+				<Form.Control>
+					{#snippet children({ props })}
+						<Form.Label>Department</Form.Label>
+
+						<SimplePicker
+							placeholder="Select Department"
+							selections={[
+								{ id: '1', label: 'CED', value: 'Civil Engineering Department' },
+								{ id: '2', label: 'CSE', value: 'Computer Science and Engineering Department' },
+								{ id: '3', label: 'CCE', value: 'Civil and Construction Engineering Department' },
+								{ id: '4', label: 'CCE', value: 'Civil and Construction Engineering Department' },
+								{ id: '5', label: 'CCE', value: 'Civil and Construction Engineering Department' },
+								{ id: '6', label: 'CCE', value: 'Civil and Construction Engineering Department' },
+								{ id: '7', label: 'CCE', value: 'Civil and Construction Engineering Department' },
+								{ id: '8', label: 'CCE', value: 'Civil and Construction Engineering Department' }
+							]}
+							bind:selected_id={$formData.department_id}
+						>
+							{#snippet loopChild({ selectedItem })}
+								<div class="flex flex-col">
+									<span class="text-sm">{selectedItem.label}</span>
+									<span class="text-xs text-muted-foreground">{selectedItem.value}</span>
+								</div>
+							{/snippet}
+						</SimplePicker>
+						<input name={props.name} type="hidden" value={$formData.department_id} />
+					{/snippet}
+				</Form.Control>
+				<Form.FieldErrors />
+			</Form.Field>
 			<Form.Field {form} name="program_name">
 				<Form.Control>
 					{#snippet children({ props })}
@@ -72,20 +103,6 @@
 					{#snippet children({ props })}
 						<Form.Label>Program Code</Form.Label>
 						<Input {...props} bind:value={$formData.program_code} placeholder="Program Code" />
-					{/snippet}
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
-
-			<Form.Field {form} name="department_id">
-				<Form.Control>
-					{#snippet children({ props })}
-						<Form.Label>Department</Form.Label>
-						<Input
-							{...props}
-							bind:value={$formData.department_id}
-							placeholder="Department dropdown"
-						/>
 					{/snippet}
 				</Form.Control>
 				<Form.FieldErrors />
