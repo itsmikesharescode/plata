@@ -22,11 +22,11 @@ export const columns: ColumnDef<DepartmentTable>[] = [
 	},
 
 	{
-		accessorKey: 'name',
+		accessorKey: 'department_name',
 		header: ({ column }) => {
 			return renderComponent(HeaderColumn<DepartmentTable, unknown>, {
 				column,
-				title: 'NAME'
+				title: 'DEPARTMENT NAME'
 			});
 		},
 		cell: ({ row }) => {
@@ -37,18 +37,18 @@ export const columns: ColumnDef<DepartmentTable>[] = [
 				};
 			});
 
-			return renderSnippet(nameSnippet, row.getValue('name'));
+			return renderSnippet(nameSnippet, row.getValue('department_name'));
 		},
 		enableSorting: true,
 		enableHiding: true
 	},
 
 	{
-		accessorKey: 'code',
+		accessorKey: 'department_code',
 		header: ({ column }) => {
 			return renderComponent(HeaderColumn<DepartmentTable, unknown>, {
 				column,
-				title: 'CODE'
+				title: 'DEPARTMENT CODE'
 			});
 		},
 		cell: ({ row }) => {
@@ -59,18 +59,18 @@ export const columns: ColumnDef<DepartmentTable>[] = [
 				};
 			});
 
-			return renderSnippet(codeSnippet, row.getValue('code'));
+			return renderSnippet(codeSnippet, row.getValue('department_code'));
 		},
 		enableSorting: true,
 		enableHiding: true
 	},
 
 	{
-		accessorKey: 'color',
+		accessorKey: 'department_color',
 		header: ({ column }) => {
 			return renderComponent(HeaderColumn<DepartmentTable, unknown>, {
 				column,
-				title: 'COLOR'
+				title: 'DEPARTMENT COLOR'
 			});
 		},
 		cell: ({ row }) => {
@@ -82,7 +82,7 @@ export const columns: ColumnDef<DepartmentTable>[] = [
 				};
 			});
 
-			return renderSnippet(colorSnippet, row.getValue('color'));
+			return renderSnippet(colorSnippet, row.getValue('department_color'));
 		},
 		enableSorting: true,
 		enableHiding: true

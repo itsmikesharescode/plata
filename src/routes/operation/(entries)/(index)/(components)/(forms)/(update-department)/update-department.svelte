@@ -53,9 +53,9 @@
 		if (id) {
 			if (activeRow) {
 				$formData.id = activeRow.id;
-				$formData.name = activeRow.name;
-				$formData.code = activeRow.code;
-				$formData.color = activeRow.color;
+				$formData.department_name = activeRow.department_name;
+				$formData.department_code = activeRow.department_code;
+				$formData.department_color = activeRow.department_color;
 			}
 		}
 	});
@@ -70,7 +70,7 @@
 >
 	<AlertDialog.Content>
 		<AlertDialog.Header>
-			<AlertDialog.Title>Create Department</AlertDialog.Title>
+			<AlertDialog.Title>Update Department</AlertDialog.Title>
 			<AlertDialog.Description>
 				Fill the form below to update the department.
 			</AlertDialog.Description>
@@ -79,34 +79,42 @@
 		<form method="POST" action="?/updateDepEvent" use:enhance>
 			<input name="id" type="hidden" value={$formData.id} />
 
-			<Form.Field {form} name="name">
+			<Form.Field {form} name="department_name">
 				<Form.Control>
 					{#snippet children({ props })}
-						<Form.Label>Name</Form.Label>
-						<Input {...props} bind:value={$formData.name} placeholder="Department Name" />
+						<Form.Label>Department Name</Form.Label>
+						<Input
+							{...props}
+							bind:value={$formData.department_name}
+							placeholder="Department Name"
+						/>
 					{/snippet}
 				</Form.Control>
 				<Form.FieldErrors />
 			</Form.Field>
 
-			<Form.Field {form} name="code">
+			<Form.Field {form} name="department_code">
 				<Form.Control>
 					{#snippet children({ props })}
-						<Form.Label>Code</Form.Label>
-						<Input {...props} bind:value={$formData.code} placeholder="Department Code" />
+						<Form.Label>Department Code</Form.Label>
+						<Input
+							{...props}
+							bind:value={$formData.department_code}
+							placeholder="Department Code"
+						/>
 					{/snippet}
 				</Form.Control>
 				<Form.FieldErrors />
 			</Form.Field>
 
-			<Form.Field {form} name="color">
+			<Form.Field {form} name="department_color">
 				<Form.Control>
 					{#snippet children({ props })}
-						<Form.Label>Color</Form.Label>
+						<Form.Label>Department Color</Form.Label>
 						<Input
 							type="color"
 							{...props}
-							bind:value={$formData.color}
+							bind:value={$formData.department_color}
 							placeholder="Department Color"
 						/>
 					{/snippet}

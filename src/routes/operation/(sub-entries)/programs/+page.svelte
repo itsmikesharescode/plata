@@ -18,14 +18,14 @@
 			data={[
 				{
 					id: crypto.randomUUID(),
-					name: 'asdasdasd',
-					code: 'aSD',
+					program_name: 'asdasdasd',
+					program_code: 'aSD',
 					department_id: 'asdasdasd'
 				},
 				{
 					id: crypto.randomUUID(),
-					name: 'asdasdasd',
-					code: 'aSD',
+					program_name: 'asdasdasd',
+					program_code: 'aSD',
 					department_id: 'asdasdasd'
 				}
 			]}

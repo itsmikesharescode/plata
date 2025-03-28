@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const baseSchema = {
 	department_id: z.string().min(1, 'Department is required.'),
-	name: z.string().min(1, 'Classroom name is required.'),
+	classroom_name: z.string().min(1, 'Classroom name is required.'),
 	building_name: z.string().min(1, 'Building name is required.')
 };
 

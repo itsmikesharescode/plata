@@ -52,8 +52,8 @@
 		if (id) {
 			if (activeRow) {
 				$formData.id = activeRow.id;
-				$formData.name = activeRow.name;
-				$formData.code = activeRow.code;
+				$formData.program_name = activeRow.program_name;
+				$formData.program_code = activeRow.program_code;
 				$formData.department_id = activeRow.department_id;
 			}
 		}
@@ -76,21 +76,21 @@
 		<form method="POST" action="?/updateProgramEvent" use:enhance>
 			<input name="id" type="hidden" value={$formData.id} />
 
-			<Form.Field {form} name="name">
+			<Form.Field {form} name="program_name">
 				<Form.Control>
 					{#snippet children({ props })}
-						<Form.Label>Name</Form.Label>
-						<Input {...props} bind:value={$formData.name} placeholder="Program Name" />
+						<Form.Label>Program Name</Form.Label>
+						<Input {...props} bind:value={$formData.program_name} placeholder="Program Name" />
 					{/snippet}
 				</Form.Control>
 				<Form.FieldErrors />
 			</Form.Field>
 
-			<Form.Field {form} name="code">
+			<Form.Field {form} name="program_code">
 				<Form.Control>
 					{#snippet children({ props })}
-						<Form.Label>Code</Form.Label>
-						<Input {...props} bind:value={$formData.code} placeholder="Code" />
+						<Form.Label>Program Code</Form.Label>
+						<Input {...props} bind:value={$formData.program_code} placeholder="Program Code" />
 					{/snippet}
 				</Form.Control>
 				<Form.FieldErrors />

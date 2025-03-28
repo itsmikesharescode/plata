@@ -52,7 +52,7 @@
 		if (id) {
 			if (activeRow) {
 				$formData.id = activeRow.id;
-				$formData.name = activeRow.name;
+				$formData.classroom_name = activeRow.classroom_name;
 				$formData.building_name = activeRow.building_name;
 				$formData.department_id = activeRow.department_id;
 			}
@@ -78,11 +78,11 @@
 		<form method="POST" action="?/updateClassroomEvent" use:enhance>
 			<input name="id" type="hidden" value={$formData.id} />
 
-			<Form.Field {form} name="name">
+			<Form.Field {form} name="classroom_name">
 				<Form.Control>
 					{#snippet children({ props })}
-						<Form.Label>Name</Form.Label>
-						<Input {...props} bind:value={$formData.name} placeholder="Classroom Name" />
+						<Form.Label>Classroom Name</Form.Label>
+						<Input {...props} bind:value={$formData.classroom_name} placeholder="Classroom Name" />
 					{/snippet}
 				</Form.Control>
 				<Form.FieldErrors />

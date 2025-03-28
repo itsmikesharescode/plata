@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 const baseSchema = {
 	department_id: z.string().min(1, 'Department is required.'),
-	name: z.string().min(1, 'Program name is required.'),
-	code: z.string().min(1, 'Code is required.')
+	program_name: z.string().min(1, 'Program name is required.'),
+	program_code: z.string().min(1, 'Code is required.')
 };
 
 export const createProgramSchema = z.object(baseSchema);

@@ -44,33 +44,33 @@ export const columns: ColumnDef<ProgramTable>[] = [
 	},
 
 	{
-		accessorKey: 'name',
+		accessorKey: 'program_name',
 		header: ({ column }) => {
 			return renderComponent(HeaderColumn<ProgramTable, unknown>, {
 				column,
-				title: 'NAME'
+				title: 'PROGRAM NAME'
 			});
 		},
 		cell: ({ row }) => {
-			const nameSnippet = createRawSnippet<[string]>((getName) => {
-				const name = getName();
+			const programNameSnippet = createRawSnippet<[string]>((getProgramName) => {
+				const programName = getProgramName();
 				return {
-					render: () => `<div class="w-full">${name}</div>`
+					render: () => `<div class="w-full">${programName}</div>`
 				};
 			});
 
-			return renderSnippet(nameSnippet, row.getValue('name'));
+			return renderSnippet(programNameSnippet, row.getValue('program_name'));
 		},
 		enableSorting: true,
 		enableHiding: true
 	},
 
 	{
-		accessorKey: 'code',
+		accessorKey: 'program_code',
 		header: ({ column }) => {
 			return renderComponent(HeaderColumn<ProgramTable, unknown>, {
 				column,
-				title: 'CODE'
+				title: 'PROGRAM CODE'
 			});
 		},
 		cell: ({ row }) => {
@@ -81,7 +81,7 @@ export const columns: ColumnDef<ProgramTable>[] = [
 				};
 			});
 
-			return renderSnippet(codeSnippet, row.getValue('code'));
+			return renderSnippet(codeSnippet, row.getValue('program_code'));
 		},
 		enableSorting: true,
 		enableHiding: true

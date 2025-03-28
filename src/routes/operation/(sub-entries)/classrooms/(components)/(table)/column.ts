@@ -44,22 +44,22 @@ export const columns: ColumnDef<ClassroomTable>[] = [
 	},
 
 	{
-		accessorKey: 'name',
+		accessorKey: 'classroom_name',
 		header: ({ column }) => {
 			return renderComponent(HeaderColumn<ClassroomTable, unknown>, {
 				column,
-				title: 'NAME'
+				title: 'CLASSROOM NAME'
 			});
 		},
 		cell: ({ row }) => {
-			const nameSnippet = createRawSnippet<[string]>((getName) => {
-				const name = getName();
+			const classroomNameSnippet = createRawSnippet<[string]>((getClassroomName) => {
+				const classroomName = getClassroomName();
 				return {
-					render: () => `<div class="w-full">${name}</div>`
+					render: () => `<div class="w-full">${classroomName}</div>`
 				};
 			});
 
-			return renderSnippet(nameSnippet, row.getValue('name'));
+			return renderSnippet(classroomNameSnippet, row.getValue('classroom_name'));
 		},
 		enableSorting: true,
 		enableHiding: true

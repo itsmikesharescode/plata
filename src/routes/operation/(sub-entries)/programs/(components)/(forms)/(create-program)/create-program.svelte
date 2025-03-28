@@ -57,21 +57,21 @@
 		</AlertDialog.Header>
 
 		<form method="POST" action="?/createProgramEvent" use:enhance>
-			<Form.Field {form} name="name">
+			<Form.Field {form} name="program_name">
 				<Form.Control>
 					{#snippet children({ props })}
-						<Form.Label>Name</Form.Label>
-						<Input {...props} bind:value={$formData.name} placeholder="Program Name" />
+						<Form.Label>Program Name</Form.Label>
+						<Input {...props} bind:value={$formData.program_name} placeholder="Program Name" />
 					{/snippet}
 				</Form.Control>
 				<Form.FieldErrors />
 			</Form.Field>
 
-			<Form.Field {form} name="code">
+			<Form.Field {form} name="program_code">
 				<Form.Control>
 					{#snippet children({ props })}
-						<Form.Label>Code</Form.Label>
-						<Input {...props} bind:value={$formData.code} placeholder="Code" />
+						<Form.Label>Program Code</Form.Label>
+						<Input {...props} bind:value={$formData.program_code} placeholder="Program Code" />
 					{/snippet}
 				</Form.Control>
 				<Form.FieldErrors />

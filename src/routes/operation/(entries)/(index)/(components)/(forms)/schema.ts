@@ -1,9 +1,9 @@
 import { z } from 'zod';
 
 const baseSchema = {
-	name: z.string().min(1, 'Department name is required.'),
-	code: z.string().min(1, 'Department code is required.'),
-	color: z.string().min(1, 'Department color is required.')
+	department_name: z.string().min(1, 'Department name is required.'),
+	department_code: z.string().min(1, 'Department code is required.'),
+	department_color: z.string().min(1, 'Department color is required.')
 };
 
 export const createDepSchema = z.object(baseSchema);

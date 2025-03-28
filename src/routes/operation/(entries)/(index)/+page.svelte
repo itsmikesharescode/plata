@@ -18,15 +18,15 @@
 			data={[
 				{
 					id: crypto.randomUUID(),
-					name: 'asdasdasd',
-					code: 'aSD',
-					color: '#000000'
+					department_name: 'asdasdasd',
+					department_code: 'aSD',
+					department_color: '#000000'
 				},
 				{
 					id: crypto.randomUUID(),
-					name: 'asdasdasd',
-					code: 'aSD',
-					color: '#983230'
+					department_name: 'asdasdasd',
+					department_code: 'aSD',
+					department_color: '#983230'
 				}
 			]}
 		/>

@@ -57,11 +57,11 @@
 		</AlertDialog.Header>
 
 		<form method="POST" action="?/createClassroomEvent" use:enhance>
-			<Form.Field {form} name="name">
+			<Form.Field {form} name="classroom_name">
 				<Form.Control>
 					{#snippet children({ props })}
-						<Form.Label>Name</Form.Label>
-						<Input {...props} bind:value={$formData.name} placeholder="Classroom Name" />
+						<Form.Label>Classroom Name</Form.Label>
+						<Input {...props} bind:value={$formData.classroom_name} placeholder="Classroom Name" />
 					{/snippet}
 				</Form.Control>
 				<Form.FieldErrors />
