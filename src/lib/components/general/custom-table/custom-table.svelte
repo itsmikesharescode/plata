@@ -17,6 +17,7 @@
 	import { createSvelteTable } from '$lib/components/ui/data-table/data-table.svelte.js';
 	import FlexRender from '$lib/components/ui/data-table/flex-render.svelte';
 	import * as Table from '$lib/components/ui/table/index.js';
+	import CustomPagination from './components/custom-pagination.svelte';
 
 	let { columns, data }: { columns: ColumnDef<TData, TValue>[]; data: TData[] } = $props();
 
@@ -124,5 +125,9 @@
 				{/each}
 			</Table.Body>
 		</Table.Root>
+	</div>
+
+	<div class="ml-auto w-fit">
+		<CustomPagination />
 	</div>
 </div>

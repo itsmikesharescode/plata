@@ -3,6 +3,7 @@
 	import CreateDepartment from './(components)/(forms)/(create-department)/create-department.svelte';
 	import UpdateDepartment from './(components)/(forms)/(update-department)/update-department.svelte';
 	import DeleteDepartment from './(components)/(forms)/(delete-department)/delete-department.svelte';
+
 	import { columns } from './(components)/(table)/column';
 
 	const { data } = $props();
@@ -12,7 +13,7 @@
 	<section>
 		<CreateDepartment createDepForm={data.createDepForm} />
 	</section>
-	<section>
+	<section class="flex flex-col gap-4">
 		<CustomTable
 			{columns}
 			data={[
