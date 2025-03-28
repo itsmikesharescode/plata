@@ -18,15 +18,19 @@
 			data={[
 				{
 					id: crypto.randomUUID(),
-					name: 'asdasdasd',
-					code: 'aSD',
-					description: 'asdasdasd'
+					course_name: 'asdasdasd',
+					course_code: 'aSD',
+					lecture_hours: 1,
+					lab_hours: 1,
+					unit: 1
 				},
 				{
 					id: crypto.randomUUID(),
-					name: 'asdasdasd',
-					code: 'aSD',
-					description: 'asdasdasd'
+					course_name: 'asdasdasd',
+					course_code: 'aSD',
+					lecture_hours: 1,
+					lab_hours: 1,
+					unit: 1
 				}
 			]}
 		/>

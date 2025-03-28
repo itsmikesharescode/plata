@@ -8,6 +8,7 @@
 	import { type SuperValidated, superForm } from 'sveltekit-superforms';
 	import ReqLoader from '$lib/components/general/spinners/req-loader.svelte';
 	import { Textarea } from '$lib/components/ui/textarea/index.js';
+	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 	import { toast } from 'svelte-sonner';
 
 	interface Props {
@@ -49,50 +50,80 @@
 	<AlertDialog.Trigger class={buttonVariants({ variant: 'default' })}
 		>Create Subject</AlertDialog.Trigger
 	>
-	<AlertDialog.Content>
-		<AlertDialog.Header>
+	<AlertDialog.Content class="flex max-h-[100dvh] flex-col p-0">
+		<AlertDialog.Header class="px-6 pt-6">
 			<AlertDialog.Title>Create Subject</AlertDialog.Title>
-			<AlertDialog.Description>
-				Fill the form below to create a new subject.
-			</AlertDialog.Description>
+			<AlertDialog.Description>Fill the form below to create a new subject.</AlertDialog.Description
+			>
 		</AlertDialog.Header>
 
 		<form method="POST" action="?/createSubEvent" use:enhance>
-			<Form.Field {form} name="name">
-				<Form.Control>
-					{#snippet children({ props })}
-						<Form.Label>Name</Form.Label>
-						<Input {...props} bind:value={$formData.name} placeholder="Subject Name" />
-					{/snippet}
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
+			<ScrollArea>
+				<section class="max-h-[60dvh] px-6">
+					<Form.Field {form} name="course_name">
+						<Form.Control>
+							{#snippet children({ props })}
+								<Form.Label>Course Name</Form.Label>
+								<Input {...props} bind:value={$formData.course_name} placeholder="Course Name" />
+							{/snippet}
+						</Form.Control>
+						<Form.FieldErrors />
+					</Form.Field>
 
-			<Form.Field {form} name="code">
-				<Form.Control>
-					{#snippet children({ props })}
-						<Form.Label>Code</Form.Label>
-						<Input {...props} bind:value={$formData.code} placeholder="Subject Code" />
-					{/snippet}
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
+					<Form.Field {form} name="course_code">
+						<Form.Control>
+							{#snippet children({ props })}
+								<Form.Label>Course Code</Form.Label>
+								<Input {...props} bind:value={$formData.course_code} placeholder="Course Code" />
+							{/snippet}
+						</Form.Control>
+						<Form.FieldErrors />
+					</Form.Field>
 
-			<Form.Field {form} name="description">
-				<Form.Control>
-					{#snippet children({ props })}
-						<Form.Label>Description</Form.Label>
-						<Textarea
-							{...props}
-							bind:value={$formData.description}
-							placeholder="Subject Description"
-						/>
-					{/snippet}
-				</Form.Control>
-				<Form.FieldErrors />
-			</Form.Field>
+					<div class="grid grid-cols-3 gap-4">
+						<Form.Field {form} name="lecture_hours">
+							<Form.Control>
+								{#snippet children({ props })}
+									<Form.Label>Lecture Hours</Form.Label>
+									<Input
+										type="number"
+										{...props}
+										bind:value={$formData.lecture_hours}
+										placeholder="Lecture Hours"
+									/>
+								{/snippet}
+							</Form.Control>
+							<Form.FieldErrors />
+						</Form.Field>
 
-			<AlertDialog.Footer>
+						<Form.Field {form} name="lab_hours">
+							<Form.Control>
+								{#snippet children({ props })}
+									<Form.Label>Lab Hours</Form.Label>
+									<Input
+										type="number"
+										{...props}
+										bind:value={$formData.lab_hours}
+										placeholder="Lab Hours"
+									/>
+								{/snippet}
+							</Form.Control>
+							<Form.FieldErrors />
+						</Form.Field>
+
+						<Form.Field {form} name="unit">
+							<Form.Control>
+								{#snippet children({ props })}
+									<Form.Label>Unit</Form.Label>
+									<Input type="number" {...props} bind:value={$formData.unit} placeholder="Unit" />
+								{/snippet}
+							</Form.Control>
+							<Form.FieldErrors />
+						</Form.Field>
+					</div>
+				</section>
+			</ScrollArea>
+			<AlertDialog.Footer class="mt-2 px-6 pb-6">
 				<AlertDialog.Cancel type="button">Cancel</AlertDialog.Cancel>
 				<Form.Button disabled={$submitting} class="relative">
 					<ReqLoader isLoader={$submitting} />

@@ -22,66 +22,110 @@ export const columns: ColumnDef<SubjectTable>[] = [
 	},
 
 	{
-		accessorKey: 'name',
+		accessorKey: 'course_name',
 		header: ({ column }) => {
 			return renderComponent(HeaderColumn<SubjectTable, unknown>, {
 				column,
-				title: 'NAME'
+				title: 'COURSE NAME'
 			});
 		},
 		cell: ({ row }) => {
-			const nameSnippet = createRawSnippet<[string]>((getName) => {
-				const name = getName();
+			const courseNameSnippet = createRawSnippet<[string]>((getCourseName) => {
+				const courseName = getCourseName();
 				return {
-					render: () => `<div class="w-full">${name}</div>`
+					render: () => `<div class="w-full">${courseName}</div>`
 				};
 			});
 
-			return renderSnippet(nameSnippet, row.getValue('name'));
+			return renderSnippet(courseNameSnippet, row.getValue('course_name'));
 		},
 		enableSorting: true,
 		enableHiding: true
 	},
 
 	{
-		accessorKey: 'code',
+		accessorKey: 'course_code',
 		header: ({ column }) => {
 			return renderComponent(HeaderColumn<SubjectTable, unknown>, {
 				column,
-				title: 'CODE'
+				title: 'COURSE CODE'
 			});
 		},
 		cell: ({ row }) => {
-			const codeSnippet = createRawSnippet<[string]>((getCode) => {
-				const code = getCode();
+			const courseCodeSnippet = createRawSnippet<[string]>((getCourseCode) => {
+				const courseCode = getCourseCode();
 				return {
-					render: () => `<div class="w-[100px]">${code}</div>`
+					render: () => `<div class="w-[100px]">${courseCode}</div>`
 				};
 			});
 
-			return renderSnippet(codeSnippet, row.getValue('code'));
+			return renderSnippet(courseCodeSnippet, row.getValue('course_code'));
 		},
 		enableSorting: true,
 		enableHiding: true
 	},
 
 	{
-		accessorKey: 'description',
+		accessorKey: 'lecture_hours',
 		header: ({ column }) => {
 			return renderComponent(HeaderColumn<SubjectTable, unknown>, {
 				column,
-				title: 'DESCRIPTION'
+				title: 'LECTURE HOURS'
 			});
 		},
 		cell: ({ row }) => {
-			const descriptionSnippet = createRawSnippet<[string]>((getDescription) => {
-				const description = getDescription();
+			const lectureHoursSnippet = createRawSnippet<[number]>((getLectureHours) => {
+				const lectureHours = getLectureHours();
 				return {
-					render: () => `<div class="w-full">${description}</div>`
+					render: () => `<div class="w-full">${lectureHours}</div>`
 				};
 			});
 
-			return renderSnippet(descriptionSnippet, row.getValue('description'));
+			return renderSnippet(lectureHoursSnippet, row.getValue('lecture_hours'));
+		},
+		enableSorting: true,
+		enableHiding: true
+	},
+
+	{
+		accessorKey: 'lab_hours',
+		header: ({ column }) => {
+			return renderComponent(HeaderColumn<SubjectTable, unknown>, {
+				column,
+				title: 'LAB HOURS'
+			});
+		},
+		cell: ({ row }) => {
+			const labHoursSnippet = createRawSnippet<[number]>((getLabHours) => {
+				const labHours = getLabHours();
+				return {
+					render: () => `<div class="w-full">${labHours}</div>`
+				};
+			});
+
+			return renderSnippet(labHoursSnippet, row.getValue('lab_hours'));
+		},
+		enableSorting: true,
+		enableHiding: true
+	},
+
+	{
+		accessorKey: 'unit',
+		header: ({ column }) => {
+			return renderComponent(HeaderColumn<SubjectTable, unknown>, {
+				column,
+				title: 'UNIT'
+			});
+		},
+		cell: ({ row }) => {
+			const unitSnippet = createRawSnippet<[number]>((getUnit) => {
+				const unit = getUnit();
+				return {
+					render: () => `<div class="w-full">${unit}</div>`
+				};
+			});
+
+			return renderSnippet(unitSnippet, row.getValue('unit'));
 		},
 		enableSorting: true,
 		enableHiding: true

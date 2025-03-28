@@ -1,9 +1,11 @@
 import { z } from 'zod';
 
 const baseSchema = {
-	name: z.string().min(1, 'Subject name is required.'),
-	code: z.string().min(1, 'Subject code is required.'),
-	description: z.string().min(1, 'Subject description is required.')
+	course_name: z.string().min(1, 'Course name is required.'),
+	course_code: z.string().min(1, 'Course code is required.'),
+	lecture_hours: z.number().nonnegative(),
+	lab_hours: z.number().nonnegative(),
+	unit: z.number().nonnegative()
 };
 
 export const createSubSchema = z.object(baseSchema);

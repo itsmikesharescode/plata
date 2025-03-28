@@ -85,7 +85,7 @@
 			<AlertDialog.Cancel
 				type="button"
 				onclick={async () => {
-					await goto('/operation/chairpersons');
+					await goto('/operation/chairperson');
 				}}
 				class={buttonVariants({ variant: 'ghost', size: 'icon', class: 'absolute right-2 top-2' })}
 			>
