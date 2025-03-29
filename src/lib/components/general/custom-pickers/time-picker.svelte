@@ -3,6 +3,7 @@
 	import * as Popover from '$lib/components/ui/popover/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
 	import * as Select from '$lib/components/ui/select/index.js';
+	import Button from '$lib/components/ui/button/button.svelte';
 
 	interface Props {
 		timeStamp: string;
@@ -84,15 +85,8 @@
 	};
 
 	const checkIfAllValid = $derived(nTime.hour && nTime.minute && nTime.second && nTime.ampm);
-
-	$effect(() => {
-		if (checkIfAllValid) {
-			timeStamp = convertSelectedTime(nTime.hour, nTime.minute, nTime.second, nTime.ampm);
-		}
-	});
 </script>
 
-{JSON.stringify(nTime, null, 2)}
 <Popover.Root>
 	<Popover.Trigger
 		class="flex min-h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm font-normal ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -104,11 +98,18 @@
 		{/if}
 		<Clock9 class="size-4" />
 	</Popover.Trigger>
-	<Popover.Content class="w-fit">
+	<Popover.Content class="flex w-fit flex-col gap-2">
 		<div class="flex flex-col gap-2 md:flex-row md:items-center">
 			<div class="grid grid-cols-2 items-center gap-2 md:grid-cols-1">
 				<Label>Hour</Label>
 				<Select.Root
+					onValueChange={() => {
+						if (checkIfAllValid) {
+							timeStamp = convertSelectedTime(nTime.hour, nTime.minute, nTime.second, nTime.ampm);
+						} else {
+							reAssigner('hour', '01');
+						}
+					}}
 					allowDeselect
 					type="single"
 					bind:value={
@@ -132,6 +133,14 @@
 			<div class="grid grid-cols-2 items-center gap-2 md:grid-cols-1">
 				<Label>Minute</Label>
 				<Select.Root
+					disabled={!!!checkIfAllValid}
+					onValueChange={() => {
+						if (checkIfAllValid) {
+							timeStamp = convertSelectedTime(nTime.hour, nTime.minute, nTime.second, nTime.ampm);
+						} else {
+							reAssigner('minute', '00');
+						}
+					}}
 					allowDeselect
 					type="single"
 					bind:value={
@@ -155,6 +164,14 @@
 			<div class="grid grid-cols-2 items-center gap-2 md:grid-cols-1">
 				<Label>Seconds</Label>
 				<Select.Root
+					disabled={!!!checkIfAllValid}
+					onValueChange={() => {
+						if (checkIfAllValid) {
+							timeStamp = convertSelectedTime(nTime.hour, nTime.minute, nTime.second, nTime.ampm);
+						} else {
+							reAssigner('second', '00');
+						}
+					}}
 					allowDeselect
 					type="single"
 					bind:value={
@@ -178,7 +195,14 @@
 			<div class="grid grid-cols-2 items-center gap-2 md:grid-cols-1">
 				<Label>AM/PM</Label>
 				<Select.Root
-					allowDeselect
+					disabled={!!!checkIfAllValid}
+					onValueChange={() => {
+						if (checkIfAllValid) {
+							timeStamp = convertSelectedTime(nTime.hour, nTime.minute, nTime.second, nTime.ampm);
+						} else {
+							reAssigner('ampm', 'AM');
+						}
+					}}
 					type="single"
 					bind:value={
 						() => {
@@ -198,5 +222,7 @@
 				</Select.Root>
 			</div>
 		</div>
+
+		<Button size="sm" onclick={() => (timeStamp = '')}>Reset</Button>
 	</Popover.Content>
 </Popover.Root>
