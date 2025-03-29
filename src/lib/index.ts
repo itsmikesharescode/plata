@@ -1,1 +1,21 @@
-// place files you want to import through the `$lib` alias in this folder.
+export const academicRanks = [
+	'College Professor',
+	'Professor VI',
+	'Professor V',
+	'Professor IV',
+	'Professor III',
+	'Professor II',
+	'Professor I',
+	'Associate Professor V',
+	'Associate Professor IV',
+	'Associate Professor III',
+	'Associate Professor II',
+	'Associate Professor I',
+	'Assistant Professor IV',
+	'Assistant Professor III',
+	'Assistant Professor II',
+	'Assistant Professor I',
+	'Instructor III',
+	'Instructor II',
+	'Instructor I'
+];
