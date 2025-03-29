@@ -14,6 +14,7 @@
 	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 	import SimplePicker from '$lib/components/general/custom-pickers/simple-picker.svelte';
 	import { academicRanks } from '$lib';
+	import { untrack } from 'svelte';
 
 	interface Props {
 		updateFacultyForm: SuperValidated<UpdateFacultySchema>;
@@ -32,6 +33,7 @@
 	const form = superForm(updateFacultyForm, {
 		validators: zodClient(updateFacultySchema),
 		id: crypto.randomUUID(),
+		dataType: 'json',
 		onUpdate: async ({ result }) => {
 			const { status, data } = result;
 
@@ -54,11 +56,13 @@
 	$effect(() => {
 		if (id) {
 			if (activeRow) {
-				$formData.faculty_id = activeRow.faculty_id;
-				$formData.department_id = activeRow.department_id;
-				$formData.fullname = activeRow.fullname;
-				$formData.academic_rank = activeRow.academic_rank;
-				$formData.employment_status = activeRow.employment_status;
+				untrack(() => {
+					$formData.faculty_id = activeRow.faculty_id;
+					$formData.department_id = activeRow.department_id;
+					$formData.fullname = activeRow.fullname;
+					$formData.academic_rank = activeRow.academic_rank;
+					$formData.employment_status = activeRow.employment_status;
+				});
 			}
 		}
 	});

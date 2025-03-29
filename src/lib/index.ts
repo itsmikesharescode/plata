@@ -94,3 +94,72 @@ export const sampleClassrooms = [
 		building_name: 'Building 11'
 	}
 ];
+
+export const sampleFaculties = [
+	{
+		id: crypto.randomUUID(),
+		department_id: crypto.randomUUID(),
+		fullname: 'John Doe',
+		academic_rank: 'Professor I',
+		employment_status: 'Regular'
+	},
+	{
+		id: crypto.randomUUID(),
+		department_id: crypto.randomUUID(),
+		fullname: 'Peter Doe',
+		academic_rank: 'Associate Professor II',
+		employment_status: 'Regular'
+	},
+	{
+		id: crypto.randomUUID(),
+		department_id: crypto.randomUUID(),
+		fullname: 'Fey Doe',
+		academic_rank: 'Assistant Professor I',
+		employment_status: 'Regular'
+	}
+];
+
+export const samplePrograms = [
+	{
+		id: crypto.randomUUID(),
+		department_id: crypto.randomUUID(),
+		program_name: 'Bachelor of Science in Computer Science',
+		program_code: 'BSCS'
+	},
+	{
+		id: crypto.randomUUID(),
+		department_id: crypto.randomUUID(),
+		program_name: 'Bachelor of Science in Information Technology',
+		program_code: 'BSIT'
+	},
+	{
+		id: crypto.randomUUID(),
+		department_id: crypto.randomUUID(),
+		program_name: 'Bachelor of Science in Information Systems',
+		program_code: 'BSIS'
+	},
+	{
+		id: crypto.randomUUID(),
+		department_id: crypto.randomUUID(),
+		program_name: 'Bachelor of Science in Mathematics',
+		program_code: 'BSMATH'
+	}
+];
+
+export const sampleYearAndSections = [
+	{
+		id: crypto.randomUUID(),
+		year_level: '1st Year',
+		section: 'IT1E'
+	},
+	{
+		id: crypto.randomUUID(),
+		year_level: '1st Year',
+		section: 'IT2E'
+	},
+	{
+		id: crypto.randomUUID(),
+		year_level: '1st Year',
+		section: 'IT3E'
+	}
+];
