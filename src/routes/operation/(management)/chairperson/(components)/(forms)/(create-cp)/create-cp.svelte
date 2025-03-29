@@ -9,7 +9,8 @@
 	import ReqLoader from '$lib/components/general/spinners/req-loader.svelte';
 	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 	import { toast } from 'svelte-sonner';
-
+	import SimplePicker from '$lib/components/general/custom-pickers/simple-picker.svelte';
+	import { academicRanks } from '$lib';
 	interface Props {
 		createChairpersonForm: SuperValidated<CreateChairpersonSchema>;
 	}
@@ -63,10 +64,86 @@
 						<Form.Control>
 							{#snippet children({ props })}
 								<Form.Label>Department</Form.Label>
+
+								<SimplePicker
+									placeholder="Select Department"
+									selections={[
+										{ id: '1', label: 'CED', value: 'Civil Engineering Department' },
+										{ id: '2', label: 'CSE', value: 'Computer Science and Engineering Department' },
+										{
+											id: '3',
+											label: 'CCE',
+											value: 'Civil and Construction Engineering Department'
+										},
+										{
+											id: '4',
+											label: 'CCE',
+											value: 'Civil and Construction Engineering Department'
+										},
+										{
+											id: '5',
+											label: 'CCE',
+											value: 'Civil and Construction Engineering Department'
+										},
+										{
+											id: '6',
+											label: 'CCE',
+											value: 'Civil and Construction Engineering Department'
+										},
+										{
+											id: '7',
+											label: 'CCE',
+											value: 'Civil and Construction Engineering Department'
+										},
+										{
+											id: '8',
+											label: 'CCE',
+											value: 'Civil and Construction Engineering Department'
+										}
+									]}
+									bind:selected_id={$formData.department_id}
+								>
+									{#snippet loopChild({ selectedItem })}
+										<div class="flex flex-col">
+											<span class="text-sm">{selectedItem.label}</span>
+											<span class="text-xs text-muted-foreground">{selectedItem.value}</span>
+										</div>
+									{/snippet}
+								</SimplePicker>
+								<input name={props.name} type="hidden" value={$formData.department_id} />
+							{/snippet}
+						</Form.Control>
+						<Form.FieldErrors />
+					</Form.Field>
+
+					<Form.Field {form} name="academic_rank">
+						<Form.Control>
+							{#snippet children({ props })}
+								<Form.Label>Academic Rank</Form.Label>
+								<SimplePicker
+									placeholder="Select Academic Rank"
+									selections={academicRanks.map((v) => ({
+										id: v,
+										label: v,
+										value: v
+									}))}
+									bind:selected_id={$formData.academic_rank}
+								/>
+
+								<input name={props.name} type="hidden" value={$formData.academic_rank} />
+							{/snippet}
+						</Form.Control>
+						<Form.FieldErrors />
+					</Form.Field>
+
+					<Form.Field {form} name="employment_status">
+						<Form.Control>
+							{#snippet children({ props })}
+								<Form.Label>Employment Status</Form.Label>
 								<Input
 									{...props}
-									bind:value={$formData.department_id}
-									placeholder="Department dropdown"
+									bind:value={$formData.employment_status}
+									placeholder="Chairperson Employment Status"
 								/>
 							{/snippet}
 						</Form.Control>
@@ -91,34 +168,6 @@
 									{...props}
 									bind:value={$formData.fullname}
 									placeholder="Chairperson Fullname"
-								/>
-							{/snippet}
-						</Form.Control>
-						<Form.FieldErrors />
-					</Form.Field>
-
-					<Form.Field {form} name="academic_rank">
-						<Form.Control>
-							{#snippet children({ props })}
-								<Form.Label>Academic Rank</Form.Label>
-								<Input
-									{...props}
-									bind:value={$formData.academic_rank}
-									placeholder="Chairperson Academic Rank"
-								/>
-							{/snippet}
-						</Form.Control>
-						<Form.FieldErrors />
-					</Form.Field>
-
-					<Form.Field {form} name="employment_status">
-						<Form.Control>
-							{#snippet children({ props })}
-								<Form.Label>Employment Status</Form.Label>
-								<Input
-									{...props}
-									bind:value={$formData.employment_status}
-									placeholder="Chairperson Employment Status"
 								/>
 							{/snippet}
 						</Form.Control>

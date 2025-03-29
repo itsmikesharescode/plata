@@ -40,7 +40,7 @@
 					toast.success('Chairperson deleted successfully');
 					rowState.setActiveRow(null);
 					reset();
-					await goto('/operation/chairpersons');
+					await goto('/operation/chairperson');
 					break;
 				case 401:
 					toast.error(data.msg);
@@ -82,7 +82,7 @@
 				<AlertDialog.Cancel
 					type="button"
 					onclick={async () => {
-						await goto('/operation/chairpersons');
+						await goto('/operation/chairperson');
 					}}
 				>
 					Cancel
