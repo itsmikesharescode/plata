@@ -37,11 +37,21 @@ export const load: PageServerLoad = async ({ locals: { supabase }, url }) => {
 		}
 	};
 
+	const getDepartmentCount = async () => {
+		if (!supabase) return 0;
+		const { count, error } = await supabase.from('departments_tb').select('*', { count: 'exact' });
+
+		if (error) return 0;
+
+		return count ?? 0;
+	};
+
 	return {
 		createDepForm: await superValidate(zod(createDepSchema)),
 		updateDepForm: await superValidate(zod(updateDepSchema)),
 		deleteDepForm: await superValidate(zod(deleteDepSchema)),
-		departments: await getDepartments()
+		departments: await getDepartments(),
+		departmentCount: await getDepartmentCount()
 	};
 };
 

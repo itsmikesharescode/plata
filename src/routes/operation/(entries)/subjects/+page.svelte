@@ -13,27 +13,7 @@
 		<CreateSubject createSubForm={data.createSubForm} />
 	</section>
 	<section>
-		<CustomTable
-			{columns}
-			data={[
-				{
-					id: crypto.randomUUID(),
-					course_name: 'asdasdasd',
-					course_code: 'aSD',
-					lecture_hours: 1,
-					lab_hours: 1,
-					unit: 1
-				},
-				{
-					id: crypto.randomUUID(),
-					course_name: 'asdasdasd',
-					course_code: 'aSD',
-					lecture_hours: 1,
-					lab_hours: 1,
-					unit: 1
-				}
-			]}
-		/>
+		<CustomTable {columns} data={data.subjects ?? []} count={data.subjectCount} />
 	</section>
 </main>
 

@@ -13,6 +13,7 @@
 	import { goto } from '$app/navigation';
 	import { toast } from 'svelte-sonner';
 	import { untrack } from 'svelte';
+	import { urlParamReducer } from '$lib/utils';
 
 	interface Props {
 		updateDepForm: SuperValidated<UpdateDepSchema>;
@@ -53,7 +54,7 @@
 					toast.success(data.msg);
 					rowState.setActiveRow(null);
 					reset();
-					await goto('/operation');
+					await goto(`${page.url.pathname}?${urlParamReducer('id', page)}`);
 					break;
 				case 401:
 					toast.error(data.msg);
@@ -92,7 +93,7 @@
 	onOpenChange={async () => {
 		reset();
 		rowState.setActiveRow(null);
-		await goto('/operation');
+		await goto(`${page.url.pathname}?${urlParamReducer('id', page)}`);
 	}}
 >
 	<AlertDialog.Content>

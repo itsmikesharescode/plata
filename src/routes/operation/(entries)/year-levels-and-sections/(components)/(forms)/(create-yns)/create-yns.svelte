@@ -17,6 +17,8 @@
 <script lang="ts">
 	const { createYnsForm }: Props = $props();
 
+	let open = $state(false);
+
 	const form = superForm(createYnsForm, {
 		validators: zodClient(createYnsSchema),
 		id: crypto.randomUUID(),
@@ -25,9 +27,9 @@
 
 			switch (status) {
 				case 200:
-					toast.success('Year and Section created successfully');
-
+					toast.success(data.msg);
 					reset();
+					open = false;
 					break;
 				case 401:
 					toast.error(data.msg);
@@ -40,6 +42,7 @@
 </script>
 
 <AlertDialog.Root
+	bind:open
 	onOpenChange={() => {
 		reset();
 	}}

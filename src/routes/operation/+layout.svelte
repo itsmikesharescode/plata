@@ -1,3 +1,9 @@
+<script lang="ts" module>
+	import type { Database } from '$lib/database.types';
+
+	export type DepartmentDropdown = Database['public']['Tables']['departments_tb']['Row'][] | null;
+</script>
+
 <script lang="ts">
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import * as Sidebar from '$lib/components/ui/sidebar/index.js';

@@ -11,6 +11,8 @@
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import { toast } from 'svelte-sonner';
+	import { urlParamReducer } from '$lib/utils';
+	import { untrack } from 'svelte';
 
 	//TODO: implement a fetch call if activeRow is null at visit
 
@@ -21,10 +23,6 @@
 
 <script lang="ts">
 	const { deleteSubForm }: Props = $props();
-
-	const rowState = useRowState();
-
-	const activeRow = $derived(rowState.getActiveRow()) as SubjectTable | null;
 
 	const id = $derived(page.url.searchParams.get('id'));
 	const deletionId = $derived(page.url.searchParams.get('deletion_id'));
@@ -38,9 +36,8 @@
 			switch (status) {
 				case 200:
 					toast.success('Subject deleted successfully');
-					rowState.setActiveRow(null);
 					reset();
-					await goto('/operation/subjects');
+					await goto(`${page.url.pathname}?${urlParamReducer('deletion_id', page)}`);
 					break;
 				case 401:
 					toast.error(data.msg);
@@ -53,25 +50,25 @@
 
 	$effect(() => {
 		if (deletionId) {
-			if (activeRow) {
-				$formData.id = activeRow.id;
-			}
+			untrack(async () => {
+				$formData.id = deletionId;
+			});
 		}
 	});
 </script>
 
 <AlertDialog.Root
 	open={!!deletionId && !!!id}
-	onOpenChange={() => {
+	onOpenChange={async () => {
 		reset();
-		rowState.setActiveRow(null);
+		await goto(`${page.url.pathname}?${urlParamReducer('deletion_id', page)}`);
 	}}
 >
 	<AlertDialog.Content>
 		<AlertDialog.Header>
 			<AlertDialog.Title>Delete Subject</AlertDialog.Title>
 			<AlertDialog.Description>
-				Are you sure you want to delete this subject? with id of {activeRow?.id}
+				Are you sure you want to delete this subject? with id of {deletionId}
 			</AlertDialog.Description>
 		</AlertDialog.Header>
 
@@ -79,14 +76,7 @@
 			<input name="id" type="hidden" value={$formData.id} />
 
 			<AlertDialog.Footer>
-				<AlertDialog.Cancel
-					type="button"
-					onclick={async () => {
-						await goto('/operation/subjects');
-					}}
-				>
-					Cancel
-				</AlertDialog.Cancel>
+				<AlertDialog.Cancel type="button">Cancel</AlertDialog.Cancel>
 				<Form.Button
 					disabled={$submitting}
 					class={buttonVariants({ variant: 'destructive', class: 'relative' })}

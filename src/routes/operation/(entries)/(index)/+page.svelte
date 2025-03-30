@@ -4,17 +4,6 @@
 	import UpdateDepartment from './(components)/(forms)/(update-department)/update-department.svelte';
 	import DeleteDepartment from './(components)/(forms)/(delete-department)/delete-department.svelte';
 	import { page } from '$app/state';
-
-	const getDepartmentCount = async () => {
-		if (!page.data.supabase) return 0;
-		const { count, error } = await page.data.supabase
-			.from('departments_tb')
-			.select('*', { count: 'exact' });
-
-		if (error) return 0;
-
-		return count ?? 0;
-	};
 </script>
 
 <script lang="ts">
@@ -22,14 +11,6 @@
 	import { untrack } from 'svelte';
 
 	const { data } = $props();
-
-	let itemsCount = $state(0);
-
-	$effect(() => {
-		untrack(async () => {
-			itemsCount = await getDepartmentCount();
-		});
-	});
 </script>
 
 <main class="flex flex-col gap-4 p-4">
@@ -37,7 +18,7 @@
 		<CreateDepartment createDepForm={data.createDepForm} />
 	</section>
 	<section class="flex flex-col gap-4">
-		<CustomTable {columns} data={data.departments ?? []} count={itemsCount} />
+		<CustomTable {columns} data={data.departments ?? []} count={data.departmentCount} />
 	</section>
 </main>
 
