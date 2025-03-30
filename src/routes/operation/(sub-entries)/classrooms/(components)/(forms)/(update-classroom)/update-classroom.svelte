@@ -125,11 +125,17 @@
 							bind:selected_id={$formData.department_id}
 						>
 							{#snippet loopChild({ selectedItem })}
-								<div class="flex flex-col">
-									<span class="text-sm">{selectedItem.label}</span>
-									<span class="text-xs text-muted-foreground">
-										{JSON.parse(selectedItem.value).department_name}
-									</span>
+								<div class="flex items-center gap-2">
+									<div
+										class="size-5 rounded-full"
+										style="background-color: {JSON.parse(selectedItem.value).department_color}"
+									></div>
+									<div class="flex flex-col">
+										<span class="text-sm">{selectedItem.label}</span>
+										<span class="text-xs text-muted-foreground">
+											{JSON.parse(selectedItem.value).department_name}
+										</span>
+									</div>
 								</div>
 							{/snippet}
 						</SimplePicker>
