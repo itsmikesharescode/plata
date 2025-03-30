@@ -19,7 +19,13 @@
 	import * as Table from '$lib/components/ui/table/index.js';
 	import CustomPagination from './components/custom-pagination.svelte';
 
-	let { columns, data }: { columns: ColumnDef<TData, TValue>[]; data: TData[] } = $props();
+	interface Props {
+		columns: ColumnDef<TData, TValue>[];
+		data: TData[];
+		count?: number;
+	}
+
+	let { columns, data, count = 0 }: Props = $props();
 
 	let rowSelection = $state<RowSelectionState>({});
 	let columnVisibility = $state<VisibilityState>({});
@@ -128,6 +134,6 @@
 	</div>
 
 	<div class="ml-auto w-fit">
-		<CustomPagination />
+		<CustomPagination {count} />
 	</div>
 </div>

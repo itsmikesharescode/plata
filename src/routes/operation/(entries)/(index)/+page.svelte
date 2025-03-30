@@ -1,12 +1,35 @@
-<script lang="ts">
+<script lang="ts" module>
 	import CustomTable from '$lib/components/general/custom-table/custom-table.svelte';
 	import CreateDepartment from './(components)/(forms)/(create-department)/create-department.svelte';
 	import UpdateDepartment from './(components)/(forms)/(update-department)/update-department.svelte';
 	import DeleteDepartment from './(components)/(forms)/(delete-department)/delete-department.svelte';
+	import { page } from '$app/state';
 
+	const getDepartmentCount = async () => {
+		if (!page.data.supabase) return 0;
+		const { count, error } = await page.data.supabase
+			.from('departments_tb')
+			.select('*', { count: 'exact' });
+
+		if (error) return 0;
+
+		return count ?? 0;
+	};
+</script>
+
+<script lang="ts">
 	import { columns } from './(components)/(table)/column';
+	import { untrack } from 'svelte';
 
 	const { data } = $props();
+
+	let itemsCount = $state(0);
+
+	$effect(() => {
+		untrack(async () => {
+			itemsCount = await getDepartmentCount();
+		});
+	});
 </script>
 
 <main class="flex flex-col gap-4 p-4">
@@ -14,23 +37,7 @@
 		<CreateDepartment createDepForm={data.createDepForm} />
 	</section>
 	<section class="flex flex-col gap-4">
-		<CustomTable
-			{columns}
-			data={[
-				{
-					id: crypto.randomUUID(),
-					department_name: 'asdasdasd',
-					department_code: 'aSD',
-					department_color: '#000000'
-				},
-				{
-					id: crypto.randomUUID(),
-					department_name: 'asdasdasd',
-					department_code: 'aSD',
-					department_color: '#983230'
-				}
-			]}
-		/>
+		<CustomTable {columns} data={data.departments ?? []} count={itemsCount} />
 	</section>
 </main>
 

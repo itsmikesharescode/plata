@@ -54,9 +54,7 @@
 
 	$effect(() => {
 		if (deletionId) {
-			if (activeRow) {
-				$formData.id = activeRow.id;
-			}
+			$formData.id = deletionId;
 		}
 	});
 </script>
@@ -72,7 +70,7 @@
 		<AlertDialog.Header>
 			<AlertDialog.Title>Delete Department</AlertDialog.Title>
 			<AlertDialog.Description>
-				Are you sure you want to delete this department? with id of {activeRow?.id}
+				Are you sure you want to delete this department? with id of {deletionId}
 			</AlertDialog.Description>
 		</AlertDialog.Header>
 
