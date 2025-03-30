@@ -4,6 +4,7 @@
 	import OperationSidebar from '$lib/components/general/operation-sidebar/operation-sidebar.svelte';
 	import { initRowState } from '$lib/states/row-state.svelte';
 	import Logout from '$lib/components/general/operation-sidebar/components/logout.svelte';
+	import Darkmode from '$lib/components/general/darkmode/darkmode.svelte';
 
 	const { children } = $props();
 
@@ -21,7 +22,10 @@
 				<Separator orientation="vertical" class="mr-2 h-4" />
 			</div>
 
-			<Logout />
+			<div class="flex items-center gap-2">
+				<Darkmode />
+				<Logout />
+			</div>
 		</header>
 		<div class="flex flex-1 flex-col gap-4">
 			{@render children()}

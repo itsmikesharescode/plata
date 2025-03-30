@@ -3,6 +3,7 @@
 	import { invalidate } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { Toaster } from '$lib/components/ui/sonner/index.js';
+	import { ModeWatcher } from 'mode-watcher';
 	let { data, children } = $props();
 	let { session, supabase } = $derived(data);
 
@@ -16,5 +17,6 @@
 	});
 </script>
 
+<ModeWatcher defaultMode="dark" />
 <Toaster />
 {@render children()}
