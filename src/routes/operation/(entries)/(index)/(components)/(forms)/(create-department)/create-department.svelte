@@ -17,6 +17,8 @@
 <script lang="ts">
 	const { createDepForm }: Props = $props();
 
+	let open = $state(false);
+
 	const form = superForm(createDepForm, {
 		validators: zodClient(createDepSchema),
 		id: crypto.randomUUID(),
@@ -25,7 +27,8 @@
 
 			switch (status) {
 				case 200:
-					toast.success('Department created successfully');
+					toast.success(data.msg);
+					open = false;
 					reset();
 
 					break;
@@ -40,6 +43,7 @@
 </script>
 
 <AlertDialog.Root
+	bind:open
 	onOpenChange={() => {
 		reset();
 	}}

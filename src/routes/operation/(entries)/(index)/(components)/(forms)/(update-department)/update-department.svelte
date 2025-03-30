@@ -12,10 +12,26 @@
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import { toast } from 'svelte-sonner';
+	import { untrack } from 'svelte';
+	import { urlParamReducer } from '$lib/utils';
 
 	interface Props {
 		updateDepForm: SuperValidated<UpdateDepSchema>;
 	}
+
+	const getDepbyId = async (id: string) => {
+		if (!page.data.supabase) return;
+		const { data, error } = await page.data.supabase
+			.from('departments_tb')
+			.select('*')
+			.order('created_at')
+			.eq('id', id)
+			.single();
+
+		if (error) return null;
+
+		return data;
+	};
 </script>
 
 <script lang="ts">
@@ -35,10 +51,10 @@
 
 			switch (status) {
 				case 200:
-					toast.success('Department updated successfully');
+					toast.success(data.msg);
 					rowState.setActiveRow(null);
 					reset();
-					await goto('/operation');
+					await goto(`${page.url.pathname}?${urlParamReducer('id', page)}`);
 					break;
 				case 401:
 					toast.error(data.msg);
@@ -51,21 +67,33 @@
 
 	$effect(() => {
 		if (id) {
-			if (activeRow) {
-				$formData.id = activeRow.id;
-				$formData.department_name = activeRow.department_name;
-				$formData.department_code = activeRow.department_code;
-				$formData.department_color = activeRow.department_color;
-			}
+			untrack(() => {
+				if (activeRow) {
+					$formData.id = activeRow.id;
+					$formData.department_name = activeRow.department_name;
+					$formData.department_code = activeRow.department_code;
+					$formData.department_color = activeRow.department_color;
+				} else {
+					getDepbyId(id).then((dep) => {
+						if (dep) {
+							$formData.id = dep.id;
+							$formData.department_name = dep.department_name;
+							$formData.department_code = dep.department_code;
+							$formData.department_color = dep.department_color;
+						}
+					});
+				}
+			});
 		}
 	});
 </script>
 
 <AlertDialog.Root
 	open={!!id && !!!deletionId}
-	onOpenChange={() => {
+	onOpenChange={async () => {
 		reset();
 		rowState.setActiveRow(null);
+		await goto(`${page.url.pathname}?${urlParamReducer('id', page)}`);
 	}}
 >
 	<AlertDialog.Content>
@@ -123,14 +151,7 @@
 			</Form.Field>
 
 			<AlertDialog.Footer>
-				<AlertDialog.Cancel
-					type="button"
-					onclick={async () => {
-						await goto('/operation');
-					}}
-				>
-					Cancel
-				</AlertDialog.Cancel>
+				<AlertDialog.Cancel type="button">Cancel</AlertDialog.Cancel>
 				<Form.Button disabled={$submitting} class="relative">
 					<ReqLoader isLoader={$submitting} />
 					Update

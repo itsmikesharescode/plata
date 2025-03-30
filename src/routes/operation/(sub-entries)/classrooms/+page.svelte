@@ -13,23 +13,7 @@
 		<CreateClassroom createClassroomForm={data.createClassroomForm} />
 	</section>
 	<section>
-		<CustomTable
-			{columns}
-			data={[
-				{
-					id: crypto.randomUUID(),
-					classroom_name: 'asdasdasd',
-					building_name: 'aSD',
-					department_id: 'asdasdasd'
-				},
-				{
-					id: crypto.randomUUID(),
-					classroom_name: 'asdasdasd',
-					building_name: 'aSD',
-					department_id: 'asdasdasd'
-				}
-			]}
-		/>
+		<CustomTable {columns} data={data.classrooms ?? []} count={data.classroomCount ?? 0} />
 	</section>
 </main>
 

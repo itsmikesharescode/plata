@@ -22,8 +22,8 @@
 					url: '/operation/subjects'
 				},
 				{
-					title: 'Year & Sections',
-					url: '/operation/year-and-sections'
+					title: 'Year Levels & Sections',
+					url: '/operation/year-levels-and-sections'
 				}
 			]
 		},

@@ -52,7 +52,7 @@
 	},
 	"dependencies": {
 		"@supabase/ssr": "^0.6.1",
-		"@supabase/supabase-js": "^2.49.3",
+		"@supabase/supabase-js": "^2.49.4",
 		"@tanstack/table-core": "^8.21.2",
 		"lucide-svelte": "^0.484.0",
 		"runed": "^0.25.0"

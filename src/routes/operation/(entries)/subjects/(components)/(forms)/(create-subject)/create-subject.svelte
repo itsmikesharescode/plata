@@ -7,7 +7,6 @@
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { type SuperValidated, superForm } from 'sveltekit-superforms';
 	import ReqLoader from '$lib/components/general/spinners/req-loader.svelte';
-	import { Textarea } from '$lib/components/ui/textarea/index.js';
 	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 	import { toast } from 'svelte-sonner';
 
@@ -19,6 +18,8 @@
 <script lang="ts">
 	const { createSubForm }: Props = $props();
 
+	let open = $state(false);
+
 	const form = superForm(createSubForm, {
 		validators: zodClient(createSubSchema),
 		id: crypto.randomUUID(),
@@ -27,9 +28,9 @@
 
 			switch (status) {
 				case 200:
-					toast.success('Subject created successfully');
-
+					toast.success(data.msg);
 					reset();
+					open = false;
 
 					break;
 				case 401:
@@ -43,6 +44,7 @@
 </script>
 
 <AlertDialog.Root
+	bind:open
 	onOpenChange={() => {
 		reset();
 	}}

@@ -13,21 +13,7 @@
 		<CreateYns createYnsForm={data.createYnsForm} />
 	</section>
 	<section>
-		<CustomTable
-			{columns}
-			data={[
-				{
-					id: crypto.randomUUID(),
-					year: 'asdasdasd',
-					section: 'aSD'
-				},
-				{
-					id: crypto.randomUUID(),
-					year: 'asdasdasd',
-					section: 'aSD'
-				}
-			]}
-		/>
+		<CustomTable {columns} data={data.yns ?? []} count={data.ynsCount} />
 	</section>
 </main>
 

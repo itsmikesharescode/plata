@@ -10,13 +10,28 @@
 	import type { SubjectTable } from '../../(table)/schema';
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
-	import { Textarea } from '$lib/components/ui/textarea/index.js';
 	import { toast } from 'svelte-sonner';
 	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
+	import { urlParamReducer } from '$lib/utils';
+	import { untrack } from 'svelte';
 
 	interface Props {
 		updateSubForm: SuperValidated<UpdateSubSchema>;
 	}
+
+	const getSubbyId = async (id: string) => {
+		if (!page.data.supabase) return;
+		const { data, error } = await page.data.supabase
+			.from('subjects_tb')
+			.select('*')
+			.order('created_at')
+			.eq('id', id)
+			.single();
+
+		if (error) return null;
+
+		return data;
+	};
 </script>
 
 <script lang="ts">
@@ -39,7 +54,7 @@
 					toast.success('Subject updated successfully');
 					rowState.setActiveRow(null);
 					reset();
-					await goto('/operation/subjects');
+					await goto(`${page.url.pathname}?${urlParamReducer('id', page)}`);
 					break;
 				case 401:
 					toast.error(data.msg);
@@ -52,23 +67,37 @@
 
 	$effect(() => {
 		if (id) {
-			if (activeRow) {
-				$formData.id = activeRow.id;
-				$formData.course_name = activeRow.course_name;
-				$formData.course_code = activeRow.course_code;
-				$formData.lecture_hours = activeRow.lecture_hours;
-				$formData.lab_hours = activeRow.lab_hours;
-				$formData.unit = activeRow.unit;
-			}
+			untrack(async () => {
+				if (activeRow) {
+					$formData.id = activeRow.id;
+					$formData.course_name = activeRow.course_name;
+					$formData.course_code = activeRow.course_code;
+					$formData.lecture_hours = activeRow.lecture_hours;
+					$formData.lab_hours = activeRow.lab_hours;
+					$formData.unit = activeRow.unit;
+				} else {
+					getSubbyId(id).then((sub) => {
+						if (sub) {
+							$formData.id = sub.id;
+							$formData.course_name = sub.course_name;
+							$formData.course_code = sub.course_code;
+							$formData.lecture_hours = sub.lecture_hours;
+							$formData.lab_hours = sub.lab_hours;
+							$formData.unit = sub.unit;
+						}
+					});
+				}
+			});
 		}
 	});
 </script>
 
 <AlertDialog.Root
 	open={!!id && !!!deletionId}
-	onOpenChange={() => {
+	onOpenChange={async () => {
 		reset();
 		rowState.setActiveRow(null);
+		await goto(`${page.url.pathname}?${urlParamReducer('id', page)}`);
 	}}
 >
 	<AlertDialog.Content class="flex max-h-[100dvh] flex-col p-0">
@@ -146,14 +175,7 @@
 				</section>
 			</ScrollArea>
 			<AlertDialog.Footer class="mt-2 px-6 pb-6">
-				<AlertDialog.Cancel
-					type="button"
-					onclick={async () => {
-						await goto('/operation/subjects');
-					}}
-				>
-					Cancel
-				</AlertDialog.Cancel>
+				<AlertDialog.Cancel type="button">Cancel</AlertDialog.Cancel>
 				<Form.Button disabled={$submitting} class="relative">
 					<ReqLoader isLoader={$submitting} />
 					Update

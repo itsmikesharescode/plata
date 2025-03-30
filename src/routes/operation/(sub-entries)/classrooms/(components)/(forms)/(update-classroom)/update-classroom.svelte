@@ -12,14 +12,32 @@
 	import { goto } from '$app/navigation';
 	import { toast } from 'svelte-sonner';
 	import SimplePicker from '$lib/components/general/custom-pickers/simple-picker.svelte';
+	import { urlParamReducer } from '$lib/utils';
+	import { untrack } from 'svelte';
+	import type { DepartmentDropdown } from '../../../../../+layout.svelte';
 	interface Props {
 		updateClassroomForm: SuperValidated<UpdateClassroomSchema>;
 	}
+
+	const getClassroombyId = async (id: string) => {
+		if (!page.data.supabase) return;
+		const { data, error } = await page.data.supabase
+			.from('classrooms_tb')
+			.select('*')
+			.order('created_at')
+			.eq('id', id)
+			.single();
+
+		if (error) return null;
+
+		return data;
+	};
 </script>
 
 <script lang="ts">
 	const { updateClassroomForm }: Props = $props();
 
+	const departmentsDropdown = $derived(page.data.departmentsDropdown) as DepartmentDropdown;
 	const rowState = useRowState();
 
 	const id = $derived(page.url.searchParams.get('id'));
@@ -37,7 +55,7 @@
 					toast.success('Classroom updated successfully');
 					rowState.setActiveRow(null);
 					reset();
-					await goto('/operation/classrooms');
+					await goto(`${page.url.pathname}?${urlParamReducer('id', page)}`);
 					break;
 				case 401:
 					toast.error(data.msg);
@@ -50,21 +68,32 @@
 
 	$effect(() => {
 		if (id) {
-			if (activeRow) {
-				$formData.id = activeRow.id;
-				$formData.classroom_name = activeRow.classroom_name;
-				$formData.building_name = activeRow.building_name;
-				$formData.department_id = activeRow.department_id;
-			}
+			untrack(async () => {
+				if (activeRow) {
+					$formData.id = activeRow.id;
+					$formData.classroom_name = activeRow.classroom_name;
+					$formData.building_name = activeRow.building_name;
+					$formData.department_id = activeRow.department_id;
+				} else {
+					const data = await getClassroombyId(id);
+					if (data) {
+						$formData.id = data.id;
+						$formData.classroom_name = data.classroom_name;
+						$formData.building_name = data.building_name;
+						$formData.department_id = data.department_id;
+					}
+				}
+			});
 		}
 	});
 </script>
 
 <AlertDialog.Root
 	open={!!id && !!!deletionId}
-	onOpenChange={() => {
+	onOpenChange={async () => {
 		reset();
 		rowState.setActiveRow(null);
+		await goto(`${page.url.pathname}?${urlParamReducer('id', page)}`);
 	}}
 >
 	<AlertDialog.Content>
@@ -85,22 +114,22 @@
 
 						<SimplePicker
 							placeholder="Select Department"
-							selections={[
-								{ id: '1', label: 'CED', value: 'Civil Engineering Department' },
-								{ id: '2', label: 'CSE', value: 'Computer Science and Engineering Department' },
-								{ id: '3', label: 'CCE', value: 'Civil and Construction Engineering Department' },
-								{ id: '4', label: 'CCE', value: 'Civil and Construction Engineering Department' },
-								{ id: '5', label: 'CCE', value: 'Civil and Construction Engineering Department' },
-								{ id: '6', label: 'CCE', value: 'Civil and Construction Engineering Department' },
-								{ id: '7', label: 'CCE', value: 'Civil and Construction Engineering Department' },
-								{ id: '8', label: 'CCE', value: 'Civil and Construction Engineering Department' }
-							]}
+							selections={departmentsDropdown?.map((v) => ({
+								id: v.id,
+								label: v.department_code,
+								value: JSON.stringify({
+									department_name: v.department_name,
+									department_color: v.department_color
+								})
+							})) ?? []}
 							bind:selected_id={$formData.department_id}
 						>
 							{#snippet loopChild({ selectedItem })}
 								<div class="flex flex-col">
 									<span class="text-sm">{selectedItem.label}</span>
-									<span class="text-xs text-muted-foreground">{selectedItem.value}</span>
+									<span class="text-xs text-muted-foreground">
+										{JSON.parse(selectedItem.value).department_name}
+									</span>
 								</div>
 							{/snippet}
 						</SimplePicker>
@@ -131,14 +160,7 @@
 			</Form.Field>
 
 			<AlertDialog.Footer>
-				<AlertDialog.Cancel
-					type="button"
-					onclick={async () => {
-						await goto('/operation/classrooms');
-					}}
-				>
-					Cancel
-				</AlertDialog.Cancel>
+				<AlertDialog.Cancel type="button">Cancel</AlertDialog.Cancel>
 				<Form.Button disabled={$submitting} class="relative">
 					<ReqLoader isLoader={$submitting} />
 					Update

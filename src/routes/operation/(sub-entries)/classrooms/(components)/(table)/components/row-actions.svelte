@@ -6,6 +6,8 @@
 	import type { ClassroomTable } from '../schema';
 	import { useRowState } from '$lib/states/row-state.svelte';
 	import { goto } from '$app/navigation';
+	import { urlParamStacker } from '$lib/utils';
+	import { page } from '$app/state';
 
 	let { row }: { row: Row<ClassroomTable> } = $props();
 
@@ -27,13 +29,12 @@
 		<DropdownMenu.Item
 			onclick={async () => {
 				rowState.setActiveRow(row.original);
-				await goto(`?id=${row.original.id}`);
+				await goto(urlParamStacker('id', row.original.id, page));
 			}}>Edit</DropdownMenu.Item
 		>
 		<DropdownMenu.Item
 			onclick={async () => {
-				rowState.setActiveRow(row.original);
-				await goto(`?deletion_id=${row.original.id}`);
+				await goto(urlParamStacker('deletion_id', row.original.id, page));
 			}}>Delete</DropdownMenu.Item
 		>
 	</DropdownMenu.Content>
