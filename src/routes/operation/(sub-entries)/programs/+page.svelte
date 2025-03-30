@@ -13,23 +13,7 @@
 		<CreateProgram createProgramForm={data.createProgramForm} />
 	</section>
 	<section>
-		<CustomTable
-			{columns}
-			data={[
-				{
-					id: crypto.randomUUID(),
-					program_name: 'asdasdasd',
-					program_code: 'aSD',
-					department_id: 'asdasdasd'
-				},
-				{
-					id: crypto.randomUUID(),
-					program_name: 'asdasdasd',
-					program_code: 'aSD',
-					department_id: 'asdasdasd'
-				}
-			]}
-		/>
+		<CustomTable {columns} data={data.programs ?? []} count={data.programCount} />
 	</section>
 </main>
 
