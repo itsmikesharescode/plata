@@ -84,6 +84,11 @@ const authGuard: Handle = async ({ event, resolve }) => {
 
 	if (user && path === '/') redirect(303, '/operation');
 
+	if ((user && path === '/operation') || (user && path === '/operation/chairperson')) {
+		const role = user.user_metadata.role;
+		if (role !== 'admin') redirect(303, '/operation/subjects');
+	}
+
 	return resolve(event);
 };
 

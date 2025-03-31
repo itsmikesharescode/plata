@@ -1,5 +1,6 @@
 <script lang="ts" module>
 	import { page } from '$app/state';
+	import { untrack } from 'svelte';
 
 	const getProgram = async (program_id: string) => {
 		if (!page.data.supabase) return null;
@@ -17,6 +18,18 @@
 
 <script lang="ts">
 	const user = $derived(page.data.user);
+
+	let program = $state<Awaited<ReturnType<typeof getProgram>> | null>(null);
+
+	$effect(() => {
+		untrack(() => {
+			if (user?.user_metadata.role === 'chair') {
+				getProgram(user?.user_metadata.program_id).then((data) => {
+					program = data;
+				});
+			}
+		});
+	});
 </script>
 
 <header class="flex items-center gap-2">
@@ -32,15 +45,9 @@
 	{:else if user?.user_metadata.role === 'chair'}
 		<div class="grid flex-1 text-left text-sm leading-tight">
 			<span class="truncate text-base font-semibold">{user?.user_metadata.fullname}</span>
-			{#await getProgram(user?.user_metadata.program_id)}
-				<span class="truncate text-xs font-bold text-muted-foreground">
-					Getting information...
-				</span>
-			{:then program}
-				<span class="truncate text-xs font-bold text-muted-foreground">
-					({program?.program_code}) {program?.program_name}
-				</span>
-			{/await}
+			<span class="truncate text-xs font-bold text-muted-foreground">
+				({program?.program_code}) {program?.program_name}
+			</span>
 		</div>
 	{/if}
 </header>
