@@ -17,3 +17,7 @@ docker system prune -a --volumes
 #get types locally
 
 supabase gen types --local > src/lib/database.types.ts
+
+#get db copy locally
+
+supabase db dump --local -f supabase/schema.sql
