@@ -5,11 +5,6 @@ import { sequence } from '@sveltejs/kit/hooks';
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
 
 const supabase: Handle = async ({ event, resolve }) => {
-	/**
-	 * Creates a Supabase client specific to this server request.
-	 *
-	 * The Supabase client gets the Auth token from the request cookies.
-	 */
 	event.locals.supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
 		cookies: {
 			getAll: () => event.cookies.getAll(),
@@ -26,11 +21,6 @@ const supabase: Handle = async ({ event, resolve }) => {
 		}
 	});
 
-	/**
-	 * Unlike `supabase.auth.getSession()`, which returns the session _without_
-	 * validating the JWT, this function also calls `getUser()` to validate the
-	 * JWT before returning the session.
-	 */
 	event.locals.safeGetSession = async () => {
 		const {
 			data: { session }
@@ -67,13 +57,11 @@ const authGuard: Handle = async ({ event, resolve }) => {
 	event.locals.session = session;
 	event.locals.user = user;
 
-	if (!event.locals.session && event.url.pathname.startsWith('/private')) {
-		redirect(303, '/auth');
-	}
+	const path = event.url.pathname;
 
-	if (event.locals.session && event.url.pathname === '/auth') {
-		redirect(303, '/private');
-	}
+	if (!user && path.startsWith('/operation')) redirect(303, '/');
+
+	if (user && path === '/') redirect(303, '/operation');
 
 	return resolve(event);
 };
