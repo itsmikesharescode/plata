@@ -77,6 +77,7 @@ export const actions: Actions = {
 				role: 'chair',
 				department_id: form.data.department_id,
 				program_id: form.data.program_id,
+				email: form.data.email,
 				academic_rank: form.data.academic_rank,
 				employment_status: form.data.employment_status,
 				fullname: form.data.fullname
@@ -94,7 +95,10 @@ export const actions: Actions = {
 		if (!form.valid) return fail(400, { form });
 
 		const { error } = await supabaseAdmin.auth.admin.updateUserById(form.data.user_id, {
-			email: form.data.email
+			email: form.data.email,
+			user_metadata: {
+				email: form.data.email
+			}
 		});
 
 		if (error) return fail(401, { form, msg: error.message });

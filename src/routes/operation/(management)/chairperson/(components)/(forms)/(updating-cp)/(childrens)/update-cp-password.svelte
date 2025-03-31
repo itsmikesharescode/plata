@@ -42,7 +42,6 @@
 
 	$effect(() => {
 		return () => {
-			console.log('Cleaned from update password');
 			reset();
 		};
 	});

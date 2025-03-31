@@ -10,6 +10,7 @@
 	import { untrack } from 'svelte';
 	import { urlParamReducer } from '$lib/utils';
 	import { page } from '$app/state';
+	import { useRowState } from '$lib/states/row-state.svelte';
 	interface Props {
 		stateProp: {
 			user_id: string | undefined;
@@ -21,6 +22,7 @@
 
 <script lang="ts">
 	const { updateChairpersonEmailForm, stateProp }: Props = $props();
+	const rowState = useRowState();
 
 	const form = superForm(updateChairpersonEmailForm, {
 		validators: zodClient(updateChairpersonEmailSchema),
@@ -32,6 +34,7 @@
 				case 200:
 					toast.success(data.msg);
 					reset();
+					rowState.setActiveRow(null);
 					await goto(`${page.url.pathname}?${urlParamReducer('id', page)}`);
 
 					break;
@@ -53,7 +56,6 @@
 		});
 
 		return () => {
-			console.log('Cleaned from update email');
 			reset();
 		};
 	});

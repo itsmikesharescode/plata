@@ -2,6 +2,13 @@
 	import type { Database } from '$lib/database.types';
 
 	export type DepartmentDropdown = Database['public']['Tables']['departments_tb']['Row'][] | null;
+	export type ProgramDropdown =
+		| (Database['public']['Tables']['programs_tb']['Row'] & {
+				departments_tb: {
+					department_name: string;
+				};
+		  })[]
+		| null;
 </script>
 
 <script lang="ts">

@@ -12,7 +12,8 @@
 	import { academicRanks } from '$lib';
 	import { urlParamReducer } from '$lib/utils';
 	import { page } from '$app/state';
-	import type { DepartmentDropdown } from '../../../../../../+layout.svelte';
+	import type { DepartmentDropdown, ProgramDropdown } from '../../../../../../+layout.svelte';
+	import { useRowState } from '$lib/states/row-state.svelte';
 
 	interface Props {
 		stateProp: {
@@ -29,7 +30,10 @@
 
 <script lang="ts">
 	const { updateChairpersonInfoForm, stateProp }: Props = $props();
+	const rowState = useRowState();
+
 	const departmentsDropdown = $derived(page.data.departmentsDropdown) as DepartmentDropdown;
+	const programsDropdown = $derived(page.data.programsDropdown) as ProgramDropdown;
 
 	const form = superForm(updateChairpersonInfoForm, {
 		validators: zodClient(updateChairpersonInfoSchema),
@@ -41,6 +45,7 @@
 				case 200:
 					toast.success(data.msg);
 					reset();
+					rowState.setActiveRow(null);
 					await goto(`${page.url.pathname}?${urlParamReducer('id', page)}`);
 
 					break;
@@ -73,7 +78,6 @@
 		});
 
 		return () => {
-			console.log('Cleaned from update information');
 			reset();
 		};
 	});
@@ -115,6 +119,38 @@
 					{/snippet}
 				</SimplePicker>
 				<input name={props.name} type="hidden" value={$formData.department_id} />
+			{/snippet}
+		</Form.Control>
+		<Form.FieldErrors />
+	</Form.Field>
+
+	<Form.Field {form} name="program_id">
+		<Form.Control>
+			{#snippet children({ props })}
+				<Form.Label>Program</Form.Label>
+
+				<SimplePicker
+					placeholder="Select Program"
+					selections={programsDropdown?.map((v) => ({
+						id: v.id,
+						label: v.program_code,
+						value: JSON.stringify({
+							program_name: v.program_name,
+							department_name: v.departments_tb.department_name
+						})
+					})) ?? []}
+					bind:selected_id={$formData.program_id}
+				>
+					{#snippet loopChild({ selectedItem })}
+						<div class="flex flex-col">
+							<span class="text-sm">{selectedItem.label}</span>
+							<span class="text-xs text-muted-foreground">
+								{JSON.parse(selectedItem.value).department_name}
+							</span>
+						</div>
+					{/snippet}
+				</SimplePicker>
+				<input name={props.name} type="hidden" value={$formData.program_id} />
 			{/snippet}
 		</Form.Control>
 		<Form.FieldErrors />
