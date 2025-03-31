@@ -51,7 +51,7 @@ export const updateChairpersonPwdSchema = z
 	});
 
 export const deleteChairpersonSchema = z.object({
-	id: z.string()
+	user_id: z.string()
 });
 
 export type CreateChairpersonSchema = z.output<typeof createChairpersonSchema>;

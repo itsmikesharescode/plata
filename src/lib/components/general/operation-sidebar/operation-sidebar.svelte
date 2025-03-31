@@ -8,6 +8,8 @@
 	import History from 'lucide-svelte/icons/history';
 	import Settings from 'lucide-svelte/icons/settings';
 	import Header from './components/header.svelte';
+	import { page } from '$app/state';
+
 	export const baseRoutes = [
 		{
 			title: 'Entries',
@@ -78,6 +80,24 @@
 		collapsible = 'icon',
 		...restProps
 	}: ComponentProps<typeof Sidebar.Root> = $props();
+
+	const getRoleRoutes = $derived.by(() => {
+		const role = page?.data.user?.user_metadata.role;
+
+		if (role === 'admin') {
+			return baseRoutes; // Admin sees all routes
+		} else if (role === 'chair') {
+			// Exclude Departments and Chairperson routes
+			return baseRoutes.map((section) => ({
+				...section,
+				items: section.items.filter(
+					(item) => item.title !== 'Departments' && item.title !== 'Chairperson'
+				)
+			}));
+		} else {
+			return [];
+		}
+	});
 </script>
 
 <Sidebar.Root bind:ref {collapsible} {...restProps}>
@@ -88,7 +108,7 @@
 		<Sidebar.Group>
 			<Sidebar.GroupLabel>Routes</Sidebar.GroupLabel>
 			<Sidebar.Menu>
-				{#each baseRoutes as mainItem (mainItem.title)}
+				{#each getRoleRoutes as mainItem (mainItem.title)}
 					<Collapsible.Root open={true} class="group/collapsible">
 						{#snippet child({ props })}
 							<Sidebar.MenuItem {...props}>

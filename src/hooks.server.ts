@@ -3,6 +3,7 @@ import { type Handle, redirect } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from '$env/static/public';
+import { PRIVATE_SUPABASE_SERVICE_ROLE_KEY } from '$env/static/private';
 
 const supabase: Handle = async ({ event, resolve }) => {
 	event.locals.supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
@@ -20,6 +21,26 @@ const supabase: Handle = async ({ event, resolve }) => {
 			}
 		}
 	});
+
+	event.locals.supabaseAdmin = createServerClient(
+		PUBLIC_SUPABASE_URL,
+		PRIVATE_SUPABASE_SERVICE_ROLE_KEY,
+		{
+			cookies: {
+				getAll: () => event.cookies.getAll(),
+				/**
+				 * SvelteKit's cookies API requires `path` to be explicitly set in
+				 * the cookie options. Setting `path` to `/` replicates previous/
+				 * standard behavior.
+				 */
+				setAll: (cookiesToSet) => {
+					cookiesToSet.forEach(({ name, value, options }) => {
+						event.cookies.set(name, value, { ...options, path: '/' });
+					});
+				}
+			}
+		}
+	);
 
 	event.locals.safeGetSession = async () => {
 		const {
@@ -62,6 +83,11 @@ const authGuard: Handle = async ({ event, resolve }) => {
 	if (!user && path.startsWith('/operation')) redirect(303, '/');
 
 	if (user && path === '/') redirect(303, '/operation');
+
+	if ((user && path === '/operation') || (user && path === '/operation/chairperson')) {
+		const role = user.user_metadata.role;
+		if (role !== 'admin') redirect(303, '/operation/subjects');
+	}
 
 	return resolve(event);
 };

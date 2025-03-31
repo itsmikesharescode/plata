@@ -8,6 +8,9 @@
 	import { goto } from '$app/navigation';
 	import ReqLoader from '$lib/components/general/spinners/req-loader.svelte';
 	import { untrack } from 'svelte';
+	import { urlParamReducer } from '$lib/utils';
+	import { page } from '$app/state';
+	import { useRowState } from '$lib/states/row-state.svelte';
 	interface Props {
 		stateProp: {
 			user_id: string | undefined;
@@ -19,6 +22,7 @@
 
 <script lang="ts">
 	const { updateChairpersonEmailForm, stateProp }: Props = $props();
+	const rowState = useRowState();
 
 	const form = superForm(updateChairpersonEmailForm, {
 		validators: zodClient(updateChairpersonEmailSchema),
@@ -28,9 +32,10 @@
 
 			switch (status) {
 				case 200:
-					toast.success('Email updated successfully.');
+					toast.success(data.msg);
 					reset();
-					await goto('/operation/chairpersons');
+					rowState.setActiveRow(null);
+					await goto(`${page.url.pathname}?${urlParamReducer('id', page)}`);
 
 					break;
 				case 401:
@@ -51,7 +56,6 @@
 		});
 
 		return () => {
-			console.log('Cleaned from update email');
 			reset();
 		};
 	});

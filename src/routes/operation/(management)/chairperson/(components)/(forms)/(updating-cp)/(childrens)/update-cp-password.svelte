@@ -7,6 +7,8 @@
 	import { toast } from 'svelte-sonner';
 	import { goto } from '$app/navigation';
 	import ReqLoader from '$lib/components/general/spinners/req-loader.svelte';
+	import { urlParamReducer } from '$lib/utils';
+	import { page } from '$app/state';
 
 	interface Props {
 		updateChairpersonPwdForm: SuperValidated<UpdateChairpersonPwdSchema>;
@@ -24,9 +26,9 @@
 
 			switch (status) {
 				case 200:
-					toast.success('Email updated successfully.');
+					toast.success(data.msg);
 					reset();
-					await goto('/operation/chairpersons');
+					await goto(`${page.url.pathname}?${urlParamReducer('id', page)}`);
 
 					break;
 				case 401:
@@ -40,7 +42,6 @@
 
 	$effect(() => {
 		return () => {
-			console.log('Cleaned from update password');
 			reset();
 		};
 	});
