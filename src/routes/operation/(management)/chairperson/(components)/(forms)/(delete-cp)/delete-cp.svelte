@@ -6,11 +6,11 @@
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { type SuperValidated, superForm } from 'sveltekit-superforms';
 	import ReqLoader from '$lib/components/general/spinners/req-loader.svelte';
-	import { useRowState } from '$lib/states/row-state.svelte';
-	import type { ChairpersonTable } from '../../(table)/schema';
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import { toast } from 'svelte-sonner';
+	import { urlParamReducer } from '$lib/utils';
+	import { untrack } from 'svelte';
 
 	//TODO: implement a fetch call if activeRow is null at visit
 
@@ -21,10 +21,6 @@
 
 <script lang="ts">
 	const { deleteChairpersonForm }: Props = $props();
-
-	const rowState = useRowState();
-
-	const activeRow = $derived(rowState.getActiveRow()) as ChairpersonTable | null;
 
 	const id = $derived(page.url.searchParams.get('id'));
 	const deletionId = $derived(page.url.searchParams.get('deletion_id'));
@@ -38,9 +34,8 @@
 			switch (status) {
 				case 200:
 					toast.success('Chairperson deleted successfully');
-					rowState.setActiveRow(null);
 					reset();
-					await goto('/operation/chairperson');
+					await goto(`${page.url.pathname}?${urlParamReducer('deletion_id', page)}`);
 					break;
 				case 401:
 					toast.error(data.msg);
@@ -53,40 +48,33 @@
 
 	$effect(() => {
 		if (deletionId) {
-			if (activeRow) {
-				$formData.id = activeRow.user_id;
-			}
+			untrack(() => {
+				$formData.user_id = deletionId;
+			});
 		}
 	});
 </script>
 
 <AlertDialog.Root
 	open={!!deletionId && !!!id}
-	onOpenChange={() => {
+	onOpenChange={async () => {
 		reset();
-		rowState.setActiveRow(null);
+		await goto(`${page.url.pathname}?${urlParamReducer('deletion_id', page)}`);
 	}}
 >
 	<AlertDialog.Content>
 		<AlertDialog.Header>
 			<AlertDialog.Title>Delete Chairperson</AlertDialog.Title>
 			<AlertDialog.Description>
-				Are you sure you want to delete this chairperson? with id of {activeRow?.user_id}
+				Are you sure you want to delete this chairperson? with id of {deletionId}
 			</AlertDialog.Description>
 		</AlertDialog.Header>
 
 		<form method="POST" action="?/deleteChairpersonEvent" use:enhance>
-			<input name="id" type="hidden" value={$formData.id} />
+			<input name="user_id" type="hidden" value={$formData.user_id} />
 
 			<AlertDialog.Footer>
-				<AlertDialog.Cancel
-					type="button"
-					onclick={async () => {
-						await goto('/operation/chairperson');
-					}}
-				>
-					Cancel
-				</AlertDialog.Cancel>
+				<AlertDialog.Cancel type="button">Cancel</AlertDialog.Cancel>
 				<Form.Button
 					disabled={$submitting}
 					class={buttonVariants({ variant: 'destructive', class: 'relative' })}

@@ -17,26 +17,15 @@
 	<section>
 		<CustomTable
 			{columns}
-			data={[
-				{
-					user_id: crypto.randomUUID(),
-					department_id: 'asdasdasd',
-					program_id: 'asdasdasd',
-					email: 'asdasdasd',
-					fullname: 'aSD',
-					academic_rank: 'asdasdasd',
-					employment_status: 'asdasdasd'
-				},
-				{
-					user_id: crypto.randomUUID(),
-					department_id: 'asdasdasd',
-					program_id: 'asdasdasd',
-					email: 'asdasdasd',
-					fullname: 'aSD',
-					academic_rank: 'asdasdasd',
-					employment_status: 'asdasdasd'
-				}
-			]}
+			data={data.users?.map((v) => ({
+				user_id: v.user_id,
+				department_id: v.user_meta_data.department_id,
+				program_id: v.user_meta_data.program_id,
+				email: v.user_meta_data.email,
+				fullname: v.user_meta_data.fullname,
+				academic_rank: v.user_meta_data.academic_rank,
+				employment_status: v.user_meta_data.employment_status
+			})) ?? []}
 		/>
 	</section>
 </main>

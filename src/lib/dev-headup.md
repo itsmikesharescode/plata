@@ -21,3 +21,5 @@ supabase gen types --local > src/lib/database.types.ts
 #get db copy locally
 
 supabase db dump --local -f supabase/schema.sql
+
+#user_meta_data -> UserMeta from ./types

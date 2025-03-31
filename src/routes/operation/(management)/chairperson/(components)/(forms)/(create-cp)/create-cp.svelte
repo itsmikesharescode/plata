@@ -11,6 +11,9 @@
 	import { toast } from 'svelte-sonner';
 	import SimplePicker from '$lib/components/general/custom-pickers/simple-picker.svelte';
 	import { academicRanks } from '$lib';
+	import type { DepartmentDropdown } from '../../../../../+layout.svelte';
+	import { page } from '$app/state';
+
 	interface Props {
 		createChairpersonForm: SuperValidated<CreateChairpersonSchema>;
 	}
@@ -18,6 +21,9 @@
 
 <script lang="ts">
 	const { createChairpersonForm }: Props = $props();
+
+	const departmentsDropdown = $derived(page.data.departmentsDropdown) as DepartmentDropdown;
+	let open = $state(false);
 
 	const form = superForm(createChairpersonForm, {
 		validators: zodClient(createChairpersonSchema),
@@ -28,9 +34,8 @@
 			switch (status) {
 				case 200:
 					toast.success('Faculty created successfully');
-
 					reset();
-
+					open = false;
 					break;
 				case 401:
 					toast.error(data.msg);
@@ -43,6 +48,7 @@
 </script>
 
 <AlertDialog.Root
+	bind:open
 	onOpenChange={() => {
 		reset();
 	}}
@@ -67,46 +73,28 @@
 
 								<SimplePicker
 									placeholder="Select Department"
-									selections={[
-										{ id: '1', label: 'CED', value: 'Civil Engineering Department' },
-										{ id: '2', label: 'CSE', value: 'Computer Science and Engineering Department' },
-										{
-											id: '3',
-											label: 'CCE',
-											value: 'Civil and Construction Engineering Department'
-										},
-										{
-											id: '4',
-											label: 'CCE',
-											value: 'Civil and Construction Engineering Department'
-										},
-										{
-											id: '5',
-											label: 'CCE',
-											value: 'Civil and Construction Engineering Department'
-										},
-										{
-											id: '6',
-											label: 'CCE',
-											value: 'Civil and Construction Engineering Department'
-										},
-										{
-											id: '7',
-											label: 'CCE',
-											value: 'Civil and Construction Engineering Department'
-										},
-										{
-											id: '8',
-											label: 'CCE',
-											value: 'Civil and Construction Engineering Department'
-										}
-									]}
+									selections={departmentsDropdown?.map((v) => ({
+										id: v.id,
+										label: v.department_code,
+										value: JSON.stringify({
+											department_name: v.department_name,
+											department_color: v.department_color
+										})
+									})) ?? []}
 									bind:selected_id={$formData.department_id}
 								>
 									{#snippet loopChild({ selectedItem })}
-										<div class="flex flex-col">
-											<span class="text-sm">{selectedItem.label}</span>
-											<span class="text-xs text-muted-foreground">{selectedItem.value}</span>
+										<div class="flex items-center gap-2">
+											<div
+												class="size-5 rounded-full"
+												style="background-color: {JSON.parse(selectedItem.value).department_color}"
+											></div>
+											<div class="flex flex-col">
+												<span class="text-sm">{selectedItem.label}</span>
+												<span class="text-xs text-muted-foreground">
+													{JSON.parse(selectedItem.value).department_name}
+												</span>
+											</div>
 										</div>
 									{/snippet}
 								</SimplePicker>
