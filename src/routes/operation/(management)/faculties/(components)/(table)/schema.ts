@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const facultySchema = z.object({
-	faculty_id: z.string(),
+	id: z.string(),
 	department_id: z.string(),
 	fullname: z.string(),
 	academic_rank: z.string(),

@@ -15,9 +15,9 @@
 	const handleCopy = async () => {
 		//implement copy of row.original.id
 		await navigator.clipboard
-			.writeText(row.original.faculty_id)
+			.writeText(row.original.id)
 			.then(() => {
-				toast.success(`Copied ${row.original.faculty_id}`);
+				toast.success(`Copied ${row.original.id}`);
 			})
 			.catch((err) => {
 				toast.error(err);
@@ -41,7 +41,7 @@
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="w-fit" align="start">
 		<DropdownMenu.Item onclick={handleCopy}>
-			{row.original.faculty_id}
+			{row.original.id}
 			<Copy class="ml-auto size-4" />
 		</DropdownMenu.Item>
 	</DropdownMenu.Content>

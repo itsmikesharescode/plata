@@ -13,25 +13,7 @@
 		<CreateFaculty createFacultyForm={data.createFacultyForm} />
 	</section>
 	<section>
-		<CustomTable
-			{columns}
-			data={[
-				{
-					faculty_id: crypto.randomUUID(),
-					department_id: 'asdasdasd',
-					fullname: 'aSD',
-					academic_rank: 'asdasdasd',
-					employment_status: 'asdasdasd'
-				},
-				{
-					faculty_id: crypto.randomUUID(),
-					department_id: 'asdasdasd',
-					fullname: 'aSD',
-					academic_rank: 'asdasdasd',
-					employment_status: 'asdasdasd'
-				}
-			]}
-		/>
+		<CustomTable {columns} data={data.faculties ?? []} count={data.facultyCount} />
 	</section>
 </main>
 

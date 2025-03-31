@@ -101,6 +101,23 @@ COMMENT ON TABLE "public"."departments_tb" IS 'list of department';
 
 
 
+CREATE TABLE IF NOT EXISTS "public"."faculties_tb" (
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "department_id" "uuid" NOT NULL,
+    "fullname" "text" NOT NULL,
+    "academic_rank" "text" NOT NULL,
+    "employment_status" "text" NOT NULL
+);
+
+
+ALTER TABLE "public"."faculties_tb" OWNER TO "postgres";
+
+
+COMMENT ON TABLE "public"."faculties_tb" IS 'list of faculties';
+
+
+
 CREATE TABLE IF NOT EXISTS "public"."programs_tb" (
     "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
@@ -160,6 +177,11 @@ ALTER TABLE ONLY "public"."departments_tb"
 
 
 
+ALTER TABLE ONLY "public"."faculties_tb"
+    ADD CONSTRAINT "faculties_tb_pkey" PRIMARY KEY ("id");
+
+
+
 ALTER TABLE ONLY "public"."programs_tb"
     ADD CONSTRAINT "programs_tb_pkey" PRIMARY KEY ("id");
 
@@ -177,6 +199,11 @@ ALTER TABLE ONLY "public"."yearlevels_and_sections_tb"
 
 ALTER TABLE ONLY "public"."classrooms_tb"
     ADD CONSTRAINT "classrooms_tb_department_id_fkey" FOREIGN KEY ("department_id") REFERENCES "public"."departments_tb"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."faculties_tb"
+    ADD CONSTRAINT "faculties_tb_department_id_fkey" FOREIGN KEY ("department_id") REFERENCES "public"."departments_tb"("id") ON DELETE CASCADE;
 
 
 
@@ -398,6 +425,12 @@ GRANT ALL ON TABLE "public"."classrooms_tb" TO "service_role";
 GRANT ALL ON TABLE "public"."departments_tb" TO "anon";
 GRANT ALL ON TABLE "public"."departments_tb" TO "authenticated";
 GRANT ALL ON TABLE "public"."departments_tb" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."faculties_tb" TO "anon";
+GRANT ALL ON TABLE "public"."faculties_tb" TO "authenticated";
+GRANT ALL ON TABLE "public"."faculties_tb" TO "service_role";
 
 
 

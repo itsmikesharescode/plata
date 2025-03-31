@@ -9,10 +9,10 @@ const baseSchema = {
 
 export const createFacultySchema = z.object(baseSchema);
 export const updateFacultySchema = z.object(baseSchema).extend({
-	faculty_id: z.string()
+	id: z.string()
 });
 export const deleteFacultySchema = z.object({
-	faculty_id: z.string()
+	id: z.string()
 });
 
 export type CreateFacultySchema = z.output<typeof createFacultySchema>;
