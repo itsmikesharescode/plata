@@ -19,6 +19,7 @@
 		"@internationalized/date": "^3.7.0",
 		"@lucide/svelte": "^0.484.0",
 		"@sveltejs/adapter-auto": "^4.0.0",
+		"@sveltejs/adapter-cloudflare-workers": "^2.9.0",
 		"@sveltejs/kit": "^2.20.2",
 		"@sveltejs/vite-plugin-svelte": "^5.0.3",
 		"@tailwindcss/container-queries": "^0.1.1",
@@ -56,5 +57,8 @@
 		"@tanstack/table-core": "^8.21.2",
 		"lucide-svelte": "^0.484.0",
 		"runed": "^0.25.0"
+	},
+	"engines": {
+		"node": ">=18.17.1"
 	}
 }
