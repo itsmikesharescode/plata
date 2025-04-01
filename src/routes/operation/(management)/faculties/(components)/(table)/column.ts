@@ -4,7 +4,7 @@ import type { FacultyTable } from './schema.js';
 import RowActions from './components/row-actions.svelte';
 import { HeaderColumn } from '$lib/components/general/custom-table/components/index.js';
 import RowId from './components/row-id.svelte';
-
+import RowDepartment from './components/row-department.svelte';
 import { renderComponent, renderSnippet } from '$lib/components/ui/data-table/index.js';
 
 export const columns: ColumnDef<FacultyTable>[] = [
@@ -29,16 +29,7 @@ export const columns: ColumnDef<FacultyTable>[] = [
 				title: 'DEPARTMENT'
 			});
 		},
-		cell: ({ row }) => {
-			const departmentSnippet = createRawSnippet<[string]>((getDepartment) => {
-				const department = getDepartment();
-				return {
-					render: () => `<div class="w-full">${department}</div>`
-				};
-			});
-
-			return renderSnippet(departmentSnippet, row.getValue('department_id'));
-		},
+		cell: ({ row }) => renderComponent(RowDepartment<FacultyTable>, { row }),
 		enableSorting: true,
 		enableHiding: true
 	},

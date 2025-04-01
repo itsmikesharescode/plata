@@ -1,5 +1,4 @@
 <script lang="ts" generics="TData">
-	import Ellipsis from '@lucide/svelte/icons/ellipsis';
 	import type { Row } from '@tanstack/table-core';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
@@ -7,23 +6,11 @@
 	import Eye from '@lucide/svelte/icons/eye';
 	import EyeOff from '@lucide/svelte/icons/eye-off';
 	import Copy from '@lucide/svelte/icons/copy';
-	import { toast } from 'svelte-sonner';
+	import { handleCopy } from '../../../../../+layout.svelte';
 
 	let { row }: { row: Row<SubjectTable> } = $props();
 
 	let open = $state(false);
-
-	const handleCopy = async () => {
-		//implement copy of row.original.id
-		await navigator.clipboard
-			.writeText(row.original.id)
-			.then(() => {
-				toast.success(`Copied ${row.original.id}`);
-			})
-			.catch((err) => {
-				toast.error(err);
-			});
-	};
 </script>
 
 <DropdownMenu.Root bind:open>
@@ -41,7 +28,7 @@
 		{/snippet}
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="w-fit" align="start">
-		<DropdownMenu.Item onclick={handleCopy}>
+		<DropdownMenu.Item onclick={() => handleCopy(row.original.id)}>
 			{row.original.id}
 			<Copy class="ml-auto size-4" />
 		</DropdownMenu.Item>

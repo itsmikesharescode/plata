@@ -1,9 +1,7 @@
 <script lang="ts" module>
-	import Ellipsis from '@lucide/svelte/icons/ellipsis';
-	import type { Row } from '@tanstack/table-core';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
-	import type { HistoryTable } from '../schema';
+	import type { FacultyTable } from '../schema';
 	import Eye from '@lucide/svelte/icons/eye';
 	import EyeOff from '@lucide/svelte/icons/eye-off';
 	import Copy from '@lucide/svelte/icons/copy';
@@ -11,7 +9,9 @@
 </script>
 
 <script lang="ts" generics="TData">
-	let { row }: { row: Row<HistoryTable> } = $props();
+	import type { Row } from '@tanstack/table-core';
+
+	let { row }: { row: Row<FacultyTable> } = $props();
 
 	let open = $state(false);
 </script>
@@ -26,13 +26,26 @@
 				{:else}
 					<Eye class="size-4" />
 				{/if}
-				<span class="sr-only">View history id</span>
+				<span class="sr-only">View department</span>
 			</Button>
 		{/snippet}
 	</DropdownMenu.Trigger>
-	<DropdownMenu.Content class="w-fit" align="start">
-		<DropdownMenu.Item onclick={() => handleCopy(row.original.id)}>
-			{row.original.id}
+	<DropdownMenu.Content class="flex w-fit flex-col gap-2 p-2" align="start">
+		<div class="flex items-center gap-2 rounded-lg border-2 p-2">
+			<div
+				class="size-7 rounded-full"
+				style={`background-color: ${row.original.departments_tb.department_color};`}
+			></div>
+			<div class="flex flex-col">
+				<span class="text-base font-medium">{row.original.departments_tb.department_code}</span>
+				<span class="text-sm text-muted-foreground"
+					>{row.original.departments_tb.department_name}</span
+				>
+			</div>
+		</div>
+
+		<DropdownMenu.Item onclick={() => handleCopy(row.original.department_id)}>
+			{row.original.department_id}
 			<Copy class="ml-auto size-4" />
 		</DropdownMenu.Item>
 	</DropdownMenu.Content>
