@@ -5,11 +5,10 @@ CREATE OR REPLACE FUNCTION cold_start() RETURNS VOID AS $$
 DECLARE
     admin_email TEXT := 'localadmin@gmail.com';  -- Set actual admin email
     admin_fullname TEXT := 'Admin User';      -- Set actual admin name
+    admin_id UUID := '0df249f9-3ae7-4370-96c6-75ddbb8cc7b7';
 BEGIN
     -- Insert base roles
-    INSERT INTO roles_tb (NAME, DESCRIPTION) VALUES 
-    ('admin', 'Administrator'),
-    ('chair', 'Chairperson');
+    INSERT INTO roles_tb (user_id, name) VALUES (admin_id, 'admin');
 
     -- Update admin user metadata
     UPDATE auth.users

@@ -12,7 +12,8 @@ DECLARE
     var_meta_data JSONB := NEW.raw_user_meta_data;
 BEGIN
 
-  INSERT INTO public.users_tb (user_id, role_name, user_meta_data) VALUES(NEW.id, var_role, var_meta_data);
+  INSERT INTO public.users_tb (user_id, user_meta_data) VALUES(NEW.id, var_meta_data);
+  INSERT INTO public.roles_tb (user_id, name) VALUES(NEW.id, var_role);
 
   RETURN NEW;
 END;
@@ -29,6 +30,11 @@ BEGIN
   UPDATE public.users_tb
   SET
     user_meta_data = NEW.raw_user_meta_data
+  WHERE user_id = NEW.id;
+
+  UPDATE public.roles_tb
+  SET
+    name = NEW.raw_user_meta_data ->> 'role'
   WHERE user_id = NEW.id;
 
   RETURN NEW;

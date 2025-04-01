@@ -71,11 +71,10 @@ CREATE OR REPLACE FUNCTION "public"."cold_start"() RETURNS "void"
 DECLARE
     admin_email TEXT := 'localadmin@gmail.com';  -- Set actual admin email
     admin_fullname TEXT := 'Admin User';      -- Set actual admin name
+    admin_id UUID := '0df249f9-3ae7-4370-96c6-75ddbb8cc7b7';
 BEGIN
     -- Insert base roles
-    INSERT INTO roles_tb (NAME, DESCRIPTION) VALUES 
-    ('admin', 'Administrator'),
-    ('chair', 'Chairperson');
+    INSERT INTO roles_tb (user_id, name) VALUES (admin_id, 'admin');
 
     -- Update admin user metadata
     UPDATE auth.users
@@ -89,6 +88,34 @@ $$;
 
 
 ALTER FUNCTION "public"."cold_start"() OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."is_admin"() RETURNS boolean
+    LANGUAGE "plpgsql" SECURITY DEFINER
+    AS $$
+BEGIN
+    RETURN EXISTS(
+        SELECT 1 FROM roles_tb WHERE name = 'admin' AND user_id = auth.uid()
+    );
+END;
+$$;
+
+
+ALTER FUNCTION "public"."is_admin"() OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."is_chair"() RETURNS boolean
+    LANGUAGE "plpgsql" SECURITY DEFINER
+    AS $$
+BEGIN
+    RETURN EXISTS(
+        SELECT 1 FROM roles_tb WHERE name = 'chair' AND user_id = auth.uid()
+    );
+END;
+$$;
+
+
+ALTER FUNCTION "public"."is_chair"() OWNER TO "postgres";
 
 
 CREATE OR REPLACE FUNCTION "public"."listen_to_changes"() RETURNS "void"
@@ -114,7 +141,7 @@ BEGIN
         END IF;
         RETURN NULL;
     END;
-    $classroom_trigger$ LANGUAGE plpgsql;
+    $classroom_trigger$ LANGUAGE plpgsql SECURITY DEFINER;
 
     -- faculties_tb trigger
     CREATE OR REPLACE FUNCTION log_faculties_changes() RETURNS TRIGGER AS $faculties_trigger$
@@ -131,7 +158,7 @@ BEGIN
         END IF;
         RETURN NULL;
     END;
-    $faculties_trigger$ LANGUAGE plpgsql;
+    $faculties_trigger$ LANGUAGE plpgsql SECURITY DEFINER;
 
     -- programs_tb trigger
     CREATE OR REPLACE FUNCTION log_programs_changes() RETURNS TRIGGER AS $programs_trigger$
@@ -148,7 +175,7 @@ BEGIN
         END IF;
         RETURN NULL;
     END;
-    $programs_trigger$ LANGUAGE plpgsql;
+    $programs_trigger$ LANGUAGE plpgsql SECURITY DEFINER;
 
     -- subjects_tb trigger
     CREATE OR REPLACE FUNCTION log_subjects_changes() RETURNS TRIGGER AS $subjects_trigger$
@@ -165,7 +192,7 @@ BEGIN
         END IF;
         RETURN NULL;
     END;
-    $subjects_trigger$ LANGUAGE plpgsql;
+    $subjects_trigger$ LANGUAGE plpgsql SECURITY DEFINER;
 
     -- Create actual triggers for each table
     DROP TRIGGER IF EXISTS classroom_changes ON classrooms_tb;
@@ -209,7 +236,7 @@ ALTER FUNCTION "public"."listen_to_changes_dropper"() OWNER TO "postgres";
 
 
 CREATE OR REPLACE FUNCTION "public"."log_classroom_changes"() RETURNS "trigger"
-    LANGUAGE "plpgsql"
+    LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
     BEGIN
         IF TG_OP = 'INSERT' THEN
@@ -231,7 +258,7 @@ ALTER FUNCTION "public"."log_classroom_changes"() OWNER TO "postgres";
 
 
 CREATE OR REPLACE FUNCTION "public"."log_faculties_changes"() RETURNS "trigger"
-    LANGUAGE "plpgsql"
+    LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
     BEGIN
         IF TG_OP = 'INSERT' THEN
@@ -253,7 +280,7 @@ ALTER FUNCTION "public"."log_faculties_changes"() OWNER TO "postgres";
 
 
 CREATE OR REPLACE FUNCTION "public"."log_programs_changes"() RETURNS "trigger"
-    LANGUAGE "plpgsql"
+    LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
     BEGIN
         IF TG_OP = 'INSERT' THEN
@@ -275,7 +302,7 @@ ALTER FUNCTION "public"."log_programs_changes"() OWNER TO "postgres";
 
 
 CREATE OR REPLACE FUNCTION "public"."log_subjects_changes"() RETURNS "trigger"
-    LANGUAGE "plpgsql"
+    LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
     BEGIN
         IF TG_OP = 'INSERT' THEN
@@ -304,7 +331,8 @@ DECLARE
     var_meta_data JSONB := NEW.raw_user_meta_data;
 BEGIN
 
-  INSERT INTO public.users_tb (user_id, role_name, user_meta_data) VALUES(NEW.id, var_role, var_meta_data);
+  INSERT INTO public.users_tb (user_id, user_meta_data) VALUES(NEW.id, var_meta_data);
+  INSERT INTO public.roles_tb (user_id, name) VALUES(NEW.id, var_role);
 
   RETURN NEW;
 END;
@@ -321,6 +349,11 @@ BEGIN
   UPDATE public.users_tb
   SET
     user_meta_data = NEW.raw_user_meta_data
+  WHERE user_id = NEW.id;
+
+  UPDATE public.roles_tb
+  SET
+    name = NEW.raw_user_meta_data ->> 'role'
   WHERE user_id = NEW.id;
 
   RETURN NEW;
@@ -400,7 +433,7 @@ COMMENT ON TABLE "public"."faculties_tb" IS 'list of faculties';
 
 CREATE TABLE IF NOT EXISTS "public"."history_tb" (
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "user_id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "user_id" "uuid" NOT NULL,
     "tb_location" "text" NOT NULL,
     "action_type" "text" NOT NULL,
     "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL
@@ -431,8 +464,9 @@ COMMENT ON TABLE "public"."programs_tb" IS 'list of programs';
 
 
 CREATE TABLE IF NOT EXISTS "public"."roles_tb" (
-    "name" "text" NOT NULL,
-    "description" "text" NOT NULL
+    "user_id" "uuid" NOT NULL,
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "name" character varying NOT NULL
 );
 
 
@@ -464,7 +498,6 @@ COMMENT ON TABLE "public"."subjects_tb" IS 'list of subjects';
 CREATE TABLE IF NOT EXISTS "public"."users_tb" (
     "user_id" "uuid" NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "role_name" "text" NOT NULL,
     "user_meta_data" "jsonb" NOT NULL
 );
 
@@ -517,7 +550,7 @@ ALTER TABLE ONLY "public"."programs_tb"
 
 
 ALTER TABLE ONLY "public"."roles_tb"
-    ADD CONSTRAINT "roles_tb_pkey" PRIMARY KEY ("name");
+    ADD CONSTRAINT "roles_tb_pkey" PRIMARY KEY ("user_id");
 
 
 
@@ -562,18 +595,13 @@ ALTER TABLE ONLY "public"."faculties_tb"
 
 
 
-ALTER TABLE ONLY "public"."history_tb"
-    ADD CONSTRAINT "history_tb_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."users_tb"("user_id") ON DELETE CASCADE;
-
-
-
 ALTER TABLE ONLY "public"."programs_tb"
     ADD CONSTRAINT "programs_tb_department_id_fkey" FOREIGN KEY ("department_id") REFERENCES "public"."departments_tb"("id") ON DELETE CASCADE;
 
 
 
-ALTER TABLE ONLY "public"."users_tb"
-    ADD CONSTRAINT "users_tb_role_name_fkey" FOREIGN KEY ("role_name") REFERENCES "public"."roles_tb"("name") ON DELETE CASCADE;
+ALTER TABLE ONLY "public"."roles_tb"
+    ADD CONSTRAINT "roles_tb_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
 
 
 
@@ -582,7 +610,71 @@ ALTER TABLE ONLY "public"."users_tb"
 
 
 
+CREATE POLICY "All for admin" ON "public"."history_tb" TO "authenticated" USING ("public"."is_admin"()) WITH CHECK ("public"."is_admin"());
+
+
+
+CREATE POLICY "All for admin" ON "public"."users_tb" TO "authenticated" USING ("public"."is_admin"()) WITH CHECK ("public"."is_admin"());
+
+
+
+CREATE POLICY "All for admin" ON "public"."yearlevels_and_sections_tb" TO "authenticated" USING (("public"."is_admin"() OR "public"."is_chair"())) WITH CHECK (("public"."is_admin"() OR "public"."is_chair"()));
+
+
+
+CREATE POLICY "All for both" ON "public"."programs_tb" TO "authenticated" USING (("public"."is_admin"() OR "public"."is_chair"())) WITH CHECK (("public"."is_admin"() OR "public"."is_chair"()));
+
+
+
+CREATE POLICY "All for both" ON "public"."subjects_tb" TO "authenticated" USING (("public"."is_admin"() OR "public"."is_chair"())) WITH CHECK (("public"."is_admin"() OR "public"."is_chair"()));
+
+
+
+CREATE POLICY "Allow all" ON "public"."classrooms_tb" TO "authenticated" USING (("public"."is_admin"() OR "public"."is_chair"())) WITH CHECK (("public"."is_admin"() OR "public"."is_chair"()));
+
+
+
+CREATE POLICY "Allow all for both" ON "public"."faculties_tb" TO "authenticated" USING (("public"."is_admin"() OR "public"."is_chair"())) WITH CHECK (("public"."is_admin"() OR "public"."is_chair"()));
+
+
+
+CREATE POLICY "Allow all if admin" ON "public"."departments_tb" TO "authenticated" USING ("public"."is_admin"()) WITH CHECK ("public"."is_admin"());
+
+
+
+CREATE POLICY "Select for chair" ON "public"."history_tb" FOR SELECT TO "authenticated" USING ("public"."is_chair"());
+
+
+
+CREATE POLICY "Select for chair" ON "public"."users_tb" FOR SELECT TO "authenticated" USING ("public"."is_chair"());
+
+
+
+ALTER TABLE "public"."classrooms_tb" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."departments_tb" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."faculties_tb" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."history_tb" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."programs_tb" ENABLE ROW LEVEL SECURITY;
+
+
 ALTER TABLE "public"."roles_tb" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."subjects_tb" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."users_tb" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."yearlevels_and_sections_tb" ENABLE ROW LEVEL SECURITY;
 
 
 
@@ -777,6 +869,18 @@ GRANT USAGE ON SCHEMA "public" TO "service_role";
 GRANT ALL ON FUNCTION "public"."cold_start"() TO "anon";
 GRANT ALL ON FUNCTION "public"."cold_start"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."cold_start"() TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."is_admin"() TO "anon";
+GRANT ALL ON FUNCTION "public"."is_admin"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."is_admin"() TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."is_chair"() TO "anon";
+GRANT ALL ON FUNCTION "public"."is_chair"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."is_chair"() TO "service_role";
 
 
 
