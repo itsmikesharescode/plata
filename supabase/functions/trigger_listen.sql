@@ -19,7 +19,7 @@ BEGIN
         END IF;
         RETURN NULL;
     END;
-    $classroom_trigger$ LANGUAGE plpgsql;
+    $classroom_trigger$ LANGUAGE plpgsql SECURITY DEFINER;
 
     -- faculties_tb trigger
     CREATE OR REPLACE FUNCTION log_faculties_changes() RETURNS TRIGGER AS $faculties_trigger$
@@ -36,7 +36,7 @@ BEGIN
         END IF;
         RETURN NULL;
     END;
-    $faculties_trigger$ LANGUAGE plpgsql;
+    $faculties_trigger$ LANGUAGE plpgsql SECURITY DEFINER;
 
     -- programs_tb trigger
     CREATE OR REPLACE FUNCTION log_programs_changes() RETURNS TRIGGER AS $programs_trigger$
@@ -53,7 +53,7 @@ BEGIN
         END IF;
         RETURN NULL;
     END;
-    $programs_trigger$ LANGUAGE plpgsql;
+    $programs_trigger$ LANGUAGE plpgsql SECURITY DEFINER;
 
     -- subjects_tb trigger
     CREATE OR REPLACE FUNCTION log_subjects_changes() RETURNS TRIGGER AS $subjects_trigger$
@@ -70,7 +70,7 @@ BEGIN
         END IF;
         RETURN NULL;
     END;
-    $subjects_trigger$ LANGUAGE plpgsql;
+    $subjects_trigger$ LANGUAGE plpgsql SECURITY DEFINER;
 
     -- Create actual triggers for each table
     DROP TRIGGER IF EXISTS classroom_changes ON classrooms_tb;
