@@ -90,6 +90,260 @@ $$;
 
 ALTER FUNCTION "public"."cold_start"() OWNER TO "postgres";
 
+
+CREATE OR REPLACE FUNCTION "public"."listen_to_changes"() RETURNS "void"
+    LANGUAGE "plpgsql"
+    AS $_$
+DECLARE
+    var_channel_name TEXT := 'public.users_tb';
+    var_event_name TEXT := 'channel_insert';
+BEGIN
+    -- Create triggers for each table we want to monitor
+    -- classrooms_tb trigger
+    CREATE OR REPLACE FUNCTION log_classroom_changes() RETURNS TRIGGER AS $classroom_trigger$
+    BEGIN
+        IF TG_OP = 'INSERT' THEN
+            INSERT INTO history_tb (created_at, user_id, tb_location, action_type)
+            VALUES (now(), auth.uid(), 'classrooms_tb', 'CREATE');
+        ELSIF TG_OP = 'UPDATE' THEN
+            INSERT INTO history_tb (created_at, user_id, tb_location, action_type)
+            VALUES (now(), auth.uid(), 'classrooms_tb', 'UPDATE');
+        ELSIF TG_OP = 'DELETE' THEN
+            INSERT INTO history_tb (created_at, user_id, tb_location, action_type)
+            VALUES (now(), auth.uid(), 'classrooms_tb', 'DELETE');
+        END IF;
+        RETURN NULL;
+    END;
+    $classroom_trigger$ LANGUAGE plpgsql;
+
+    -- faculties_tb trigger
+    CREATE OR REPLACE FUNCTION log_faculties_changes() RETURNS TRIGGER AS $faculties_trigger$
+    BEGIN
+        IF TG_OP = 'INSERT' THEN
+            INSERT INTO history_tb (created_at, user_id, tb_location, action_type)
+            VALUES (now(), auth.uid(), 'faculties_tb', 'CREATE');
+        ELSIF TG_OP = 'UPDATE' THEN
+            INSERT INTO history_tb (created_at, user_id, tb_location, action_type)
+            VALUES (now(), auth.uid(), 'faculties_tb', 'UPDATE');
+        ELSIF TG_OP = 'DELETE' THEN
+            INSERT INTO history_tb (created_at, user_id, tb_location, action_type)
+            VALUES (now(), auth.uid(), 'faculties_tb', 'DELETE');
+        END IF;
+        RETURN NULL;
+    END;
+    $faculties_trigger$ LANGUAGE plpgsql;
+
+    -- programs_tb trigger
+    CREATE OR REPLACE FUNCTION log_programs_changes() RETURNS TRIGGER AS $programs_trigger$
+    BEGIN
+        IF TG_OP = 'INSERT' THEN
+            INSERT INTO history_tb (created_at, user_id, tb_location, action_type)
+            VALUES (now(), auth.uid(), 'programs_tb', 'CREATE');
+        ELSIF TG_OP = 'UPDATE' THEN
+            INSERT INTO history_tb (created_at, user_id, tb_location, action_type)
+            VALUES (now(), auth.uid(), 'programs_tb', 'UPDATE');
+        ELSIF TG_OP = 'DELETE' THEN
+            INSERT INTO history_tb (created_at, user_id, tb_location, action_type)
+            VALUES (now(), auth.uid(), 'programs_tb', 'DELETE');
+        END IF;
+        RETURN NULL;
+    END;
+    $programs_trigger$ LANGUAGE plpgsql;
+
+    -- subjects_tb trigger
+    CREATE OR REPLACE FUNCTION log_subjects_changes() RETURNS TRIGGER AS $subjects_trigger$
+    BEGIN
+        IF TG_OP = 'INSERT' THEN
+            INSERT INTO history_tb (created_at, user_id, tb_location, action_type)
+            VALUES (now(), auth.uid(), 'subjects_tb', 'CREATE');
+        ELSIF TG_OP = 'UPDATE' THEN
+            INSERT INTO history_tb (created_at, user_id, tb_location, action_type)
+            VALUES (now(), auth.uid(), 'subjects_tb', 'UPDATE');
+        ELSIF TG_OP = 'DELETE' THEN
+            INSERT INTO history_tb (created_at, user_id, tb_location, action_type)
+            VALUES (now(), auth.uid(), 'subjects_tb', 'DELETE');
+        END IF;
+        RETURN NULL;
+    END;
+    $subjects_trigger$ LANGUAGE plpgsql;
+
+    -- Create actual triggers for each table
+    DROP TRIGGER IF EXISTS classroom_changes ON classrooms_tb;
+    CREATE TRIGGER classroom_changes
+    AFTER INSERT OR UPDATE OR DELETE ON classrooms_tb
+    FOR EACH ROW EXECUTE FUNCTION log_classroom_changes();
+
+    DROP TRIGGER IF EXISTS faculties_changes ON faculties_tb;
+    CREATE TRIGGER faculties_changes
+    AFTER INSERT OR UPDATE OR DELETE ON faculties_tb
+    FOR EACH ROW EXECUTE FUNCTION log_faculties_changes();
+
+    DROP TRIGGER IF EXISTS programs_changes ON programs_tb;
+    CREATE TRIGGER programs_changes
+    AFTER INSERT OR UPDATE OR DELETE ON programs_tb
+    FOR EACH ROW EXECUTE FUNCTION log_programs_changes();
+
+    DROP TRIGGER IF EXISTS subjects_changes ON subjects_tb;
+    CREATE TRIGGER subjects_changes
+    AFTER INSERT OR UPDATE OR DELETE ON subjects_tb
+    FOR EACH ROW EXECUTE FUNCTION log_subjects_changes();
+END;
+$_$;
+
+
+ALTER FUNCTION "public"."listen_to_changes"() OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."listen_to_changes_dropper"() RETURNS "void"
+    LANGUAGE "plpgsql"
+    AS $$
+BEGIN
+    -- Call the main function to set up all triggers
+    PERFORM listen_to_changes();
+    RAISE NOTICE 'All triggers have been successfully set up!';
+END;
+$$;
+
+
+ALTER FUNCTION "public"."listen_to_changes_dropper"() OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."log_classroom_changes"() RETURNS "trigger"
+    LANGUAGE "plpgsql"
+    AS $$
+    BEGIN
+        IF TG_OP = 'INSERT' THEN
+            INSERT INTO history_tb (created_at, user_id, tb_location, action_type)
+            VALUES (now(), auth.uid(), 'classrooms_tb', 'CREATE');
+        ELSIF TG_OP = 'UPDATE' THEN
+            INSERT INTO history_tb (created_at, user_id, tb_location, action_type)
+            VALUES (now(), auth.uid(), 'classrooms_tb', 'UPDATE');
+        ELSIF TG_OP = 'DELETE' THEN
+            INSERT INTO history_tb (created_at, user_id, tb_location, action_type)
+            VALUES (now(), auth.uid(), 'classrooms_tb', 'DELETE');
+        END IF;
+        RETURN NULL;
+    END;
+    $$;
+
+
+ALTER FUNCTION "public"."log_classroom_changes"() OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."log_faculties_changes"() RETURNS "trigger"
+    LANGUAGE "plpgsql"
+    AS $$
+    BEGIN
+        IF TG_OP = 'INSERT' THEN
+            INSERT INTO history_tb (created_at, user_id, tb_location, action_type)
+            VALUES (now(), auth.uid(), 'faculties_tb', 'CREATE');
+        ELSIF TG_OP = 'UPDATE' THEN
+            INSERT INTO history_tb (created_at, user_id, tb_location, action_type)
+            VALUES (now(), auth.uid(), 'faculties_tb', 'UPDATE');
+        ELSIF TG_OP = 'DELETE' THEN
+            INSERT INTO history_tb (created_at, user_id, tb_location, action_type)
+            VALUES (now(), auth.uid(), 'faculties_tb', 'DELETE');
+        END IF;
+        RETURN NULL;
+    END;
+    $$;
+
+
+ALTER FUNCTION "public"."log_faculties_changes"() OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."log_programs_changes"() RETURNS "trigger"
+    LANGUAGE "plpgsql"
+    AS $$
+    BEGIN
+        IF TG_OP = 'INSERT' THEN
+            INSERT INTO history_tb (created_at, user_id, tb_location, action_type)
+            VALUES (now(), auth.uid(), 'programs_tb', 'CREATE');
+        ELSIF TG_OP = 'UPDATE' THEN
+            INSERT INTO history_tb (created_at, user_id, tb_location, action_type)
+            VALUES (now(), auth.uid(), 'programs_tb', 'UPDATE');
+        ELSIF TG_OP = 'DELETE' THEN
+            INSERT INTO history_tb (created_at, user_id, tb_location, action_type)
+            VALUES (now(), auth.uid(), 'programs_tb', 'DELETE');
+        END IF;
+        RETURN NULL;
+    END;
+    $$;
+
+
+ALTER FUNCTION "public"."log_programs_changes"() OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."log_subjects_changes"() RETURNS "trigger"
+    LANGUAGE "plpgsql"
+    AS $$
+    BEGIN
+        IF TG_OP = 'INSERT' THEN
+            INSERT INTO history_tb (created_at, user_id, tb_location, action_type)
+            VALUES (now(), auth.uid(), 'subjects_tb', 'CREATE');
+        ELSIF TG_OP = 'UPDATE' THEN
+            INSERT INTO history_tb (created_at, user_id, tb_location, action_type)
+            VALUES (now(), auth.uid(), 'subjects_tb', 'UPDATE');
+        ELSIF TG_OP = 'DELETE' THEN
+            INSERT INTO history_tb (created_at, user_id, tb_location, action_type)
+            VALUES (now(), auth.uid(), 'subjects_tb', 'DELETE');
+        END IF;
+        RETURN NULL;
+    END;
+    $$;
+
+
+ALTER FUNCTION "public"."log_subjects_changes"() OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."on_auth_user_created"() RETURNS "trigger"
+    LANGUAGE "plpgsql" SECURITY DEFINER
+    AS $$
+DECLARE
+    var_role TEXT := NEW.raw_user_meta_data ->> 'role';
+    var_meta_data JSONB := NEW.raw_user_meta_data;
+BEGIN
+
+  INSERT INTO public.users_tb (user_id, role_name, user_meta_data) VALUES(NEW.id, var_role, var_meta_data);
+
+  RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION "public"."on_auth_user_created"() OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."on_auth_user_updated"() RETURNS "trigger"
+    LANGUAGE "plpgsql" SECURITY DEFINER
+    AS $$
+BEGIN
+  UPDATE public.users_tb
+  SET
+    user_meta_data = NEW.raw_user_meta_data
+  WHERE user_id = NEW.id;
+
+  RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION "public"."on_auth_user_updated"() OWNER TO "postgres";
+
+
+CREATE OR REPLACE FUNCTION "public"."start_engine_brum_brum"() RETURNS "void"
+    LANGUAGE "plpgsql"
+    AS $$
+BEGIN
+    -- Call the main function to set up all triggers
+    PERFORM listen_to_changes();
+    RAISE NOTICE 'All triggers have been successfully set up!';
+END;
+$$;
+
+
+ALTER FUNCTION "public"."start_engine_brum_brum"() OWNER TO "postgres";
+
 SET default_tablespace = '';
 
 SET default_table_access_method = "heap";
@@ -141,6 +395,33 @@ ALTER TABLE "public"."faculties_tb" OWNER TO "postgres";
 
 
 COMMENT ON TABLE "public"."faculties_tb" IS 'list of faculties';
+
+
+
+CREATE TABLE IF NOT EXISTS "public"."history_tb" (
+    "id" bigint NOT NULL,
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "user_id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "tb_location" "text" NOT NULL,
+    "action_type" "text" NOT NULL
+);
+
+
+ALTER TABLE "public"."history_tb" OWNER TO "postgres";
+
+
+COMMENT ON TABLE "public"."history_tb" IS 'logging system to all table';
+
+
+
+ALTER TABLE "public"."history_tb" ALTER COLUMN "id" ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME "public"."history_tb_id_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
 
 
 
@@ -236,6 +517,11 @@ ALTER TABLE ONLY "public"."faculties_tb"
 
 
 
+ALTER TABLE ONLY "public"."history_tb"
+    ADD CONSTRAINT "history_tb_pkey" PRIMARY KEY ("id");
+
+
+
 ALTER TABLE ONLY "public"."programs_tb"
     ADD CONSTRAINT "programs_tb_pkey" PRIMARY KEY ("id");
 
@@ -261,6 +547,22 @@ ALTER TABLE ONLY "public"."yearlevels_and_sections_tb"
 
 
 
+CREATE OR REPLACE TRIGGER "classroom_changes" AFTER INSERT OR DELETE OR UPDATE ON "public"."classrooms_tb" FOR EACH ROW EXECUTE FUNCTION "public"."log_classroom_changes"();
+
+
+
+CREATE OR REPLACE TRIGGER "faculties_changes" AFTER INSERT OR DELETE OR UPDATE ON "public"."faculties_tb" FOR EACH ROW EXECUTE FUNCTION "public"."log_faculties_changes"();
+
+
+
+CREATE OR REPLACE TRIGGER "programs_changes" AFTER INSERT OR DELETE OR UPDATE ON "public"."programs_tb" FOR EACH ROW EXECUTE FUNCTION "public"."log_programs_changes"();
+
+
+
+CREATE OR REPLACE TRIGGER "subjects_changes" AFTER INSERT OR DELETE OR UPDATE ON "public"."subjects_tb" FOR EACH ROW EXECUTE FUNCTION "public"."log_subjects_changes"();
+
+
+
 ALTER TABLE ONLY "public"."classrooms_tb"
     ADD CONSTRAINT "classrooms_tb_department_id_fkey" FOREIGN KEY ("department_id") REFERENCES "public"."departments_tb"("id") ON DELETE CASCADE;
 
@@ -268,6 +570,11 @@ ALTER TABLE ONLY "public"."classrooms_tb"
 
 ALTER TABLE ONLY "public"."faculties_tb"
     ADD CONSTRAINT "faculties_tb_department_id_fkey" FOREIGN KEY ("department_id") REFERENCES "public"."departments_tb"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."history_tb"
+    ADD CONSTRAINT "history_tb_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "public"."users_tb"("user_id") ON DELETE CASCADE;
 
 
 
@@ -287,9 +594,6 @@ ALTER TABLE ONLY "public"."users_tb"
 
 
 ALTER TABLE "public"."roles_tb" ENABLE ROW LEVEL SECURITY;
-
-
-ALTER TABLE "public"."users_tb" ENABLE ROW LEVEL SECURITY;
 
 
 
@@ -487,6 +791,60 @@ GRANT ALL ON FUNCTION "public"."cold_start"() TO "service_role";
 
 
 
+GRANT ALL ON FUNCTION "public"."listen_to_changes"() TO "anon";
+GRANT ALL ON FUNCTION "public"."listen_to_changes"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."listen_to_changes"() TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."listen_to_changes_dropper"() TO "anon";
+GRANT ALL ON FUNCTION "public"."listen_to_changes_dropper"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."listen_to_changes_dropper"() TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."log_classroom_changes"() TO "anon";
+GRANT ALL ON FUNCTION "public"."log_classroom_changes"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."log_classroom_changes"() TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."log_faculties_changes"() TO "anon";
+GRANT ALL ON FUNCTION "public"."log_faculties_changes"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."log_faculties_changes"() TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."log_programs_changes"() TO "anon";
+GRANT ALL ON FUNCTION "public"."log_programs_changes"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."log_programs_changes"() TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."log_subjects_changes"() TO "anon";
+GRANT ALL ON FUNCTION "public"."log_subjects_changes"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."log_subjects_changes"() TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."on_auth_user_created"() TO "anon";
+GRANT ALL ON FUNCTION "public"."on_auth_user_created"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."on_auth_user_created"() TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."on_auth_user_updated"() TO "anon";
+GRANT ALL ON FUNCTION "public"."on_auth_user_updated"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."on_auth_user_updated"() TO "service_role";
+
+
+
+GRANT ALL ON FUNCTION "public"."start_engine_brum_brum"() TO "anon";
+GRANT ALL ON FUNCTION "public"."start_engine_brum_brum"() TO "authenticated";
+GRANT ALL ON FUNCTION "public"."start_engine_brum_brum"() TO "service_role";
+
+
+
 
 
 
@@ -517,6 +875,18 @@ GRANT ALL ON TABLE "public"."departments_tb" TO "service_role";
 GRANT ALL ON TABLE "public"."faculties_tb" TO "anon";
 GRANT ALL ON TABLE "public"."faculties_tb" TO "authenticated";
 GRANT ALL ON TABLE "public"."faculties_tb" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."history_tb" TO "anon";
+GRANT ALL ON TABLE "public"."history_tb" TO "authenticated";
+GRANT ALL ON TABLE "public"."history_tb" TO "service_role";
+
+
+
+GRANT ALL ON SEQUENCE "public"."history_tb_id_seq" TO "anon";
+GRANT ALL ON SEQUENCE "public"."history_tb_id_seq" TO "authenticated";
+GRANT ALL ON SEQUENCE "public"."history_tb_id_seq" TO "service_role";
 
 
 

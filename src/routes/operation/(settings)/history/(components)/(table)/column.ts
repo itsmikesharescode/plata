@@ -22,11 +22,11 @@ export const columns: ColumnDef<HistoryTable>[] = [
 	},
 
 	{
-		accessorKey: 'location_name',
+		accessorKey: 'tb_location',
 		header: ({ column }) => {
 			return renderComponent(HeaderColumn<HistoryTable, unknown>, {
 				column,
-				title: 'LOCATION NAME'
+				title: 'LOCATION'
 			});
 		},
 		cell: ({ row }) => {
@@ -37,14 +37,14 @@ export const columns: ColumnDef<HistoryTable>[] = [
 				};
 			});
 
-			return renderSnippet(locationSnippet, row.getValue('location_name'));
+			return renderSnippet(locationSnippet, row.getValue('tb_location'));
 		},
 		enableSorting: true,
 		enableHiding: true
 	},
 
 	{
-		accessorKey: 'cp_fullname',
+		accessorKey: 'user_id',
 		header: ({ column }) => {
 			return renderComponent(HeaderColumn<HistoryTable, unknown>, {
 				column,
@@ -52,36 +52,36 @@ export const columns: ColumnDef<HistoryTable>[] = [
 			});
 		},
 		cell: ({ row }) => {
-			const fullnameSnippet = createRawSnippet<[string]>((getFullName) => {
-				const fullname = getFullName();
+			const getUserId = createRawSnippet<[string]>((getUserId) => {
+				const userId = getUserId();
 				return {
-					render: () => `<div class="w-[100px]">${fullname}</div>`
+					render: () => `<div class="w-[100px]">${userId}</div>`
 				};
 			});
 
-			return renderSnippet(fullnameSnippet, row.getValue('cp_fullname'));
+			return renderSnippet(getUserId, row.getValue('user_id'));
 		},
 		enableSorting: true,
 		enableHiding: true
 	},
 
 	{
-		accessorKey: 'activity_type',
+		accessorKey: 'action_type',
 		header: ({ column }) => {
 			return renderComponent(HeaderColumn<HistoryTable, unknown>, {
 				column,
-				title: 'ACTIVITY TYPE'
+				title: 'TYPE'
 			});
 		},
 		cell: ({ row }) => {
-			const activitySnippet = createRawSnippet<[string]>((getActivity) => {
-				const activity = getActivity();
+			const actionSnippet = createRawSnippet<[string]>((getAction) => {
+				const action = getAction();
 				return {
-					render: () => `<div class="w-[100px]">${activity}</div>`
+					render: () => `<div class="w-[100px]">${action}</div>`
 				};
 			});
 
-			return renderSnippet(activitySnippet, row.getValue('activity_type'));
+			return renderSnippet(actionSnippet, row.getValue('action_type'));
 		},
 		enableSorting: true,
 		enableHiding: true
