@@ -22,7 +22,7 @@ export const load: PageServerLoad = async ({ locals: { supabase }, url }) => {
 
 			const { data, error } = await supabase
 				.from('classrooms_tb')
-				.select('*')
+				.select('*, departments_tb(*)')
 				.range(initialRow, finalRow)
 				.order('created_at');
 
@@ -32,7 +32,7 @@ export const load: PageServerLoad = async ({ locals: { supabase }, url }) => {
 		} else {
 			const { data, error } = await supabase
 				.from('classrooms_tb')
-				.select('*')
+				.select('*, departments_tb(*)')
 				.limit(limit)
 				.order('created_at');
 			if (error) return null;

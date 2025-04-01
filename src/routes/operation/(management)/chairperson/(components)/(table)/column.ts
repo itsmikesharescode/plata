@@ -6,6 +6,8 @@ import { HeaderColumn } from '$lib/components/general/custom-table/components/in
 import RowId from './components/row-id.svelte';
 
 import { renderComponent, renderSnippet } from '$lib/components/ui/data-table/index.js';
+import RowDepartment from './components/row-department.svelte';
+import RowProgram from './components/row-program.svelte';
 
 export const columns: ColumnDef<ChairpersonTable>[] = [
 	{
@@ -29,16 +31,7 @@ export const columns: ColumnDef<ChairpersonTable>[] = [
 				title: 'DEPARTMENT'
 			});
 		},
-		cell: ({ row }) => {
-			const departmentSnippet = createRawSnippet<[string]>((getDepartment) => {
-				const department = getDepartment();
-				return {
-					render: () => `<div class="w-full">${department}</div>`
-				};
-			});
-
-			return renderSnippet(departmentSnippet, row.getValue('department_id'));
-		},
+		cell: ({ row }) => renderComponent(RowDepartment<ChairpersonTable>, { row }),
 		enableSorting: true,
 		enableHiding: true
 	},
@@ -51,16 +44,7 @@ export const columns: ColumnDef<ChairpersonTable>[] = [
 				title: 'PROGRAM'
 			});
 		},
-		cell: ({ row }) => {
-			const programSnippet = createRawSnippet<[string]>((getProgram) => {
-				const program = getProgram();
-				return {
-					render: () => `<div class="w-full">${program}</div>`
-				};
-			});
-
-			return renderSnippet(programSnippet, row.getValue('program_id'));
-		},
+		cell: ({ row }) => renderComponent(RowProgram<ChairpersonTable>, { row }),
 		enableSorting: true,
 		enableHiding: true
 	},

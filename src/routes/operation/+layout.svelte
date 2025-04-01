@@ -1,7 +1,9 @@
 <script lang="ts" module>
 	import type { Database } from '$lib/database.types';
+	import { toast } from 'svelte-sonner';
 
 	export type DepartmentDropdown = Database['public']['Tables']['departments_tb']['Row'][] | null;
+	export type Department = Database['public']['Tables']['departments_tb']['Row'];
 	export type ProgramDropdown =
 		| (Database['public']['Tables']['programs_tb']['Row'] & {
 				departments_tb: {
@@ -9,6 +11,17 @@
 				};
 		  })[]
 		| null;
+
+	export const handleCopy = async (text: string) => {
+		await navigator.clipboard
+			.writeText(text)
+			.then(() => {
+				toast.success(`Copied ${text}`);
+			})
+			.catch((err) => {
+				toast.error(err);
+			});
+	};
 </script>
 
 <script lang="ts">
