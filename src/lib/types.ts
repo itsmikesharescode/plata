@@ -10,7 +10,7 @@ export type UserMeta = {
 
 export type AssignedSubject = {
 	id: string;
-	code: string;
+	code?: string;
 	subject_id: string;
 	classroom_id: string;
 	start_time: string;

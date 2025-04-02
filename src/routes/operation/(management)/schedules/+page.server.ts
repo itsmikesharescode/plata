@@ -17,12 +17,16 @@ export const load: PageServerLoad = async () => {
 };
 
 export const actions: Actions = {
-	createScheduleEvent: async ({ request }) => {
+	createScheduleEvent: async ({ request, locals: { supabase } }) => {
 		const form = await superValidate(request, zod(createScheduleSchema));
 
 		if (!form.valid) return fail(400, { form });
 
-		console.log(form.data);
+		const { error } = await supabase.from('schedules_tb').insert(form.data);
+
+		if (error) return fail(401, { form });
+
+		return { form, msg: 'Schedule created successfully' };
 	},
 
 	updateScheduleEvent: async ({ request }) => {

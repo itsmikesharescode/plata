@@ -10,14 +10,6 @@
 	import { toast } from 'svelte-sonner';
 	import SimplePicker from '$lib/components/general/custom-pickers/simple-picker.svelte';
 	import * as Resizable from '$lib/components/ui/resizable/index.js';
-	import {
-		sampleClassrooms,
-		sampleDepartments,
-		sampleFaculties,
-		samplePrograms,
-		sampleSubjects,
-		sampleYearAndSections
-	} from '$lib';
 	import TimePicker from '$lib/components/general/custom-pickers/time-picker.svelte';
 	import { untrack } from 'svelte';
 	import { Input } from '$lib/components/ui/input/index.js';
@@ -64,8 +56,8 @@
 			switch (status) {
 				case 200:
 					toast.success('Schedule created successfully');
-
 					reset();
+					open = false;
 
 					break;
 				case 401:
@@ -413,7 +405,7 @@
 										<div class="grid grid-cols-2 items-center gap-4">
 											<div class="flex flex-wrap items-center gap-2">
 												<span class="text-lg font-medium">
-													{sampleSubjects.find(
+													{subjectsDropdown?.find(
 														(v) => v.id === $formData.assigned_subjects[index].subject_id
 													)?.course_name}
 												</span>
