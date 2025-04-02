@@ -17,11 +17,11 @@
 	});
 </script>
 
-<div class="pointer-events-none fixed inset-0 z-50 flex items-center justify-center">
+<!-- <div class="pointer-events-none fixed inset-0 z-50 flex items-center justify-center">
 	<div class="rounded-lg bg-secondary/50 p-4">
 		<span class="text-base font-bold">Not Paid</span>
 	</div>
-</div>
+</div> -->
 
 <ModeWatcher defaultMode="dark" />
 <Toaster />

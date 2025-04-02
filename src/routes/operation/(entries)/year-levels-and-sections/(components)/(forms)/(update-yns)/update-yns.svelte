@@ -94,9 +94,9 @@
 >
 	<AlertDialog.Content>
 		<AlertDialog.Header>
-			<AlertDialog.Title>Update Year and Section</AlertDialog.Title>
+			<AlertDialog.Title>Update Year Level and Section</AlertDialog.Title>
 			<AlertDialog.Description
-				>Fill the form below to update the year and section.</AlertDialog.Description
+				>Fill the form below to update the year level and section.</AlertDialog.Description
 			>
 		</AlertDialog.Header>
 
@@ -106,8 +106,8 @@
 			<Form.Field {form} name="year">
 				<Form.Control>
 					{#snippet children({ props })}
-						<Form.Label>Year</Form.Label>
-						<Input {...props} bind:value={$formData.year} placeholder="Year" />
+						<Form.Label>Year Level</Form.Label>
+						<Input {...props} bind:value={$formData.year} placeholder="Year Level" />
 					{/snippet}
 				</Form.Control>
 				<Form.FieldErrors />
