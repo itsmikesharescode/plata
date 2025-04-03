@@ -76,19 +76,27 @@ export const actions: Actions = {
 		return { form, msg: 'Schedule created successfully' };
 	},
 
-	updateScheduleEvent: async ({ request }) => {
+	updateScheduleEvent: async ({ request, locals: { supabase } }) => {
 		const form = await superValidate(request, zod(updateScheduleSchema));
 
 		if (!form.valid) return fail(400, { form });
 
-		console.log(form.data);
+		const { error } = await supabase.from('schedules_tb').update(form.data).eq('id', form.data.id);
+
+		if (error) return fail(401, { form });
+
+		return { form, msg: 'Schedule updated successfully' };
 	},
 
-	deleteScheduleEvent: async ({ request }) => {
+	deleteScheduleEvent: async ({ request, locals: { supabase } }) => {
 		const form = await superValidate(request, zod(deleteScheduleSchema));
 
 		if (!form.valid) return fail(400, { form });
 
-		console.log(form.data);
+		const { error } = await supabase.from('schedules_tb').delete().eq('id', form.data.id);
+
+		if (error) return fail(401, { form });
+
+		return { form, msg: 'Schedule deleted successfully' };
 	}
 };
