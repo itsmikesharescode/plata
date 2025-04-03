@@ -15,45 +15,7 @@
 		<CreateSchedule createScheduleForm={data.createScheduleForm} />
 	</section>
 	<section>
-		<CustomTable
-			{columns}
-			data={[
-				{
-					id: crypto.randomUUID(),
-					faculty_id: crypto.randomUUID(),
-					department_id: 'asdasdasd',
-					program_id: 'asdasdasd',
-					year_and_section_id: 'asdasdasd',
-					semester: 'asdasdasd',
-					assigned_subjects: [
-						{
-							subject_id: 'asdasdasd',
-							classroom_id: 'asdasdasd',
-							start_time: 'asdasdasd',
-							end_time: 'asdasdasd',
-							day: 'asdasdasd'
-						}
-					]
-				},
-				{
-					id: crypto.randomUUID(),
-					faculty_id: crypto.randomUUID(),
-					department_id: 'asdasdasd',
-					program_id: 'asdasdasd',
-					year_and_section_id: 'asdasdasd',
-					semester: 'asdasdasd',
-					assigned_subjects: [
-						{
-							subject_id: 'asdasdasd',
-							classroom_id: 'asdasdasd',
-							start_time: 'asdasdasd',
-							end_time: 'asdasdasd',
-							day: 'asdasdasd'
-						}
-					]
-				}
-			]}
-		/>
+		<CustomTable {columns} data={data.schedules ?? []} />
 	</section>
 </main>
 

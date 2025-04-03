@@ -397,7 +397,7 @@
 					<ScrollArea class="mt-5">
 						<section class="flex flex-col px-6">
 							<div
-								class="relative flex flex-col gap-4 overflow-hidden rounded-lg border-2 bg-white p-6"
+								class="relative flex flex-col gap-4 overflow-hidden rounded-lg border-2 bg-background p-6"
 							>
 								{#each $formData.assigned_subjects as _, index (index)}
 									<div class="ove flex flex-col gap-4" in:fade>
