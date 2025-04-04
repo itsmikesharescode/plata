@@ -48,13 +48,13 @@
 	}}
 >
 	<AlertDialog.Trigger class={buttonVariants({ variant: 'default' })}
-		>Create Year and Section</AlertDialog.Trigger
+		>Create Year Level and Section</AlertDialog.Trigger
 	>
 	<AlertDialog.Content>
 		<AlertDialog.Header>
-			<AlertDialog.Title>Create Year and Section</AlertDialog.Title>
+			<AlertDialog.Title>Create Year Level and Section</AlertDialog.Title>
 			<AlertDialog.Description>
-				Fill the form below to create a new year and section.
+				Fill the form below to create a new year level and section.
 			</AlertDialog.Description>
 		</AlertDialog.Header>
 
@@ -62,8 +62,8 @@
 			<Form.Field {form} name="year">
 				<Form.Control>
 					{#snippet children({ props })}
-						<Form.Label>Year</Form.Label>
-						<Input {...props} bind:value={$formData.year} placeholder="Year" />
+						<Form.Label>Year Level</Form.Label>
+						<Input {...props} bind:value={$formData.year} placeholder="Year Level" />
 					{/snippet}
 				</Form.Control>
 				<Form.FieldErrors />

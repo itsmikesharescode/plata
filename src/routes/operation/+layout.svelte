@@ -3,7 +3,23 @@
 	import { toast } from 'svelte-sonner';
 
 	export type DepartmentDropdown = Database['public']['Tables']['departments_tb']['Row'][] | null;
-	export type Department = Database['public']['Tables']['departments_tb']['Row'];
+	export type FacultyDropdown =
+		| (Database['public']['Tables']['faculties_tb']['Row'] & {
+				departments_tb: {
+					department_name: string;
+				};
+		  })[]
+		| null;
+	export type YearLevelsAndSectionsDropdown =
+		| Database['public']['Tables']['yearlevels_and_sections_tb']['Row'][]
+		| null;
+	export type ClassroomDropdown =
+		| (Database['public']['Tables']['classrooms_tb']['Row'] & {
+				departments_tb: {
+					department_name: string;
+				};
+		  })[]
+		| null;
 	export type ProgramDropdown =
 		| (Database['public']['Tables']['programs_tb']['Row'] & {
 				departments_tb: {
@@ -11,6 +27,7 @@
 				};
 		  })[]
 		| null;
+	export type SubjectDropdown = Database['public']['Tables']['subjects_tb']['Row'][] | null;
 
 	export const handleCopy = async (text: string) => {
 		await navigator.clipboard
@@ -41,7 +58,7 @@
 	<OperationSidebar />
 	<Sidebar.Inset class="min-w-0">
 		<header
-			class="sticky top-0 flex h-16 shrink-0 items-center justify-between gap-2 border-b bg-background px-4"
+			class="sticky top-0 z-20 flex h-16 shrink-0 items-center justify-between gap-2 border-b bg-background px-4"
 		>
 			<div class="flex h-full items-center gap-2">
 				<Sidebar.Trigger class="-ml-1" />

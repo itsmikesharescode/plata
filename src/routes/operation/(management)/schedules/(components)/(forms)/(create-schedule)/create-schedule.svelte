@@ -10,14 +10,6 @@
 	import { toast } from 'svelte-sonner';
 	import SimplePicker from '$lib/components/general/custom-pickers/simple-picker.svelte';
 	import * as Resizable from '$lib/components/ui/resizable/index.js';
-	import {
-		sampleClassrooms,
-		sampleDepartments,
-		sampleFaculties,
-		samplePrograms,
-		sampleSubjects,
-		sampleYearAndSections
-	} from '$lib';
 	import TimePicker from '$lib/components/general/custom-pickers/time-picker.svelte';
 	import { untrack } from 'svelte';
 	import { Input } from '$lib/components/ui/input/index.js';
@@ -27,22 +19,32 @@
 	import { Button } from '$lib/components/ui/button';
 	import { useDebounce } from 'runed';
 	import { fade } from 'svelte/transition';
+	import type {
+		ClassroomDropdown,
+		DepartmentDropdown,
+		FacultyDropdown,
+		ProgramDropdown,
+		SubjectDropdown,
+		YearLevelsAndSectionsDropdown
+	} from '../../../../../+layout.svelte';
+	import { page } from '$app/state';
 
 	interface Props {
 		createScheduleForm: SuperValidated<CreateScheduleSchema>;
 	}
-
-	const detectedLecLabUnit = (id: string) => {
-		return sampleSubjects.find((v) => v.id === id);
-	};
-
-	const detectedClassroom = (id: string) => {
-		return sampleClassrooms.find((v) => v.id === id);
-	};
 </script>
 
 <script lang="ts">
 	const { createScheduleForm }: Props = $props();
+
+	const departmentsDropdown = $derived(page.data.departmentsDropdown) as DepartmentDropdown;
+	const programsDropdown = $derived(page.data.programsDropdown) as ProgramDropdown;
+	const facultiesDropdown = $derived(page.data.facultiesDropdown) as FacultyDropdown;
+	const yearLevelsAndSectionsDropdown = $derived(
+		page.data.yearLevelsAndSectionsDropdown
+	) as YearLevelsAndSectionsDropdown;
+	const classroomsDropdown = $derived(page.data.classroomsDropdown) as ClassroomDropdown;
+	const subjectsDropdown = $derived(page.data.subjectsDropdown) as SubjectDropdown;
 
 	const form = superForm(createScheduleForm, {
 		validators: zodClient(createScheduleSchema),
@@ -54,8 +56,8 @@
 			switch (status) {
 				case 200:
 					toast.success('Schedule created successfully');
-
 					reset();
+					open = false;
 
 					break;
 				case 401:
@@ -90,6 +92,14 @@
 			});
 		}
 	});
+
+	const detectedLecLabUnit = (id: string) => {
+		return subjectsDropdown?.find((v) => v.id === id);
+	};
+
+	const detectedClassroom = (id: string) => {
+		return classroomsDropdown?.find((v) => v.id === id);
+	};
 </script>
 
 {#snippet readOnlyTemplate(title: string, description: string | number | undefined)}
@@ -133,7 +143,7 @@
 
 											<SimplePicker
 												placeholder="Select Department"
-												selections={sampleDepartments.map((v) => ({
+												selections={departmentsDropdown?.map((v) => ({
 													id: v.id,
 													label: v.department_code,
 													value: JSON.stringify({
@@ -146,9 +156,9 @@
 												{#snippet loopChild({ selectedItem })}
 													<div class="flex items-center gap-2">
 														<div
+															class="size-5 rounded-full"
 															style="background-color: {JSON.parse(selectedItem.value)
 																.department_color}"
-															class="size-4 rounded-full border-[1px]"
 														></div>
 														<div class="flex flex-col">
 															<span class="text-sm">{selectedItem.label}</span>
@@ -173,24 +183,35 @@
 
 											<SimplePicker
 												placeholder="Select Faculty"
-												selections={sampleFaculties.map((v) => ({
+												selections={facultiesDropdown?.map((v) => ({
 													id: v.id,
 													label: v.fullname,
 													value: JSON.stringify({
-														department_id: v.department_id,
+														employment_status: v.employment_status,
 														academic_rank: v.academic_rank,
-														employment_status: v.employment_status
+														department_name: v.departments_tb.department_name
 													})
 												})) ?? []}
 												bind:selected_id={$formData.faculty_id}
 											>
 												{#snippet loopChild({ selectedItem })}
-													<div class="flex flex-col">
-														<span class="text-sm">{selectedItem.label}</span>
-														<span class="text-xs text-muted-foreground">
-															{JSON.parse(selectedItem.value).employment_status} /
-															{JSON.parse(selectedItem.value).academic_rank}
-														</span>
+													<div class="flex items-center gap-2">
+														<div class="flex flex-col">
+															<span class="text-sm">
+																{selectedItem.label}
+																<span class="text-xs font-medium text-destructive"
+																	>({JSON.parse(selectedItem.value).employment_status})</span
+																>
+															</span>
+															<div class="flex flex-col text-xs text-muted-foreground">
+																<span>
+																	{JSON.parse(selectedItem.value).academic_rank}
+																</span>
+																<span>
+																	{JSON.parse(selectedItem.value).department_name}
+																</span>
+															</div>
+														</div>
 													</div>
 												{/snippet}
 											</SimplePicker>
@@ -208,12 +229,12 @@
 
 											<SimplePicker
 												placeholder="Select Program"
-												selections={samplePrograms.map((v) => ({
+												selections={programsDropdown?.map((v) => ({
 													id: v.id,
 													label: v.program_code,
 													value: JSON.stringify({
-														department_id: v.department_id,
-														program_name: v.program_name
+														program_name: v.program_name,
+														department_name: v.departments_tb.department_name
 													})
 												})) ?? []}
 												bind:selected_id={$formData.program_id}
@@ -222,8 +243,7 @@
 													<div class="flex flex-col">
 														<span class="text-sm">{selectedItem.label}</span>
 														<span class="text-xs text-muted-foreground">
-															<!-- {JSON.parse(selectedItem.value).department_id} / -->
-															{JSON.parse(selectedItem.value).program_name}
+															{JSON.parse(selectedItem.value).department_name}
 														</span>
 													</div>
 												{/snippet}
@@ -234,26 +254,22 @@
 									<Form.FieldErrors />
 								</Form.Field>
 
+								<!--Year level and section dropdown-->
 								<Form.Field {form} name="year_and_section_id">
 									<Form.Control>
 										{#snippet children({ props })}
 											<Form.Label>Year Level and Section</Form.Label>
 
 											<SimplePicker
-												placeholder="Select Year and Section"
-												selections={sampleYearAndSections.map((v) => ({
+												placeholder="Select Year Level and Section"
+												selections={yearLevelsAndSectionsDropdown?.map((v) => ({
 													id: v.id,
-													label: `${v.year_level} - ${v.section}`,
-													value: `${v.year_level} - ${v.section}`
+													label: `${v.year} ${v.section}`,
+													value: ''
 												})) ?? []}
 												bind:selected_id={$formData.year_and_section_id}
-											>
-												{#snippet loopChild({ selectedItem })}
-													<div class="flex flex-col">
-														<span class="text-sm">{selectedItem.label}</span>
-													</div>
-												{/snippet}
-											</SimplePicker>
+											/>
+
 											<input
 												name={props.name}
 												type="hidden"
@@ -289,14 +305,8 @@
 													}
 												]}
 												bind:selected_id={$formData.semester}
-											>
-												{#snippet loopChild({ selectedItem })}
-													<div class="flex flex-col">
-														<span class="text-sm">{selectedItem.label}</span>
-														<span class="text-xs text-muted-foreground">{selectedItem.value}</span>
-													</div>
-												{/snippet}
-											</SimplePicker>
+											/>
+
 											<input name={props.name} type="hidden" value={$formData.semester} />
 										{/snippet}
 									</Form.Control>
@@ -387,14 +397,15 @@
 					<ScrollArea class="mt-5">
 						<section class="flex flex-col px-6">
 							<div
-								class="relative flex flex-col gap-4 overflow-hidden rounded-lg border-2 bg-white p-6"
+								class="relative flex flex-col gap-4 overflow-hidden rounded-lg border-2 bg-background p-6"
 							>
 								{#each $formData.assigned_subjects as _, index (index)}
 									<div class="ove flex flex-col gap-4" in:fade>
+										<!--Display subject name, start time, end time, and day-->
 										<div class="grid grid-cols-2 items-center gap-4">
 											<div class="flex flex-wrap items-center gap-2">
 												<span class="text-lg font-medium">
-													{sampleSubjects.find(
+													{subjectsDropdown?.find(
 														(v) => v.id === $formData.assigned_subjects[index].subject_id
 													)?.course_name}
 												</span>
@@ -461,17 +472,16 @@
 
 														<SimplePicker
 															placeholder="Select Subject"
-															selections={sampleSubjects.map((v) => ({
+															selections={subjectsDropdown?.map((v) => ({
 																id: v.id,
 																label: v.course_name,
 																value: JSON.stringify({
 																	course_code: v.course_code,
-																	lec_hours: v.lec_hours,
+																	lecture_hours: v.lecture_hours,
 																	lab_hours: v.lab_hours,
-																	unit: v.unit,
-																	code: ''
+																	unit: v.unit
 																})
-															}))}
+															})) ?? []}
 															bind:selected_id={$formData.assigned_subjects[index].subject_id}
 														>
 															{#snippet loopChild({ selectedItem })}
@@ -484,7 +494,7 @@
 																	</div>
 																	<div class="flex items-center gap-2">
 																		<span class="text-xs text-muted-foreground">
-																			Lecture: {JSON.parse(selectedItem.value).lec_hours}
+																			Lecture: {JSON.parse(selectedItem.value).lecture_hours}
 																		</span>
 																		<span class="text-xs text-muted-foreground">
 																			Lab: {JSON.parse(selectedItem.value).lab_hours}
@@ -514,14 +524,14 @@
 
 														<SimplePicker
 															placeholder="Select Classroom"
-															selections={sampleClassrooms.map((v) => ({
+															selections={classroomsDropdown?.map((v) => ({
 																id: v.id,
 																label: v.classroom_name,
 																value: JSON.stringify({
-																	department_name: 'Sample dep name',
+																	department_name: v.departments_tb.department_name,
 																	building_name: v.building_name
 																})
-															}))}
+															})) ?? []}
 															bind:selected_id={$formData.assigned_subjects[index].classroom_id}
 														>
 															{#snippet loopChild({ selectedItem })}
@@ -529,11 +539,11 @@
 																	<div class="flex items-center gap-2">
 																		<span class="text-sm">{selectedItem.label}</span>
 																	</div>
-																	<div class="flex items-center gap-2">
-																		<span class="text-xs text-muted-foreground">
+																	<div class="flex flex-col text-xs text-muted-foreground">
+																		<span>
 																			Department: {JSON.parse(selectedItem.value).department_name}
 																		</span>
-																		<span class="text-xs text-muted-foreground">
+																		<span>
 																			Building: {JSON.parse(selectedItem.value).building_name}
 																		</span>
 																	</div>
@@ -559,7 +569,7 @@
 											{@render readOnlyTemplate(
 												'Department Name',
 												detectedClassroom($formData.assigned_subjects[index].classroom_id)
-													?.department_id ?? 'Auto-assigned'
+													?.departments_tb.department_name ?? 'Auto-assigned'
 											)}
 										</div>
 
@@ -567,7 +577,7 @@
 											{@render readOnlyTemplate(
 												'Lecture Hours',
 												detectedLecLabUnit($formData.assigned_subjects[index].subject_id)
-													?.lec_hours ?? 'Auto-assigned'
+													?.lecture_hours ?? 'Auto-assigned'
 											)}
 
 											{@render readOnlyTemplate(

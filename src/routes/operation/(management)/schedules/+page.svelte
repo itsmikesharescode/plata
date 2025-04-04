@@ -4,56 +4,21 @@
 	import DeleteSchedule from './(components)/(forms)/(delete-schedule)/delete-schedule.svelte';
 	import UpdateSchedule from './(components)/(forms)/(update-schedule)/update-schedule.svelte';
 	import { columns } from './(components)/(table)/column';
+	import Printing from './(components)/(toolbars)/(printing)/printing.svelte';
+	import { initPrintingState } from './(components)/(toolbars)/(printing)/state.svelte';
 
 	const { data } = $props();
 
-	//TODO: implement update chairperson form
+	initPrintingState();
 </script>
 
 <main class="flex flex-col gap-4 p-4">
-	<section>
+	<section class="flex items-center justify-between gap-4">
 		<CreateSchedule createScheduleForm={data.createScheduleForm} />
+		<Printing />
 	</section>
 	<section>
-		<CustomTable
-			{columns}
-			data={[
-				{
-					id: crypto.randomUUID(),
-					faculty_id: crypto.randomUUID(),
-					department_id: 'asdasdasd',
-					program_id: 'asdasdasd',
-					year_and_section_id: 'asdasdasd',
-					semester: 'asdasdasd',
-					assigned_subjects: [
-						{
-							subject_id: 'asdasdasd',
-							classroom_id: 'asdasdasd',
-							start_time: 'asdasdasd',
-							end_time: 'asdasdasd',
-							day: 'asdasdasd'
-						}
-					]
-				},
-				{
-					id: crypto.randomUUID(),
-					faculty_id: crypto.randomUUID(),
-					department_id: 'asdasdasd',
-					program_id: 'asdasdasd',
-					year_and_section_id: 'asdasdasd',
-					semester: 'asdasdasd',
-					assigned_subjects: [
-						{
-							subject_id: 'asdasdasd',
-							classroom_id: 'asdasdasd',
-							start_time: 'asdasdasd',
-							end_time: 'asdasdasd',
-							day: 'asdasdasd'
-						}
-					]
-				}
-			]}
-		/>
+		<CustomTable {columns} data={data.schedules ?? []} />
 	</section>
 </main>
 

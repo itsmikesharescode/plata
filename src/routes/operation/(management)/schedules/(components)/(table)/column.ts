@@ -1,9 +1,16 @@
 import type { ColumnDef } from '@tanstack/table-core';
 import { createRawSnippet } from 'svelte';
 import type { ScheduleTable } from './schema.js';
-import RowActions from './components/row-actions.svelte';
 import { HeaderColumn } from '$lib/components/general/custom-table/components/index.js';
-import RowId from './components/row-id.svelte';
+import {
+	RowActions,
+	RowDepartment,
+	RowFaculty,
+	RowId,
+	RowProgram,
+	RowYns,
+	RowAssignedSub
+} from './components/index.js';
 
 import { renderComponent, renderSnippet } from '$lib/components/ui/data-table/index.js';
 
@@ -29,16 +36,7 @@ export const columns: ColumnDef<ScheduleTable>[] = [
 				title: 'DEPARTMENT'
 			});
 		},
-		cell: ({ row }) => {
-			const departmentSnippet = createRawSnippet<[string]>((getDepartment) => {
-				const department = getDepartment();
-				return {
-					render: () => `<div class="w-full">${department}</div>`
-				};
-			});
-
-			return renderSnippet(departmentSnippet, row.getValue('department_id'));
-		},
+		cell: ({ row }) => renderComponent(RowDepartment<ScheduleTable>, { row }),
 		enableSorting: true,
 		enableHiding: true
 	},
@@ -51,16 +49,7 @@ export const columns: ColumnDef<ScheduleTable>[] = [
 				title: 'PROGRAM'
 			});
 		},
-		cell: ({ row }) => {
-			const programSnippet = createRawSnippet<[string]>((getProgram) => {
-				const program = getProgram();
-				return {
-					render: () => `<div class="w-full">${program}</div>`
-				};
-			});
-
-			return renderSnippet(programSnippet, row.getValue('program_id'));
-		},
+		cell: ({ row }) => renderComponent(RowProgram<ScheduleTable>, { row }),
 		enableSorting: true,
 		enableHiding: true
 	},
@@ -73,16 +62,7 @@ export const columns: ColumnDef<ScheduleTable>[] = [
 				title: 'FULLNAME'
 			});
 		},
-		cell: ({ row }) => {
-			const facultySnippet = createRawSnippet<[string]>((getFaculty) => {
-				const faculty = getFaculty();
-				return {
-					render: () => `<div class="w-full">${faculty}</div>`
-				};
-			});
-
-			return renderSnippet(facultySnippet, row.getValue('faculty_id'));
-		},
+		cell: ({ row }) => renderComponent(RowFaculty<ScheduleTable>, { row }),
 		enableSorting: true,
 		enableHiding: true
 	},
@@ -95,16 +75,7 @@ export const columns: ColumnDef<ScheduleTable>[] = [
 				title: 'YEAR AND SECTION'
 			});
 		},
-		cell: ({ row }) => {
-			const yearAndSectionSnippet = createRawSnippet<[string]>((getYearAndSection) => {
-				const yearAndSection = getYearAndSection();
-				return {
-					render: () => `<div class="w-[100px]">${yearAndSection}</div>`
-				};
-			});
-
-			return renderSnippet(yearAndSectionSnippet, row.getValue('year_and_section_id'));
-		},
+		cell: ({ row }) => renderComponent(RowYns<ScheduleTable>, { row }),
 		enableSorting: true,
 		enableHiding: true
 	},
@@ -139,16 +110,7 @@ export const columns: ColumnDef<ScheduleTable>[] = [
 				title: 'ASSIGNED SUBJECTS'
 			});
 		},
-		cell: ({ row }) => {
-			const assignedSubjectsSnippet = createRawSnippet<[string]>((getAssignedSubjects) => {
-				const assignedSubjects = getAssignedSubjects();
-				return {
-					render: () => `<div class="w-full">${assignedSubjects}</div>`
-				};
-			});
-
-			return renderSnippet(assignedSubjectsSnippet, row.getValue('assigned_subjects'));
-		},
+		cell: ({ row }) => renderComponent(RowAssignedSub<ScheduleTable>, { row }),
 		enableSorting: true,
 		enableHiding: true
 	},

@@ -71,7 +71,7 @@ CREATE OR REPLACE FUNCTION "public"."cold_start"() RETURNS "void"
 DECLARE
     admin_email TEXT := 'localadmin@gmail.com';  -- Set actual admin email
     admin_fullname TEXT := 'Admin User';      -- Set actual admin name
-    admin_id UUID := '0df249f9-3ae7-4370-96c6-75ddbb8cc7b7';
+    admin_id UUID := '4f219c2a-7993-499b-b2b1-085a1b050474';
 BEGIN
     -- Insert base roles
     INSERT INTO roles_tb (user_id, name) VALUES (admin_id, 'admin');
@@ -477,6 +477,25 @@ COMMENT ON TABLE "public"."roles_tb" IS 'list of roles';
 
 
 
+CREATE TABLE IF NOT EXISTS "public"."schedules_tb" (
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "faculty_id" "uuid" NOT NULL,
+    "program_id" "uuid" NOT NULL,
+    "department_id" "uuid" NOT NULL,
+    "year_and_section_id" "uuid" NOT NULL,
+    "semester" "text" NOT NULL,
+    "assigned_subjects" "jsonb" NOT NULL
+);
+
+
+ALTER TABLE "public"."schedules_tb" OWNER TO "postgres";
+
+
+COMMENT ON TABLE "public"."schedules_tb" IS 'list of created schedules';
+
+
+
 CREATE TABLE IF NOT EXISTS "public"."subjects_tb" (
     "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
@@ -554,6 +573,11 @@ ALTER TABLE ONLY "public"."roles_tb"
 
 
 
+ALTER TABLE ONLY "public"."schedules_tb"
+    ADD CONSTRAINT "schedules_tb_pkey" PRIMARY KEY ("id");
+
+
+
 ALTER TABLE ONLY "public"."subjects_tb"
     ADD CONSTRAINT "subjects_tb_pkey" PRIMARY KEY ("id");
 
@@ -605,6 +629,26 @@ ALTER TABLE ONLY "public"."roles_tb"
 
 
 
+ALTER TABLE ONLY "public"."schedules_tb"
+    ADD CONSTRAINT "schedules_tb_department_id_fkey" FOREIGN KEY ("department_id") REFERENCES "public"."departments_tb"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."schedules_tb"
+    ADD CONSTRAINT "schedules_tb_faculty_id_fkey" FOREIGN KEY ("faculty_id") REFERENCES "public"."faculties_tb"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."schedules_tb"
+    ADD CONSTRAINT "schedules_tb_program_id_fkey" FOREIGN KEY ("program_id") REFERENCES "public"."programs_tb"("id") ON DELETE CASCADE;
+
+
+
+ALTER TABLE ONLY "public"."schedules_tb"
+    ADD CONSTRAINT "schedules_tb_year_and_section_id_fkey" FOREIGN KEY ("year_and_section_id") REFERENCES "public"."yearlevels_and_sections_tb"("id") ON DELETE CASCADE;
+
+
+
 ALTER TABLE ONLY "public"."users_tb"
     ADD CONSTRAINT "users_tb_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
 
@@ -642,6 +686,14 @@ CREATE POLICY "Allow all if admin" ON "public"."departments_tb" TO "authenticate
 
 
 
+CREATE POLICY "Allow all if admin or chair" ON "public"."schedules_tb" TO "authenticated" USING (("public"."is_admin"() OR "public"."is_chair"())) WITH CHECK (("public"."is_admin"() OR "public"."is_chair"()));
+
+
+
+CREATE POLICY "Allow select if chair" ON "public"."departments_tb" FOR SELECT TO "authenticated" USING ("public"."is_chair"());
+
+
+
 CREATE POLICY "Select for chair" ON "public"."history_tb" FOR SELECT TO "authenticated" USING ("public"."is_chair"());
 
 
@@ -666,6 +718,9 @@ ALTER TABLE "public"."programs_tb" ENABLE ROW LEVEL SECURITY;
 
 
 ALTER TABLE "public"."roles_tb" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."schedules_tb" ENABLE ROW LEVEL SECURITY;
 
 
 ALTER TABLE "public"."subjects_tb" ENABLE ROW LEVEL SECURITY;
@@ -986,6 +1041,12 @@ GRANT ALL ON TABLE "public"."programs_tb" TO "service_role";
 GRANT ALL ON TABLE "public"."roles_tb" TO "anon";
 GRANT ALL ON TABLE "public"."roles_tb" TO "authenticated";
 GRANT ALL ON TABLE "public"."roles_tb" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."schedules_tb" TO "anon";
+GRANT ALL ON TABLE "public"."schedules_tb" TO "authenticated";
+GRANT ALL ON TABLE "public"."schedules_tb" TO "service_role";
 
 
 
