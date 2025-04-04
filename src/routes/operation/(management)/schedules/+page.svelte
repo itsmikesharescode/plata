@@ -5,9 +5,11 @@
 	import UpdateSchedule from './(components)/(forms)/(update-schedule)/update-schedule.svelte';
 	import { columns } from './(components)/(table)/column';
 	import Printing from './(components)/(toolbars)/(printing)/printing.svelte';
+	import { initPrintingState } from './(components)/(toolbars)/(printing)/state.svelte';
+
 	const { data } = $props();
 
-	//TODO: implement update chairperson form
+	initPrintingState();
 </script>
 
 <main class="flex flex-col gap-4 p-4">

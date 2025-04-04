@@ -1,27 +1,49 @@
+<script lang="ts" module>
+	import { page } from '$app/state';
+	const queryPrograms = async (textSearch: string) => {
+		if (!page.data.supabase) return null;
+
+		const query = page.data.supabase.from('programs_tb').select('*').order('created_at').limit(30);
+
+		if (textSearch.length) {
+			query.like('program_code', `%${textSearch.toUpperCase()}%`);
+		}
+
+		const { data, error } = await query;
+
+		return error ? null : data;
+	};
+</script>
+
 <script lang="ts">
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import { buttonVariants } from '$lib/components/ui/button';
 	import Printer from 'lucide-svelte/icons/printer';
 	import Button from '$lib/components/ui/button/button.svelte';
-	import * as Command from '$lib/components/ui/command/index.js';
-	import { tick } from 'svelte';
+	import { tick, untrack } from 'svelte';
 	import Input from '$lib/components/ui/input/input.svelte';
-
-	const labels = ['BSIT', 'BSCS', 'BSIS2'];
+	import Search from 'lucide-svelte/icons/search';
+	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
+	import { Debounced } from 'runed';
 
 	let open = $state(false);
-	let selectedLabel = $state('feature');
 	let triggerRef = $state<HTMLButtonElement>(null!);
+	let searchValue = $state('');
 
-	// We want to refocus the trigger button when the user selects
-	// an item from the list so users can continue navigating the
-	// rest of the form with the keyboard.
+	const searchDebounce = new Debounced(() => searchValue, 800);
+
 	function closeAndFocusTrigger() {
 		open = false;
 		tick().then(() => {
 			triggerRef.focus();
 		});
 	}
+
+	$effect(() => {
+		if (open) {
+			untrack(async () => {});
+		}
+	});
 </script>
 
 <DropdownMenu.Root bind:open>
@@ -37,42 +59,74 @@
 				<DropdownMenu.Sub>
 					<DropdownMenu.SubTrigger>Class Schedules</DropdownMenu.SubTrigger>
 					<DropdownMenu.SubContent>
-						<DropdownMenu.Item>
-							<Printer class="size-4" />
-							All Programs
-						</DropdownMenu.Item>
+						<div class="flex flex-col gap-2">
+							<div class="p-4 pb-0">
+								<div class="relative flex items-center gap-2">
+									<Input
+										type="search"
+										placeholder="Search Program Code"
+										bind:value={searchValue}
+										class="pl-7"
+									/>
+									<Search class="absolute left-2 size-4" />
+								</div>
+							</div>
+
+							<div class="flex flex-col gap-2">
+								<ScrollArea class="h-[200px] px-4 pb-4">
+									{#await queryPrograms(searchDebounce.current)}
+										<div class="p-4 text-center text-sm text-muted-foreground">Searching ...</div>
+									{:then programs}
+										{#if !programs?.length}
+											<div class="p-4 text-center text-sm text-muted-foreground">
+												No programs found
+											</div>
+										{/if}
+
+										{#each programs ?? [] as program}
+											<a href="/operation/schedules/printables?id={program.id}">
+												<DropdownMenu.Item>
+													<Printer class="size-4" />
+													<div class="flex max-w-[200px] flex-col">
+														<span>{program.program_code}</span>
+														<span class="text-xs text-muted-foreground">
+															{program.program_name}
+														</span>
+													</div>
+												</DropdownMenu.Item>
+											</a>
+										{/each}
+									{/await}
+								</ScrollArea>
+							</div>
+						</div>
+
 						<DropdownMenu.Separator />
-						<Command.Root value={selectedLabel}>
-							<Command.Input autofocus placeholder="Search program..." class="h-9" />
-							<Command.List>
-								<Command.Empty>No program found.</Command.Empty>
-								<Command.Group>
-									{#each labels as label (label)}
-										<Command.Item
-											value={label}
-											onSelect={() => {
-												selectedLabel = label;
-												closeAndFocusTrigger();
-											}}
-										>
-											{label}
-										</Command.Item>
-									{/each}
-								</Command.Group>
-							</Command.List>
-						</Command.Root>
+
+						<div class="p-4">
+							<a href="/operation/schedules/printables">
+								<DropdownMenu.Item>
+									<Printer class="size-4" />
+									All Programs
+								</DropdownMenu.Item>
+							</a>
+						</div>
 					</DropdownMenu.SubContent>
 				</DropdownMenu.Sub>
 
 				<DropdownMenu.Sub>
 					<DropdownMenu.SubTrigger>Teaching Form</DropdownMenu.SubTrigger>
-					<DropdownMenu.SubContent class="p-4">
+					<DropdownMenu.SubContent class="flex flex-col gap-2 p-4">
 						<div class="flex items-center gap-2">
-							<Input placeholder="Faculty ID" class="h-9" />
+							<Input placeholder="Schedule ID" class="h-9" />
 							<Button size="sm">
 								<Printer class="size-4" />
 							</Button>
 						</div>
+
+						<span class="text-xs text-muted-foreground">
+							Enter Schedule ID To Print Teaching Form
+						</span>
 					</DropdownMenu.SubContent>
 				</DropdownMenu.Sub>
 			</DropdownMenu.Group>
