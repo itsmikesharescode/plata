@@ -63,7 +63,7 @@
 				<Form.Control>
 					{#snippet children({ props })}
 						<Form.Label>Year Level</Form.Label>
-						<Input {...props} bind:value={$formData.year} placeholder="Year Level" />
+						<Input type="number" {...props} bind:value={$formData.year} placeholder="Year Level" />
 					{/snippet}
 				</Form.Control>
 				<Form.FieldErrors />

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 const baseSchema = {
-	year: z.string().min(1, 'Year is required.'),
+	year: z.coerce.number().positive({ message: 'Year must be a positive number.' }),
 	section: z.string().min(1, 'Section is required.')
 };
 

@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const yearAndSectionSchema = z.object({
 	id: z.string(),
-	year: z.string(),
+	year: z.number(),
 	section: z.string()
 });
 

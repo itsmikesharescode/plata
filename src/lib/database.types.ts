@@ -310,19 +310,19 @@ export type Database = {
 					created_at: string;
 					id: string;
 					section: string;
-					year: string;
+					year: number;
 				};
 				Insert: {
 					created_at?: string;
 					id?: string;
 					section: string;
-					year: string;
+					year: number;
 				};
 				Update: {
 					created_at?: string;
 					id?: string;
 					section?: string;
-					year?: string;
+					year?: number;
 				};
 				Relationships: [];
 			};

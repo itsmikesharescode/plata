@@ -23,3 +23,4 @@ supabase gen types --local > src/lib/database.types.ts
 supabase db dump --local -f supabase/schema.sql
 
 #user_meta_data -> UserMeta from ./types
+#assigned_subjects -> AssignedSubject from ./types

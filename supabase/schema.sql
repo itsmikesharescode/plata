@@ -531,7 +531,7 @@ COMMENT ON TABLE "public"."users_tb" IS 'list of created users';
 CREATE TABLE IF NOT EXISTS "public"."yearlevels_and_sections_tb" (
     "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
-    "year" character varying NOT NULL,
+    "year" numeric NOT NULL,
     "section" character varying NOT NULL
 );
 
