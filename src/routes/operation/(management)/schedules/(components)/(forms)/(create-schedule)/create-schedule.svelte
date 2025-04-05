@@ -243,7 +243,7 @@
 													<div class="flex flex-col">
 														<span class="text-sm">{selectedItem.label}</span>
 														<span class="text-xs text-muted-foreground">
-															{JSON.parse(selectedItem.value).department_name}
+															{JSON.parse(selectedItem.value).program_name}
 														</span>
 													</div>
 												{/snippet}
@@ -289,19 +289,19 @@
 												placeholder="Select Semester"
 												selections={[
 													{
-														id: 'First Semester',
-														label: 'First Semester',
-														value: 'First Semester'
+														id: '1st Term',
+														label: '1st Term',
+														value: '1st Term'
 													},
 													{
-														id: 'Second Semester',
-														label: 'Second Semester',
-														value: 'Second Semester'
+														id: '2nd Term',
+														label: '2nd Term',
+														value: '2nd Term'
 													},
 													{
-														id: 'Third Semester',
-														label: 'Third Semester',
-														value: 'Third Semester'
+														id: '3rd Term',
+														label: '3rd Term',
+														value: '3rd Term'
 													}
 												]}
 												bind:selected_id={$formData.semester}

@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 const assignedSubjectSchema = z.object({
 	id: z.string(),
-	code: z.string().optional(),
+	code: z.string().default(''),
 	subject_id: z.string().min(1, 'Subject is required.'),
 	classroom_id: z.string().min(1, 'Classroom is required.'),
 	start_time: z.string().min(1, 'Start Time is required.'),

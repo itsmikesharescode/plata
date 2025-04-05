@@ -27,17 +27,10 @@
 	import { Debounced } from 'runed';
 
 	let open = $state(false);
-	let triggerRef = $state<HTMLButtonElement>(null!);
 	let searchValue = $state('');
+	let scheduleId = $state('');
 
 	const searchDebounce = new Debounced(() => searchValue, 800);
-
-	function closeAndFocusTrigger() {
-		open = false;
-		tick().then(() => {
-			triggerRef.focus();
-		});
-	}
 
 	$effect(() => {
 		if (open) {
@@ -84,7 +77,9 @@
 										{/if}
 
 										{#each programs ?? [] as program}
-											<a href="/operation/schedules/printables?id={program.id}">
+											<a
+												href="/operation/schedules/printables?id={program.id}&from={page.url.href}"
+											>
 												<DropdownMenu.Item>
 													<Printer class="size-4" />
 													<div class="flex max-w-[200px] flex-col">
@@ -104,7 +99,7 @@
 						<DropdownMenu.Separator />
 
 						<div class="p-4">
-							<a href="/operation/schedules/printables">
+							<a href="/operation/schedules/printables?from={page.url.href}">
 								<DropdownMenu.Item>
 									<Printer class="size-4" />
 									All Programs
@@ -118,8 +113,12 @@
 					<DropdownMenu.SubTrigger>Teaching Form</DropdownMenu.SubTrigger>
 					<DropdownMenu.SubContent class="flex flex-col gap-2 p-4">
 						<div class="flex items-center gap-2">
-							<Input placeholder="Schedule ID" class="h-9" />
-							<Button size="sm">
+							<Input bind:value={scheduleId} placeholder="Schedule ID" class="h-9" />
+							<Button
+								href="/operation/schedules/printables/teaching-form?id={scheduleId}&from={page.url
+									.href}"
+								size="sm"
+							>
 								<Printer class="size-4" />
 							</Button>
 						</div>

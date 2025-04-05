@@ -1,6 +1,7 @@
 <script lang="ts" module>
 	import type { Database } from '$lib/database.types';
 	import { toast } from 'svelte-sonner';
+	import { page } from '$app/state';
 
 	export type DepartmentDropdown = Database['public']['Tables']['departments_tb']['Row'][] | null;
 	export type FacultyDropdown =
@@ -54,24 +55,28 @@
 	initRowState();
 </script>
 
-<Sidebar.Provider>
-	<OperationSidebar />
-	<Sidebar.Inset class="min-w-0">
-		<header
-			class="sticky top-0 z-20 flex h-16 shrink-0 items-center justify-between gap-2 border-b bg-background px-4"
-		>
-			<div class="flex h-full items-center gap-2">
-				<Sidebar.Trigger class="-ml-1" />
-				<Separator orientation="vertical" class="mr-2 h-4" />
-			</div>
+{#if page.url.pathname.startsWith('/operation/schedules/printables')}
+	{@render children()}
+{:else}
+	<Sidebar.Provider>
+		<OperationSidebar />
+		<Sidebar.Inset class="min-w-0">
+			<header
+				class="sticky top-0 z-20 flex h-16 shrink-0 items-center justify-between gap-2 border-b bg-background px-4"
+			>
+				<div class="flex h-full items-center gap-2">
+					<Sidebar.Trigger class="-ml-1" />
+					<Separator orientation="vertical" class="mr-2 h-4" />
+				</div>
 
-			<div class="flex items-center gap-2">
-				<Darkmode />
-				<Logout />
+				<div class="flex items-center gap-2">
+					<Darkmode />
+					<Logout />
+				</div>
+			</header>
+			<div class="flex flex-1 flex-col gap-4">
+				{@render children()}
 			</div>
-		</header>
-		<div class="flex flex-1 flex-col gap-4">
-			{@render children()}
-		</div>
-	</Sidebar.Inset>
-</Sidebar.Provider>
+		</Sidebar.Inset>
+	</Sidebar.Provider>
+{/if}

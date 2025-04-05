@@ -13,7 +13,7 @@
 </script>
 
 <main class="flex flex-col gap-4 p-4">
-	<section class="flex items-center justify-between gap-4">
+	<section class="flex items-center gap-4">
 		<CreateSchedule createScheduleForm={data.createScheduleForm} />
 		<Printing />
 	</section>

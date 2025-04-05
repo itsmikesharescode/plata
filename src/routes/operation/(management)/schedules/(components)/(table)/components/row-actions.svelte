@@ -6,6 +6,7 @@
 	import type { ScheduleTable } from '../schema';
 	import { useRowState } from '$lib/states/row-state.svelte';
 	import { goto } from '$app/navigation';
+	import { page } from '$app/state';
 
 	let { row }: { row: Row<ScheduleTable> } = $props();
 
@@ -24,6 +25,16 @@
 		{/snippet}
 	</DropdownMenu.Trigger>
 	<DropdownMenu.Content class="w-fit" align="end">
+		<DropdownMenu.Item
+			onclick={async () => {
+				rowState.setActiveRow(row.original);
+				await goto(
+					`/operation/schedules/printables/teaching-form?id=${row.original.id}&from=${page.url.href}`
+				);
+			}}
+		>
+			Print Teaching Form
+		</DropdownMenu.Item>
 		<DropdownMenu.Item
 			onclick={async () => {
 				rowState.setActiveRow(row.original);
