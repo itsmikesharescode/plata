@@ -45,7 +45,10 @@ export const actions: Actions = {
 
 		if (!form.valid) return fail(400, { form });
 
-		const { error } = await supabase.from('subjects_tb').insert(form.data);
+		const { error } = await supabase.from('subjects_tb').insert({
+			...form.data,
+			subject_code: form.data.course_code.toUpperCase()
+		});
 
 		if (error) return fail(401, { form, msg: error.message });
 

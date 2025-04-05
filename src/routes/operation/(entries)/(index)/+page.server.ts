@@ -62,9 +62,8 @@ export const actions: Actions = {
 		if (!form.valid) return fail(400, { form });
 
 		const { error } = await supabase.from('departments_tb').insert({
-			department_name: form.data.department_name,
-			department_code: form.data.department_code,
-			department_color: form.data.department_color
+			...form.data,
+			department_code: form.data.department_code.toUpperCase()
 		});
 
 		if (error) return fail(401, { form, msg: error.message });
@@ -79,9 +78,8 @@ export const actions: Actions = {
 		const { error } = await supabase
 			.from('departments_tb')
 			.update({
-				department_name: form.data.department_name,
-				department_code: form.data.department_code,
-				department_color: form.data.department_color
+				...form.data,
+				department_code: form.data.department_code.toUpperCase()
 			})
 			.eq('id', form.data.id);
 

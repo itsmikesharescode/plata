@@ -49,7 +49,9 @@ export const actions: Actions = {
 
 		if (!form.valid) return fail(400, { form });
 
-		const { error } = await supabase.from('programs_tb').insert(form.data);
+		const { error } = await supabase
+			.from('programs_tb')
+			.insert({ ...form.data, program_code: form.data.program_code.toUpperCase() });
 
 		if (error) return fail(401, { form, msg: error.message });
 
@@ -60,7 +62,10 @@ export const actions: Actions = {
 
 		if (!form.valid) return fail(400, { form });
 
-		const { error } = await supabase.from('programs_tb').update(form.data).eq('id', form.data.id);
+		const { error } = await supabase
+			.from('programs_tb')
+			.update({ ...form.data, program_code: form.data.program_code.toUpperCase() })
+			.eq('id', form.data.id);
 
 		if (error) return fail(401, { form, msg: error.message });
 
