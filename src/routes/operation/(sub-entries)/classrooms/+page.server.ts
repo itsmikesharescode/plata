@@ -10,35 +10,19 @@ import { fail } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ locals: { supabase }, url }) => {
 	const getClassrooms = async () => {
-		const page = url.searchParams.get('page');
-		const size = url.searchParams.get('size');
-		const limit = size ? Number(size) : 10;
+		const pageNumber = Number(url.searchParams.get('page')) || 1;
+		const limit = Number(url.searchParams.get('size')) || 10;
+		const initialRow = (pageNumber - 1) * limit;
 
 		if (!supabase) return null;
 
-		if (page) {
-			const initialRow = (Number(page) - 1) * limit;
-			const finalRow = Number(page) * limit;
+		const { data, error } = await supabase
+			.from('classrooms_tb')
+			.select('*, departments_tb(*)')
+			.range(initialRow, initialRow + limit - 1)
+			.order('created_at');
 
-			const { data, error } = await supabase
-				.from('classrooms_tb')
-				.select('*, departments_tb(*)')
-				.range(initialRow, finalRow)
-				.order('created_at');
-
-			if (error) return null;
-
-			return data;
-		} else {
-			const { data, error } = await supabase
-				.from('classrooms_tb')
-				.select('*, departments_tb(*)')
-				.limit(limit)
-				.order('created_at');
-			if (error) return null;
-
-			return data;
-		}
+		return error ? null : data;
 	};
 
 	const getClassroomCount = async () => {
