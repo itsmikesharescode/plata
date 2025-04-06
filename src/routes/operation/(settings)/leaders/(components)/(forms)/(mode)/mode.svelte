@@ -16,6 +16,7 @@
 	import { type SuperValidated, superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { toast } from 'svelte-sonner';
+	import { page } from '$app/state';
 
 	const forms = {
 		president: universityPresidentUpdateSchema,
@@ -80,24 +81,33 @@
 			$formData.fullname = value.fullname;
 		});
 	});
+
+	const user = $derived(page.data.user);
 </script>
 
-<form method="POST" action={endPoints[mode]} use:enhance>
-	<input name="id" type="hidden" bind:value={$formData.id} />
-	<Form.Field {form} name="fullname">
-		<Form.Control>
-			{#snippet children({ props })}
-				<Form.Label>Full Name</Form.Label>
-				<div class="grid grid-cols-[1fr_auto] gap-2">
-					<Input {...props} bind:value={$formData.fullname} />
-					<Form.Button disabled={$submitting} class="relative">
-						<ReqLoader isLoader={$submitting} />
-						Update
-					</Form.Button>
-				</div>
-			{/snippet}
-		</Form.Control>
-		<Form.Description>{placeholder}</Form.Description>
-		<Form.FieldErrors />
-	</Form.Field>
-</form>
+{#if user?.user_metadata.role !== 'admin'}
+	<div class="flex flex-col gap-1.5 bg-secondary p-5">
+		<Input bind:value={$formData.fullname} disabled />
+		<span class="text-sm text-muted-foreground">{placeholder}</span>
+	</div>
+{:else}
+	<form method="POST" action={endPoints[mode]} use:enhance>
+		<input name="id" type="hidden" bind:value={$formData.id} />
+		<Form.Field {form} name="fullname">
+			<Form.Control>
+				{#snippet children({ props })}
+					<Form.Label>Full Name</Form.Label>
+					<div class="grid grid-cols-[1fr_auto] gap-2">
+						<Input {...props} bind:value={$formData.fullname} />
+						<Form.Button disabled={$submitting} class="relative">
+							<ReqLoader isLoader={$submitting} />
+							Update
+						</Form.Button>
+					</div>
+				{/snippet}
+			</Form.Control>
+			<Form.Description>{placeholder}</Form.Description>
+			<Form.FieldErrors />
+		</Form.Field>
+	</form>
+{/if}
