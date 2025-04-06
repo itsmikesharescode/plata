@@ -53,6 +53,8 @@
 	const { children } = $props();
 
 	initRowState();
+
+	const activeUrl = $derived(page.url.pathname);
 </script>
 
 {#if page.url.pathname.startsWith('/operation/schedules/printables')}
@@ -67,6 +69,9 @@
 				<div class="flex h-full items-center gap-2">
 					<Sidebar.Trigger class="-ml-1" />
 					<Separator orientation="vertical" class="mr-2 h-4" />
+					<span class="text-muted-foreground"
+						>You are at <span class="font-medium text-primary">{activeUrl}</span></span
+					>
 				</div>
 
 				<div class="flex items-center gap-2">
