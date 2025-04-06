@@ -118,7 +118,10 @@
 						$formData.program_id = schedule.program_id;
 						$formData.year_and_section_id = schedule.year_and_section_id;
 						$formData.semester = schedule.semester;
-						$formData.assigned_subjects = schedule.assigned_subjects;
+						$formData.assigned_subjects = schedule.assigned_subjects.map((v) => ({
+							...v,
+							code: v.code ?? ''
+						}));
 					}
 				}
 			});
@@ -403,7 +406,8 @@
 													classroom_id: '',
 													start_time: '',
 													end_time: '',
-													day: ''
+													day: '',
+													code: ''
 												}
 											];
 

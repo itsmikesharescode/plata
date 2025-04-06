@@ -86,7 +86,8 @@
 						classroom_id: '',
 						start_time: '',
 						end_time: '',
-						day: ''
+						day: '',
+						code: ''
 					}
 				];
 			});
@@ -373,7 +374,8 @@
 													classroom_id: '',
 													start_time: '',
 													end_time: '',
-													day: ''
+													day: '',
+													code: ''
 												}
 											];
 
