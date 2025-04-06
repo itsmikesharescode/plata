@@ -59,7 +59,13 @@ export const actions: Actions = {
 
 		if (!form.valid) return fail(400, { form });
 
-		const { error } = await supabase.from('subjects_tb').update(form.data).eq('id', form.data.id);
+		const { error } = await supabase
+			.from('subjects_tb')
+			.update({
+				...form.data,
+				subject_code: form.data.course_code.toUpperCase()
+			})
+			.eq('id', form.data.id);
 
 		if (error) return fail(401, { form, msg: error.message });
 

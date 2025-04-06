@@ -68,6 +68,10 @@
 				{
 					title: 'History',
 					url: '/operation/history'
+				},
+				{
+					title: 'Leaders',
+					url: '/operation/leaders'
 				}
 			]
 		}

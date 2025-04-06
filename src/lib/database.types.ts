@@ -1,5 +1,4 @@
-import type { AssignedSubject, UserMeta } from './types';
-
+import type { UserMeta, AssignedSubject } from './types';
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
@@ -142,6 +141,33 @@ export type Database = {
 					id?: string;
 					tb_location?: string;
 					user_id?: string;
+				};
+				Relationships: [];
+			};
+			leaders_tb: {
+				Row: {
+					created_at: string;
+					id: string;
+					program_chairperson: string;
+					univ_president: string;
+					univ_registrar: string;
+					vp_academic_affairs: string;
+				};
+				Insert: {
+					created_at?: string;
+					id?: string;
+					program_chairperson: string;
+					univ_president: string;
+					univ_registrar: string;
+					vp_academic_affairs: string;
+				};
+				Update: {
+					created_at?: string;
+					id?: string;
+					program_chairperson?: string;
+					univ_president?: string;
+					univ_registrar?: string;
+					vp_academic_affairs?: string;
 				};
 				Relationships: [];
 			};
@@ -334,6 +360,16 @@ export type Database = {
 			cold_start: {
 				Args: Record<PropertyKey, never>;
 				Returns: undefined;
+			};
+			helper_compute_sched_count: {
+				Args: {
+					subject_ids: string[];
+				};
+				Returns: {
+					total_units: number;
+					total_lec_hours: number;
+					total_lab_hours: number;
+				};
 			};
 			is_admin: {
 				Args: Record<PropertyKey, never>;

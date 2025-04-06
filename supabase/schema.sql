@@ -90,6 +90,36 @@ $$;
 ALTER FUNCTION "public"."cold_start"() OWNER TO "postgres";
 
 
+CREATE OR REPLACE FUNCTION "public"."helper_compute_sched_count"("subject_ids" "text"[]) RETURNS "json"
+    LANGUAGE "plpgsql" SECURITY DEFINER
+    AS $$
+DECLARE
+    total_result json;
+    uuid_array uuid[];
+BEGIN
+    -- Convert text array to UUID array
+    SELECT array_agg(id::uuid)
+    INTO uuid_array
+    FROM (
+        SELECT unnest(subject_ids) as id
+    ) as ids;
+
+    SELECT json_build_object(
+        'total_unit', COALESCE(SUM(unit), 0),
+        'total_lecture_hours', COALESCE(SUM(lecture_hours), 0),
+        'total_lab_hours', COALESCE(SUM(lab_hours), 0)
+    ) INTO total_result
+    FROM subjects_tb
+    WHERE id = ANY(uuid_array);
+    
+    RETURN total_result;
+END;
+$$;
+
+
+ALTER FUNCTION "public"."helper_compute_sched_count"("subject_ids" "text"[]) OWNER TO "postgres";
+
+
 CREATE OR REPLACE FUNCTION "public"."is_admin"() RETURNS boolean
     LANGUAGE "plpgsql" SECURITY DEFINER
     AS $$
@@ -447,6 +477,23 @@ COMMENT ON TABLE "public"."history_tb" IS 'logging system to all table';
 
 
 
+CREATE TABLE IF NOT EXISTS "public"."leaders_tb" (
+    "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
+    "univ_president" "text" NOT NULL,
+    "univ_registrar" "text" NOT NULL,
+    "program_chairperson" "text" NOT NULL,
+    "vp_academic_affairs" "text" NOT NULL,
+    "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL
+);
+
+
+ALTER TABLE "public"."leaders_tb" OWNER TO "postgres";
+
+
+COMMENT ON TABLE "public"."leaders_tb" IS 'list of leaders';
+
+
+
 CREATE TABLE IF NOT EXISTS "public"."programs_tb" (
     "id" "uuid" DEFAULT "gen_random_uuid"() NOT NULL,
     "created_at" timestamp with time zone DEFAULT "now"() NOT NULL,
@@ -560,6 +607,11 @@ ALTER TABLE ONLY "public"."faculties_tb"
 
 ALTER TABLE ONLY "public"."history_tb"
     ADD CONSTRAINT "history_tb_pkey" PRIMARY KEY ("id");
+
+
+
+ALTER TABLE ONLY "public"."leaders_tb"
+    ADD CONSTRAINT "leaders_tb_pkey" PRIMARY KEY ("id");
 
 
 
@@ -712,6 +764,9 @@ ALTER TABLE "public"."faculties_tb" ENABLE ROW LEVEL SECURITY;
 
 
 ALTER TABLE "public"."history_tb" ENABLE ROW LEVEL SECURITY;
+
+
+ALTER TABLE "public"."leaders_tb" ENABLE ROW LEVEL SECURITY;
 
 
 ALTER TABLE "public"."programs_tb" ENABLE ROW LEVEL SECURITY;
@@ -927,6 +982,12 @@ GRANT ALL ON FUNCTION "public"."cold_start"() TO "service_role";
 
 
 
+GRANT ALL ON FUNCTION "public"."helper_compute_sched_count"("subject_ids" "text"[]) TO "anon";
+GRANT ALL ON FUNCTION "public"."helper_compute_sched_count"("subject_ids" "text"[]) TO "authenticated";
+GRANT ALL ON FUNCTION "public"."helper_compute_sched_count"("subject_ids" "text"[]) TO "service_role";
+
+
+
 GRANT ALL ON FUNCTION "public"."is_admin"() TO "anon";
 GRANT ALL ON FUNCTION "public"."is_admin"() TO "authenticated";
 GRANT ALL ON FUNCTION "public"."is_admin"() TO "service_role";
@@ -1029,6 +1090,12 @@ GRANT ALL ON TABLE "public"."faculties_tb" TO "service_role";
 GRANT ALL ON TABLE "public"."history_tb" TO "anon";
 GRANT ALL ON TABLE "public"."history_tb" TO "authenticated";
 GRANT ALL ON TABLE "public"."history_tb" TO "service_role";
+
+
+
+GRANT ALL ON TABLE "public"."leaders_tb" TO "anon";
+GRANT ALL ON TABLE "public"."leaders_tb" TO "authenticated";
+GRANT ALL ON TABLE "public"."leaders_tb" TO "service_role";
 
 
 
