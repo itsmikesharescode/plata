@@ -29,7 +29,7 @@
 		const { data, error } = await page.data.supabase
 			.from('users_tb')
 			.select('*')
-			.order('created_at')
+			.order('created_at', { ascending: false })
 			.eq('user_id', id)
 			.single();
 

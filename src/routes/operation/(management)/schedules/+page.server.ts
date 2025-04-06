@@ -22,7 +22,7 @@ export const load: PageServerLoad = async ({ locals: { supabase }, url }) => {
 				'*, faculties_tb(*, departments_tb(*)), programs_tb(*, departments_tb(*)), departments_tb(*), yearlevels_and_sections_tb(*)'
 			)
 			.range(initialRow, initialRow + limit - 1)
-			.order('created_at');
+			.order('created_at', { ascending: false });
 
 		return error ? null : data;
 	};

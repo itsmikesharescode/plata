@@ -17,6 +17,9 @@ BEGIN
         'fullname', admin_fullname
     )
     WHERE email = admin_email;
+
+    INSERT INTO leaders_tb (univ_president, univ_registrar, program_chairperson, vp_academic_affairs) 
+    VALUES ('EVA MARIE CODAMON-DUGYON, PhD', 'JOCELYN A. GUIMPATAN', 'ENGR, ZAIRAH JANE G. ORDILLO', 'MARY P. CACLINI, PhD');
 END;
 $$ LANGUAGE PLPGSQL SECURITY DEFINER;
 

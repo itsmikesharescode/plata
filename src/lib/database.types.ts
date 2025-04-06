@@ -1,4 +1,5 @@
 import type { UserMeta, AssignedSubject } from './types';
+
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
@@ -366,8 +367,8 @@ export type Database = {
 					subject_ids: string[];
 				};
 				Returns: {
-					total_units: number;
-					total_lec_hours: number;
+					total_unit: number;
+					total_lecture_hours: number;
 					total_lab_hours: number;
 				};
 			};

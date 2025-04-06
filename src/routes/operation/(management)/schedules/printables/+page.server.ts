@@ -9,7 +9,7 @@ export const load: PageServerLoad = async ({ locals: { supabase }, url }) => {
 			.select(
 				'*, faculties_tb(*), departments_tb(*), programs_tb(*), yearlevels_and_sections_tb(*)'
 			)
-			.order('created_at');
+			.order('created_at', { ascending: false });
 
 		if (program_id) query.eq('program_id', program_id);
 

@@ -3,7 +3,7 @@
 	import { tick } from 'svelte';
 	import Undo2 from '@lucide/svelte/icons/undo-2';
 	import PrinterCheck from '@lucide/svelte/icons/printer-check';
-	import { setMode, mode, toggleMode } from 'mode-watcher';
+	import { setMode, mode } from 'mode-watcher';
 	import { page } from '$app/state';
 
 	export const getSubjectCodeTitleUnitLecLabById = async (id: string) => {
@@ -45,6 +45,16 @@
 			.eq('id', id)
 			.single();
 		return error ? null : data;
+	};
+
+	export const getLeaders = async () => {
+		if (!page.data.supabase) return null;
+
+		const { data, error } = await page.data.supabase.from('leaders_tb').select('*');
+
+		if (error) return null;
+
+		return data;
 	};
 </script>
 

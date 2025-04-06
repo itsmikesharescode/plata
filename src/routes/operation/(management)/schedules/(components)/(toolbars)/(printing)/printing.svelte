@@ -3,7 +3,11 @@
 	const queryPrograms = async (textSearch: string) => {
 		if (!page.data.supabase) return null;
 
-		const query = page.data.supabase.from('programs_tb').select('*').order('created_at').limit(30);
+		const query = page.data.supabase
+			.from('programs_tb')
+			.select('*')
+			.order('created_at', { ascending: false })
+			.limit(30);
 
 		if (textSearch.length) {
 			query.like('program_code', `%${textSearch.toUpperCase()}%`);
