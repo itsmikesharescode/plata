@@ -1,9 +1,9 @@
 import type { ColumnDef } from '@tanstack/table-core';
 import { createRawSnippet } from 'svelte';
 import type { HistoryTable } from './schema.js';
-import RowActions from './components/row-actions.svelte';
 import { HeaderColumn } from '$lib/components/general/custom-table/components/index.js';
 import RowId from './components/row-id.svelte';
+import RowFullname from './components/row-fullname.svelte';
 
 import { renderComponent, renderSnippet } from '$lib/components/ui/data-table/index.js';
 
@@ -51,16 +51,7 @@ export const columns: ColumnDef<HistoryTable>[] = [
 				title: 'FULLNAME'
 			});
 		},
-		cell: ({ row }) => {
-			const getUserId = createRawSnippet<[string]>((getUserId) => {
-				const userId = getUserId();
-				return {
-					render: () => `<div class="w-[100px]">${userId}</div>`
-				};
-			});
-
-			return renderSnippet(getUserId, row.getValue('user_id'));
-		},
+		cell: ({ row }) => renderComponent(RowFullname<HistoryTable>, { row }),
 		enableSorting: true,
 		enableHiding: true
 	},

@@ -23,7 +23,7 @@
 		const { data, error } = await page.data.supabase
 			.from('yearlevels_and_sections_tb')
 			.select('*')
-			.order('created_at')
+			.order('created_at', { ascending: false })
 			.eq('id', id)
 			.single();
 

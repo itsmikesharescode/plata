@@ -1,6 +1,5 @@
 <script lang="ts" module>
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
-	import { buttonVariants } from '$lib/components/ui/button/index.js';
 	import * as Form from '$lib/components/ui/form/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { updateDepSchema, type UpdateDepSchema } from '../schema';
@@ -24,7 +23,7 @@
 		const { data, error } = await page.data.supabase
 			.from('departments_tb')
 			.select('*')
-			.order('created_at')
+			.order('created_at', { ascending: false })
 			.eq('id', id)
 			.single();
 

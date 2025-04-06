@@ -16,7 +16,7 @@ export const load: PageServerLoad = async ({ locals: { supabase }, url }) => {
 			.from('yearlevels_and_sections_tb')
 			.select('*')
 			.range(initialRow, initialRow + limit - 1)
-			.order('created_at');
+			.order('created_at', { ascending: false });
 
 		return error ? null : data;
 	};

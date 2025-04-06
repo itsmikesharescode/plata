@@ -16,7 +16,7 @@ export const load: PageServerLoad = async ({ locals: { supabase }, url }) => {
 			.from('subjects_tb')
 			.select('*')
 			.range(initialRow, initialRow + limit - 1)
-			.order('created_at');
+			.order('created_at', { ascending: false });
 
 		return error ? null : data;
 	};
@@ -47,7 +47,7 @@ export const actions: Actions = {
 
 		const { error } = await supabase.from('subjects_tb').insert({
 			...form.data,
-			subject_code: form.data.course_code.toUpperCase()
+			course_code: form.data.course_code.toUpperCase()
 		});
 
 		if (error) return fail(401, { form, msg: error.message });
@@ -63,7 +63,7 @@ export const actions: Actions = {
 			.from('subjects_tb')
 			.update({
 				...form.data,
-				subject_code: form.data.course_code.toUpperCase()
+				course_code: form.data.course_code.toUpperCase()
 			})
 			.eq('id', form.data.id);
 

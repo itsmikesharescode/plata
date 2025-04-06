@@ -12,7 +12,7 @@ export const load: PageServerLoad = async ({ locals: { supabase }, url }) => {
 			.from('history_tb')
 			.select('*')
 			.range(initialRow, initialRow + limit - 1)
-			.order('created_at');
+			.order('created_at', { ascending: false });
 
 		return error ? null : data;
 	};

@@ -738,11 +738,19 @@ CREATE POLICY "Allow all if admin" ON "public"."departments_tb" TO "authenticate
 
 
 
+CREATE POLICY "Allow all if admin" ON "public"."leaders_tb" TO "authenticated" USING ("public"."is_admin"()) WITH CHECK ("public"."is_admin"());
+
+
+
 CREATE POLICY "Allow all if admin or chair" ON "public"."schedules_tb" TO "authenticated" USING (("public"."is_admin"() OR "public"."is_chair"())) WITH CHECK (("public"."is_admin"() OR "public"."is_chair"()));
 
 
 
 CREATE POLICY "Allow select if chair" ON "public"."departments_tb" FOR SELECT TO "authenticated" USING ("public"."is_chair"());
+
+
+
+CREATE POLICY "Allow select if chair" ON "public"."leaders_tb" FOR SELECT TO "authenticated" USING ("public"."is_chair"());
 
 
 

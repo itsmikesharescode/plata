@@ -5,6 +5,7 @@
 		getYearLevelAndSectionById
 	} from '../+layout.svelte';
 	import * as Table from '$lib/components/ui/table/index.js';
+	import { getLeaders } from '../+layout.svelte';
 </script>
 
 <script lang="ts">
@@ -151,9 +152,21 @@
 	</section>
 
 	<section class="grid grid-cols-4">
-		{@render PersonTemplate('ENGR, ZAIRAH JANE G. ORDILLO', 'Program Chairperson')}
-		{@render PersonTemplate('JOCELYN A. GUIMPATAN', 'University Registrar')}
-		{@render PersonTemplate('MARY P. CACLINI, PhD', 'Vice President for Academic Affairs')}
-		{@render PersonTemplate('EVA MARIE CODAMON-DUGYON, PhD', 'University President')}
+		{#await getLeaders()}
+			{@render PersonTemplate('loading ...', 'loading ...')}
+			{@render PersonTemplate('loading ...', 'loading ...')}
+			{@render PersonTemplate('loading ...', 'loading ...')}
+			{@render PersonTemplate('loading ...', 'loading ...')}
+		{:then leaders}
+			{#if leaders}
+				{@render PersonTemplate(leaders[0].program_chairperson, 'Program Chairperson')}
+				{@render PersonTemplate(leaders[0].univ_registrar, 'University Registrar')}
+				{@render PersonTemplate(
+					leaders[0].vp_academic_affairs,
+					'Vice President for Academic Affairs'
+				)}
+				{@render PersonTemplate(leaders[0].univ_president, 'University President')}
+			{/if}
+		{/await}
 	</section>
 </main>
