@@ -1,5 +1,5 @@
 <script lang="ts">
-	import LandingBg from '$lib/assets/landing-bg.png';
+	import LandingBg from '$lib/assets/landing-bg.png?enhanced';
 	import ReqLoader from '$lib/components/general/spinners/req-loader.svelte';
 	import * as Form from '$lib/components/ui/form/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
@@ -30,7 +30,7 @@
 </script>
 
 <main class="relative h-screen overflow-hidden bg-primary p-2">
-	<img
+	<enhanced:img
 		src={LandingBg}
 		alt="landingimage"
 		class="absolute inset-0 h-full w-full object-cover object-center opacity-50"
