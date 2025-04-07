@@ -166,7 +166,13 @@
 							<Form.Control>
 								{#snippet children({ props })}
 									<Form.Label>Unit</Form.Label>
-									<Input type="number" {...props} bind:value={$formData.unit} placeholder="Unit" />
+									<Input
+										step="0.01"
+										type="number"
+										{...props}
+										bind:value={$formData.unit}
+										placeholder="Unit"
+									/>
 								{/snippet}
 							</Form.Control>
 							<Form.FieldErrors />

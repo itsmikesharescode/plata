@@ -33,9 +33,7 @@
 </script>
 
 <header class="flex items-center gap-2">
-	<div
-		class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground"
-	></div>
+	<img src="../favicon.png" alt="logo" class="size-8" />
 
 	{#if user?.user_metadata.role === 'admin'}
 		<div class="grid flex-1 text-left text-sm leading-tight">

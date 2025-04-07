@@ -4,6 +4,7 @@
 	import { onMount } from 'svelte';
 	import { Toaster } from '$lib/components/ui/sonner/index.js';
 	import { ModeWatcher } from 'mode-watcher';
+	import { page } from '$app/state';
 	let { data, children } = $props();
 	let { session, supabase } = $derived(data);
 
@@ -22,6 +23,10 @@
 		<span class="text-base font-bold">Not Paid</span>
 	</div>
 </div> -->
+
+<svelte:head>
+	<title>Ifugao State University</title>
+</svelte:head>
 
 <ModeWatcher defaultMode="dark" />
 <Toaster />
