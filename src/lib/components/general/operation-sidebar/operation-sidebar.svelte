@@ -136,7 +136,9 @@
 									{#if mainItem.items}
 										<Sidebar.MenuSub>
 											{#each mainItem.items as subItem (subItem.title)}
-												<Sidebar.MenuSubItem>
+												<Sidebar.MenuSubItem
+													class={page.url.pathname === subItem.url ? 'rounded-lg bg-secondary' : ''}
+												>
 													<Sidebar.MenuSubButton>
 														{#snippet child({ props })}
 															<a href={subItem.url} {...props}>
