@@ -1,12 +1,7 @@
 import { superValidate } from 'sveltekit-superforms';
 import type { Actions, PageServerLoad } from './$types';
 import { zod } from 'sveltekit-superforms/adapters';
-import {
-	vicePresidentAcademicUpdateSchema,
-	programChairUpdateSchema,
-	universityPresidentUpdateSchema,
-	universityRegistrarUpdateSchema
-} from './(components)/(forms)/schema';
+import { modeSchema } from './(components)/(forms)/schema';
 import { fail } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ locals: { supabase } }) => {
@@ -22,16 +17,13 @@ export const load: PageServerLoad = async ({ locals: { supabase } }) => {
 
 	return {
 		leaders: await getLeaders(),
-		updatePresident: await superValidate(zod(universityPresidentUpdateSchema)),
-		updateRegistrar: await superValidate(zod(universityRegistrarUpdateSchema)),
-		updateProgramChair: await superValidate(zod(programChairUpdateSchema)),
-		updateVicePresidentAcademic: await superValidate(zod(vicePresidentAcademicUpdateSchema))
+		updateMode: await superValidate(zod(modeSchema))
 	};
 };
 
 export const actions: Actions = {
 	updatePresidentEvent: async ({ request, locals: { supabase } }) => {
-		const form = await superValidate(request, zod(universityPresidentUpdateSchema));
+		const form = await superValidate(request, zod(modeSchema));
 
 		if (!form.valid) return fail(400, { form });
 
@@ -48,7 +40,7 @@ export const actions: Actions = {
 	},
 
 	updateRegistrarEvent: async ({ request, locals: { supabase } }) => {
-		const form = await superValidate(request, zod(universityRegistrarUpdateSchema));
+		const form = await superValidate(request, zod(modeSchema));
 
 		if (!form.valid) return fail(400, { form });
 
@@ -65,7 +57,7 @@ export const actions: Actions = {
 	},
 
 	updateProgramChairEvent: async ({ request, locals: { supabase } }) => {
-		const form = await superValidate(request, zod(programChairUpdateSchema));
+		const form = await superValidate(request, zod(modeSchema));
 
 		if (!form.valid) return fail(400, { form });
 
@@ -82,7 +74,7 @@ export const actions: Actions = {
 	},
 
 	updateVicePresidentAcademicEvent: async ({ request, locals: { supabase } }) => {
-		const form = await superValidate(request, zod(vicePresidentAcademicUpdateSchema));
+		const form = await superValidate(request, zod(modeSchema));
 
 		if (!form.valid) return fail(400, { form });
 

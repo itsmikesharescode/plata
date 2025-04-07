@@ -1,6 +1,9 @@
 <script lang="ts" module>
 	import { page } from '$app/state';
 	import { Skeleton } from '$lib/components/ui/skeleton/index.js';
+	import type { Row } from '@tanstack/table-core';
+	import type { HistoryTable } from '../schema';
+
 	const getUserById = async (id: string) => {
 		if (!page.data.supabase) return null;
 		const { data, error } = await page.data.supabase
@@ -16,9 +19,6 @@
 </script>
 
 <script lang="ts" generics="TData">
-	import type { Row } from '@tanstack/table-core';
-	import type { HistoryTable } from '../schema';
-
 	let { row }: { row: Row<HistoryTable> } = $props();
 </script>
 

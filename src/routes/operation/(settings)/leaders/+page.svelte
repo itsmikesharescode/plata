@@ -10,7 +10,7 @@
 		<Mode
 			placeholder="University President"
 			mode="president"
-			data={data.updatePresident}
+			data={data.updateMode}
 			value={{
 				id: data?.leaders?.[0]?.id ?? '',
 				fullname: data?.leaders?.[0]?.univ_president ?? ''
@@ -20,7 +20,7 @@
 		<Mode
 			placeholder="University Registrar"
 			mode="registrar"
-			data={data.updateRegistrar}
+			data={data.updateMode}
 			value={{
 				id: data?.leaders?.[0]?.id ?? '',
 				fullname: data?.leaders?.[0]?.univ_registrar ?? ''
@@ -30,7 +30,7 @@
 		<Mode
 			placeholder="Program Chairperson"
 			mode="program-chair"
-			data={data.updateProgramChair}
+			data={data.updateMode}
 			value={{
 				id: data?.leaders?.[0]?.id ?? '',
 				fullname: data?.leaders?.[0]?.program_chairperson ?? ''
@@ -40,7 +40,7 @@
 		<Mode
 			placeholder="Vice President for Academic Affairs"
 			mode="vp-academic"
-			data={data.updateVicePresidentAcademic}
+			data={data.updateMode}
 			value={{
 				id: data?.leaders?.[0]?.id ?? '',
 				fullname: data?.leaders?.[0]?.vp_academic_affairs ?? ''

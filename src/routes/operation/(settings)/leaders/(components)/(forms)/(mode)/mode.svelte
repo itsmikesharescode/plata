@@ -3,27 +3,11 @@
 	import * as Form from '$lib/components/ui/form/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { untrack } from 'svelte';
-	import {
-		programChairUpdateSchema,
-		type ProgramChairUpdateSchema,
-		universityPresidentUpdateSchema,
-		type UniversityPresidentUpdateSchema,
-		universityRegistrarUpdateSchema,
-		type UniversityRegistrarUpdateSchema,
-		vicePresidentAcademicUpdateSchema,
-		type VicePresidentAcademicUpdateSchema
-	} from '../schema';
+	import { modeSchema, type ModeSchema } from '../schema';
 	import { type SuperValidated, superForm } from 'sveltekit-superforms';
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { toast } from 'svelte-sonner';
 	import { page } from '$app/state';
-
-	const forms = {
-		president: universityPresidentUpdateSchema,
-		registrar: universityRegistrarUpdateSchema,
-		'program-chair': programChairUpdateSchema,
-		'vp-academic': vicePresidentAcademicUpdateSchema
-	} as const;
 
 	const endPoints = {
 		president: '?/updatePresidentEvent',
@@ -32,19 +16,9 @@
 		'vp-academic': '?/updateVicePresidentAcademicEvent'
 	} as const;
 
-	type SchemaType<K extends keyof typeof forms> = K extends 'president'
-		? UniversityPresidentUpdateSchema
-		: K extends 'registrar'
-			? UniversityRegistrarUpdateSchema
-			: K extends 'program-chair'
-				? ProgramChairUpdateSchema
-				: K extends 'vp-academic'
-					? VicePresidentAcademicUpdateSchema
-					: never;
-
 	interface Props {
-		mode: keyof typeof forms;
-		data: SuperValidated<SchemaType<keyof typeof forms>>;
+		mode: keyof typeof endPoints;
+		data: SuperValidated<ModeSchema>;
 		placeholder: string;
 		value: {
 			id: string;
@@ -56,10 +30,10 @@
 <script lang="ts">
 	let { mode = 'president', data, value, placeholder }: Props = $props();
 
-	const form = superForm<SchemaType<typeof mode>>(data, {
+	const form = superForm(data, {
 		id: `${mode}-${crypto.randomUUID()}`,
-		validators: zodClient(forms[mode]),
-		onUpdate: ({ result, form }) => {
+		validators: zodClient(modeSchema),
+		onUpdate: ({ result }) => {
 			const { status, data } = result;
 
 			switch (status) {
