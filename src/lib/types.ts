@@ -17,3 +17,9 @@ export type AssignedSubject = {
 	end_time: string;
 	day: string;
 };
+
+export type HelperComputeSched = {
+	total_unit: number;
+	total_lecture_hours: number;
+	total_lab_hours: number;
+};

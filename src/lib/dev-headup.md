@@ -24,3 +24,4 @@ supabase db dump --local -f supabase/schema.sql
 
 #user_meta_data -> UserMeta from ./types
 #assigned_subjects -> AssignedSubject from ./types
+#helper_compute_sched_count -> HelperComputeSched from ./types

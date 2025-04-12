@@ -1,4 +1,4 @@
-import type { UserMeta, AssignedSubject } from './types';
+import type { UserMeta, AssignedSubject, HelperComputeSched } from './types';
 
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
@@ -366,11 +366,13 @@ export type Database = {
 				Args: {
 					subject_ids: string[];
 				};
-				Returns: {
-					total_unit: number;
-					total_lecture_hours: number;
-					total_lab_hours: number;
+				Returns: HelperComputeSched;
+			};
+			helper_detect_sched_conflict: {
+				Args: {
+					sched_id: string;
 				};
+				Returns: string;
 			};
 			is_admin: {
 				Args: Record<PropertyKey, never>;

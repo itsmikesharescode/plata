@@ -40,6 +40,15 @@
 				toast.error(err);
 			});
 	};
+
+	export const handleSchedConflict = async (sched_id: string) => {
+		if (!page.data.supabase) return null;
+		const { data, error } = await page.data.supabase.rpc('helper_detect_sched_conflict', {
+			sched_id
+		});
+		if (error) return error.message;
+		return data;
+	};
 </script>
 
 <script lang="ts">

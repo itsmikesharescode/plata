@@ -31,6 +31,8 @@
 		YearLevelsAndSectionsDropdown
 	} from '../../../../../+layout.svelte';
 	import { urlParamReducer } from '$lib/utils';
+	import { handleSchedConflict } from '../../../../../+layout.svelte';
+
 	interface Props {
 		updateScheduleForm: SuperValidated<UpdateScheduleSchema>;
 	}
@@ -110,6 +112,8 @@
 					$formData.semester = activeRow.semester;
 					$formData.assigned_subjects = activeRow.assigned_subjects;
 				} else {
+					const checkConflict = await handleSchedConflict(id);
+					console.log(checkConflict);
 					const schedule = await getScheduleById(id);
 					if (schedule) {
 						$formData.id = schedule.id;
@@ -157,10 +161,21 @@
 	}}
 >
 	<AlertDialog.Content class="flex max-h-[100dvh] max-w-7xl flex-col overflow-hidden p-0">
+		{#await handleSchedConflict(id ?? '')}
+			<span>Checking for conflicts...</span>
+		{:then data}
+			{#if data}
+				<div class="p-6 pb-0">
+					<span class="text-xs font-medium text-destructive">{data}</span>
+				</div>
+			{/if}
+		{/await}
+
 		<AlertDialog.Header class="p-6 pb-0">
 			<AlertDialog.Title>Update Schedule</AlertDialog.Title>
 			<AlertDialog.Description>Fill the form below to update the schedule.</AlertDialog.Description>
 		</AlertDialog.Header>
+
 		<form method="POST" action="?/updateScheduleEvent" use:enhance>
 			<input name="id" type="hidden" value={$formData.id} />
 			<Resizable.PaneGroup direction="vertical" class="min-h-[70dvh]">
