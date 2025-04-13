@@ -4,15 +4,21 @@
 	import DeleteChairperson from './(components)/(forms)/(delete-cp)/delete-cp.svelte';
 	import UpdatingCp from './(components)/(forms)/(updating-cp)/updating-cp.svelte';
 	import { columns } from './(components)/(table)/column';
+	import { page } from '$app/state';
+	import { DepartmentFilter, type DepartmentDropdown } from '../../+layout.svelte';
 
 	const { data } = $props();
 
-	//TODO: implement update chairperson form
+	const departmentsDropdown = $derived(page.data.departmentsDropdown) as DepartmentDropdown;
+
+	const department_id = $derived(page.url.searchParams.get('department_id') ?? undefined);
 </script>
 
 <main class="flex flex-col gap-4 p-4">
-	<section>
+	<section class="flex flex-wrap items-center justify-between gap-4">
 		<CreateChairperson createChairpersonForm={data.createChairpersonForm} />
+
+		{@render DepartmentFilter({ departmentsDropdown, selected_id: department_id })}
 	</section>
 	<section>
 		<CustomTable

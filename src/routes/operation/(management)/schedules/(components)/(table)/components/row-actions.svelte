@@ -7,6 +7,7 @@
 	import { useRowState } from '$lib/states/row-state.svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/state';
+	import { urlParamStacker } from '$lib/utils';
 
 	let { row }: { row: Row<ScheduleTable> } = $props();
 
@@ -38,13 +39,13 @@
 		<DropdownMenu.Item
 			onclick={async () => {
 				rowState.setActiveRow(row.original);
-				await goto(`?id=${row.original.id}`);
+				await goto(urlParamStacker('id', row.original.id, page));
 			}}>Edit</DropdownMenu.Item
 		>
 		<DropdownMenu.Item
 			onclick={async () => {
 				rowState.setActiveRow(row.original);
-				await goto(`?deletion_id=${row.original.id}`);
+				await goto(urlParamStacker('deletion_id', row.original.id, page));
 			}}>Delete</DropdownMenu.Item
 		>
 	</DropdownMenu.Content>

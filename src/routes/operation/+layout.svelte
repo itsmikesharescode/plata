@@ -2,6 +2,7 @@
 	import type { Database } from '$lib/database.types';
 	import { toast } from 'svelte-sonner';
 	import { page } from '$app/state';
+	import ComboPicker from '$lib/components/general/custom-pickers/combo-picker.svelte';
 
 	export type DepartmentDropdown = Database['public']['Tables']['departments_tb']['Row'][] | null;
 	export type FacultyDropdown =
@@ -49,6 +50,8 @@
 		if (error) return error.message;
 		return data;
 	};
+
+	export { DepartmentFilter };
 </script>
 
 <script lang="ts">
@@ -58,6 +61,8 @@
 	import { initRowState } from '$lib/states/row-state.svelte';
 	import Logout from '$lib/components/general/operation-sidebar/components/logout.svelte';
 	import Darkmode from '$lib/components/general/darkmode/darkmode.svelte';
+	import { goto } from '$app/navigation';
+	import { urlParamReducer, urlParamStacker } from '$lib/utils';
 
 	const { children } = $props();
 
@@ -65,6 +70,56 @@
 
 	const activeUrl = $derived(page.url.pathname);
 </script>
+
+{#snippet DepartmentFilter({
+	departmentsDropdown,
+	selected_id
+}: {
+	departmentsDropdown: DepartmentDropdown;
+	selected_id?: string;
+})}
+	<div class="grid grid-cols-[auto_auto] items-center gap-4">
+		<span class="w-full text-sm font-medium">Filter by:</span>
+		<ComboPicker
+			selections={departmentsDropdown?.map((v) => ({
+				id: v.id,
+				label: v.department_code,
+				value: JSON.stringify({
+					department_name: v.department_name,
+					department_color: v.department_color
+				})
+			})) ?? []}
+			{selected_id}
+		>
+			{#snippet childLoop({ selectedItem })}
+				<button
+					onclick={async () => {
+						const department_id = page.url.searchParams.get('department_id');
+						if (department_id === selectedItem.id) {
+							await goto(`${page.url.pathname}?${urlParamReducer('department_id', page)}`);
+						} else {
+							await goto(urlParamStacker('department_id', selectedItem.id, page));
+						}
+					}}
+					aria-label="redirect"
+					class="absolute inset-0"
+				></button>
+				<div class="grid grid-cols-[auto_1fr] items-center gap-2">
+					<div
+						class="size-5 rounded-full"
+						style="background-color: {JSON.parse(selectedItem.value).department_color}"
+					></div>
+					<div class="flex flex-col">
+						<span class="">{selectedItem.label}</span>
+						<span class="text-xs text-muted-foreground"
+							>{JSON.parse(selectedItem.value).department_name}</span
+						>
+					</div>
+				</div>
+			{/snippet}
+		</ComboPicker>
+	</div>
+{/snippet}
 
 {#if page.url.pathname.startsWith('/operation/schedules/printables')}
 	{@render children()}

@@ -10,20 +10,23 @@ import { fail } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ locals: { supabase }, url }) => {
 	const getSchedules = async () => {
-		const pageNumber = Number(url.searchParams.get('page')) || 1;
-		const limit = Number(url.searchParams.get('size')) || 10;
-		const initialRow = (pageNumber - 1) * limit;
+		const { page, size, department_id } = Object.fromEntries(url.searchParams);
+		const pageNumber = Number(page) || 1;
+		const limit = Number(size) || 10;
 
 		if (!supabase) return null;
 
-		const { data, error } = await supabase
+		let query = supabase
 			.from('schedules_tb')
 			.select(
 				'*, faculties_tb(*, departments_tb(*)), programs_tb(*, departments_tb(*)), departments_tb(*), yearlevels_and_sections_tb(*)'
 			)
-			.range(initialRow, initialRow + limit - 1)
+			.range((pageNumber - 1) * limit, pageNumber * limit - 1)
 			.order('created_at', { ascending: false });
 
+		if (department_id) query = query.eq('department_id', department_id);
+
+		const { data, error } = await query;
 		return error ? null : data;
 	};
 

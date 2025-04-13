@@ -3,11 +3,13 @@
 	import type { Row } from '@tanstack/table-core';
 	import * as DropdownMenu from '$lib/components/ui/dropdown-menu/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
-	import type { ClassroomTable } from '../schema';
+	import type { ProgramTable } from '../schema';
 	import { useRowState } from '$lib/states/row-state.svelte';
 	import { goto } from '$app/navigation';
+	import { urlParamStacker } from '$lib/utils';
+	import { page } from '$app/state';
 
-	let { row }: { row: Row<ClassroomTable> } = $props();
+	let { row }: { row: Row<ProgramTable> } = $props();
 
 	const rowState = useRowState();
 </script>
@@ -27,13 +29,13 @@
 		<DropdownMenu.Item
 			onclick={async () => {
 				rowState.setActiveRow(row.original);
-				await goto(`?id=${row.original.id}`);
+				await goto(urlParamStacker('id', row.original.id, page));
 			}}>Edit</DropdownMenu.Item
 		>
 		<DropdownMenu.Item
 			onclick={async () => {
 				rowState.setActiveRow(row.original);
-				await goto(`?deletion_id=${row.original.id}`);
+				await goto(urlParamStacker('deletion_id', row.original.id, page));
 			}}>Delete</DropdownMenu.Item
 		>
 	</DropdownMenu.Content>

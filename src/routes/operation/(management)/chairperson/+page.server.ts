@@ -12,18 +12,21 @@ import { fail } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ locals: { supabase }, url }) => {
 	const getUsers = async () => {
-		const pageNumber = Number(url.searchParams.get('page')) || 1;
-		const limit = Number(url.searchParams.get('size')) || 10;
-		const initialRow = (pageNumber - 1) * limit;
+		const { page, size, department_id } = Object.fromEntries(url.searchParams);
+		const pageNumber = Number(page) || 1;
+		const limit = Number(size) || 10;
 
 		if (!supabase) return null;
 
-		const { data, error } = await supabase
+		let query = supabase
 			.from('users_tb')
 			.select('*')
-			.range(initialRow, initialRow + limit - 1)
+			.range((pageNumber - 1) * limit, pageNumber * limit - 1)
 			.order('created_at', { ascending: false });
 
+		if (department_id) query = query.eq('user_meta_data->>department_id', department_id);
+
+		const { data, error } = await query;
 		return error ? null : data;
 	};
 

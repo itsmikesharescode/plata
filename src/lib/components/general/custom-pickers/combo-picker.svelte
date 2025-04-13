@@ -16,17 +16,22 @@
 			label: string;
 			value: string;
 		}[];
+		selected_id?: string;
 		nameHolder?: string;
 		childLoop: Snippet<[{ selectedItem: Props['selections'][number] }]>;
 	}
 
-	let { selections, nameHolder = 'department', childLoop }: Props = $props();
+	let {
+		selections,
+		nameHolder = 'department',
+		childLoop,
+		selected_id = $bindable()
+	}: Props = $props();
 
 	let open = $state(false);
-	let value = $state('');
 	let triggerRef = $state<HTMLButtonElement>(null!);
 
-	const selectedValue = $derived(selections.find((f) => f.value === value));
+	const selectedValue = $derived(selections.find((f) => f.id === selected_id));
 
 	function closeAndFocusTrigger() {
 		open = false;
@@ -61,11 +66,18 @@
 						<Command.Item
 							value={selection.value}
 							onSelect={() => {
-								value = selection.value;
+								if (selected_id === selection.id) {
+									selected_id = '';
+								} else {
+									selected_id = selection.id;
+								}
 								closeAndFocusTrigger();
 							}}
+							class="relative"
 						>
-							<Check class={cn('mr-2 size-4', value !== selection.value && 'text-transparent')} />
+							<Check
+								class={cn('mr-2 size-4', selected_id !== selection.id && 'text-transparent')}
+							/>
 							{@render childLoop({ selectedItem: selection })}
 						</Command.Item>
 					{/each}
