@@ -166,7 +166,11 @@
 		{:then data}
 			{#if data}
 				<div class="p-6 pb-0">
-					<span class="text-xs font-medium text-destructive">{data}</span>
+					<div class="flex items-center justify-center rounded-lg bg-secondary p-2">
+						<span class="text-center text-base font-medium text-destructive dark:text-red-700"
+							>{data}</span
+						>
+					</div>
 				</div>
 			{/if}
 		{/await}
@@ -702,6 +706,26 @@
 																	id: 'TTH',
 																	label: 'TTH',
 																	value: 'Tuesday, Thursday'
+																},
+																{
+																	id: 'MF',
+																	label: 'MF',
+																	value: 'Monday, Friday'
+																},
+																{
+																	id: 'MW',
+																	label: 'MW',
+																	value: 'Monday, Wednesday'
+																},
+																{
+																	id: 'SAT-SUN',
+																	label: 'SAT-SUN',
+																	value: 'Saturday, Sunday'
+																},
+																{
+																	id: 'WF',
+																	label: 'WF',
+																	value: 'Wednesday, Friday'
 																}
 															]}
 															bind:selected_id={$formData.assigned_subjects[index].day}

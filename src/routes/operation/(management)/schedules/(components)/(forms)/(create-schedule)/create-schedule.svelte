@@ -655,6 +655,26 @@
 																	id: 'TTH',
 																	label: 'TTH',
 																	value: 'Tuesday, Thursday'
+																},
+																{
+																	id: 'MF',
+																	label: 'MF',
+																	value: 'Monday, Friday'
+																},
+																{
+																	id: 'MW',
+																	label: 'MW',
+																	value: 'Monday, Wednesday'
+																},
+																{
+																	id: 'SAT-SUN',
+																	label: 'SAT-SUN',
+																	value: 'Saturday, Sunday'
+																},
+																{
+																	id: 'WF',
+																	label: 'WF',
+																	value: 'Wednesday, Friday'
 																}
 															]}
 															bind:selected_id={$formData.assigned_subjects[index].day}
