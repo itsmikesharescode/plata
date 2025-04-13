@@ -139,6 +139,8 @@
 	const detectedClassroom = (id: string) => {
 		return classroomsDropdown?.find((v) => v.id === id);
 	};
+
+	let showConflict = $state(false);
 </script>
 
 {#snippet readOnlyTemplate(title: string, description: string | number | undefined)}
@@ -161,19 +163,21 @@
 	}}
 >
 	<AlertDialog.Content class="flex max-h-[100dvh] max-w-7xl flex-col overflow-hidden p-0">
-		{#await handleSchedConflict(id ?? '')}
-			<span>Checking for conflicts...</span>
-		{:then data}
-			{#if data}
-				<div class="p-6 pb-0">
-					<div class="flex items-center justify-center rounded-lg bg-secondary p-2">
-						<span class="text-center text-base font-medium text-destructive dark:text-red-700"
-							>{data}</span
-						>
+		<div class="absolute">
+			{#await handleSchedConflict(id ?? '')}
+				<span>Checking for conflicts...</span>
+			{:then data}
+				{#if data}
+					<div class="p-6 pb-0">
+						<div class="flex items-center justify-center rounded-lg bg-secondary p-2">
+							<span class="text-center text-base font-medium text-destructive dark:text-red-700"
+								>{data}</span
+							>
+						</div>
 					</div>
-				</div>
-			{/if}
-		{/await}
+				{/if}
+			{/await}
+		</div>
 
 		<AlertDialog.Header class="p-6 pb-0">
 			<AlertDialog.Title>Update Schedule</AlertDialog.Title>
