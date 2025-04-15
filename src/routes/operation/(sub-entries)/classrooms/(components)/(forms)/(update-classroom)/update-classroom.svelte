@@ -15,6 +15,7 @@
 	import { urlParamReducer } from '$lib/utils';
 	import { untrack } from 'svelte';
 	import type { DepartmentDropdown } from '../../../../../+layout.svelte';
+	import { v4 as uuidv4 } from 'uuid';
 	interface Props {
 		updateClassroomForm: SuperValidated<UpdateClassroomSchema>;
 	}
@@ -46,7 +47,7 @@
 
 	const form = superForm(updateClassroomForm, {
 		validators: zodClient(updateClassroomSchema),
-		id: crypto.randomUUID(),
+		id: uuidv4(),
 		onUpdate: async ({ result }) => {
 			const { status, data } = result;
 

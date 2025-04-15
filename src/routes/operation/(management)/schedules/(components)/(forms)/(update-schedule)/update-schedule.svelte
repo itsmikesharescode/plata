@@ -32,7 +32,7 @@
 	} from '../../../../../+layout.svelte';
 	import { urlParamReducer } from '$lib/utils';
 	import { handleSchedConflict } from '../../../../../+layout.svelte';
-
+	import { v4 as uuidv4 } from 'uuid';
 	interface Props {
 		updateScheduleForm: SuperValidated<UpdateScheduleSchema>;
 	}
@@ -79,7 +79,7 @@
 	const form = superForm(updateScheduleForm, {
 		validators: zodClient(updateScheduleSchema),
 		dataType: 'json',
-		id: crypto.randomUUID(),
+		id: uuidv4(),
 		onUpdate: async ({ result }) => {
 			const { status, data } = result;
 
@@ -424,7 +424,7 @@
 											$formData.assigned_subjects = [
 												...$formData.assigned_subjects,
 												{
-													id: crypto.randomUUID(),
+													id: uuidv4(),
 													subject_id: '',
 													classroom_id: '',
 													start_time: '',

@@ -8,10 +8,11 @@
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { toast } from 'svelte-sonner';
 	const { data } = $props();
+	import { v4 as uuidv4 } from 'uuid';
 
 	const form = superForm(data.loginForm, {
 		validators: zodClient(loginSchema),
-		id: crypto.randomUUID(),
+		id: uuidv4(),
 		onUpdate: async ({ result }) => {
 			const { status, data } = result;
 

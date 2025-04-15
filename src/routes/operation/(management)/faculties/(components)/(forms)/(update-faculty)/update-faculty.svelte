@@ -17,7 +17,7 @@
 	import { untrack } from 'svelte';
 	import type { DepartmentDropdown } from '../../../../../+layout.svelte';
 	import { urlParamReducer } from '$lib/utils';
-
+	import { v4 as uuidv4 } from 'uuid';
 	interface Props {
 		updateFacultyForm: SuperValidated<UpdateFacultySchema>;
 	}
@@ -48,7 +48,7 @@
 
 	const form = superForm(updateFacultyForm, {
 		validators: zodClient(updateFacultySchema),
-		id: crypto.randomUUID(),
+		id: uuidv4(),
 		dataType: 'json',
 		onUpdate: async ({ result }) => {
 			const { status, data } = result;

@@ -9,7 +9,7 @@
 	import ReqLoader from '$lib/components/general/spinners/req-loader.svelte';
 	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 	import { toast } from 'svelte-sonner';
-
+	import { v4 as uuidv4 } from 'uuid';
 	interface Props {
 		createSubForm: SuperValidated<CreateSubSchema>;
 	}
@@ -22,7 +22,7 @@
 
 	const form = superForm(createSubForm, {
 		validators: zodClient(createSubSchema),
-		id: crypto.randomUUID(),
+		id: uuidv4(),
 		onUpdate: async ({ result }) => {
 			const { status, data } = result;
 

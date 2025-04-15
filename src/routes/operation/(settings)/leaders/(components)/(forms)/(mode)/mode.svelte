@@ -8,7 +8,7 @@
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { toast } from 'svelte-sonner';
 	import { page } from '$app/state';
-
+	import { v4 as uuidv4 } from 'uuid';
 	const endPoints = {
 		president: '?/updatePresidentEvent',
 		registrar: '?/updateRegistrarEvent',
@@ -31,7 +31,7 @@
 	let { mode = 'president', data, value, placeholder }: Props = $props();
 
 	const form = superForm(data, {
-		id: `${mode}-${crypto.randomUUID()}`,
+		id: `${mode}-${uuidv4()}`,
 		validators: zodClient(modeSchema),
 		onUpdate: ({ result }) => {
 			const { status, data } = result;

@@ -12,7 +12,7 @@
 	import { toast } from 'svelte-sonner';
 	import { urlParamReducer } from '$lib/utils';
 	import { untrack } from 'svelte';
-
+	import { v4 as uuidv4 } from 'uuid';
 	//TODO: implement a fetch call if activeRow is null at visit
 
 	interface Props {
@@ -28,7 +28,7 @@
 
 	const form = superForm(deleteDepForm, {
 		validators: zodClient(deleteDepSchema),
-		id: crypto.randomUUID(),
+		id: uuidv4(),
 		onUpdate: async ({ result }) => {
 			const { status, data } = result;
 

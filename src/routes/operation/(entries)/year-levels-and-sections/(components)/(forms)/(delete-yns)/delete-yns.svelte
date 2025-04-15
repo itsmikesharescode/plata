@@ -11,7 +11,7 @@
 	import { toast } from 'svelte-sonner';
 	import { urlParamReducer } from '$lib/utils';
 	import { untrack } from 'svelte';
-
+	import { v4 as uuidv4 } from 'uuid';
 	interface Props {
 		deleteYnsForm: SuperValidated<DeleteYnsSchema>;
 	}
@@ -25,7 +25,7 @@
 
 	const form = superForm(deleteYnsForm, {
 		validators: zodClient(deleteYnsSchema),
-		id: crypto.randomUUID(),
+		id: uuidv4(),
 		onUpdate: async ({ result }) => {
 			const { status, data } = result;
 

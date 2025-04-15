@@ -8,7 +8,7 @@
 	import { type SuperValidated, superForm } from 'sveltekit-superforms';
 	import ReqLoader from '$lib/components/general/spinners/req-loader.svelte';
 	import { toast } from 'svelte-sonner';
-
+	import { v4 as uuidv4 } from 'uuid';
 	interface Props {
 		createDepForm: SuperValidated<CreateDepSchema>;
 	}
@@ -21,7 +21,7 @@
 
 	const form = superForm(createDepForm, {
 		validators: zodClient(createDepSchema),
-		id: crypto.randomUUID(),
+		id: uuidv4(),
 		onUpdate: async ({ result }) => {
 			const { status, data } = result;
 

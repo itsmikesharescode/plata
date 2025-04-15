@@ -11,7 +11,7 @@
 	import SimplePicker from '$lib/components/general/custom-pickers/simple-picker.svelte';
 	import { page } from '$app/state';
 	import type { DepartmentDropdown } from '../../../../../+layout.svelte';
-
+	import { v4 as uuidv4 } from 'uuid';
 	interface Props {
 		createProgramForm: SuperValidated<CreateProgramSchema>;
 	}
@@ -25,7 +25,7 @@
 
 	const form = superForm(createProgramForm, {
 		validators: zodClient(createProgramSchema),
-		id: crypto.randomUUID(),
+		id: uuidv4(),
 		onUpdate: async ({ result }) => {
 			const { status, data } = result;
 

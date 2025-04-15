@@ -19,6 +19,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { useDebounce } from 'runed';
 	import { fade } from 'svelte/transition';
+	import { v4 as uuidv4 } from 'uuid';
 	import type {
 		ClassroomDropdown,
 		DepartmentDropdown,
@@ -49,7 +50,7 @@
 	const form = superForm(createScheduleForm, {
 		validators: zodClient(createScheduleSchema),
 		dataType: 'json',
-		id: crypto.randomUUID(),
+		id: uuidv4(),
 		onUpdate: async ({ result }) => {
 			const { status, data } = result;
 
@@ -81,7 +82,7 @@
 			untrack(() => {
 				$formData.assigned_subjects = [
 					{
-						id: crypto.randomUUID(),
+						id: uuidv4(),
 						subject_id: '',
 						classroom_id: '',
 						start_time: '',
@@ -369,7 +370,7 @@
 											$formData.assigned_subjects = [
 												...$formData.assigned_subjects,
 												{
-													id: crypto.randomUUID(),
+													id: uuidv4(),
 													subject_id: '',
 													classroom_id: '',
 													start_time: '',

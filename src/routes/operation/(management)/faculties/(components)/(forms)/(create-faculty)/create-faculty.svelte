@@ -14,7 +14,7 @@
 	import { academicRanks } from '$lib';
 	import { page } from '$app/state';
 	import type { DepartmentDropdown } from '../../../../../+layout.svelte';
-
+	import { v4 as uuidv4 } from 'uuid';
 	interface Props {
 		createFacultyForm: SuperValidated<CreateFacultySchema>;
 	}
@@ -29,7 +29,7 @@
 
 	const form = superForm(createFacultyForm, {
 		validators: zodClient(createFacultySchema),
-		id: crypto.randomUUID(),
+		id: uuidv4(),
 		onUpdate: async ({ result }) => {
 			const { status, data } = result;
 

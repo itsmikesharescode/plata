@@ -13,7 +13,7 @@
 	import { toast } from 'svelte-sonner';
 	import { untrack } from 'svelte';
 	import { urlParamReducer } from '$lib/utils';
-
+	import { v4 as uuidv4 } from 'uuid';
 	interface Props {
 		updateDepForm: SuperValidated<UpdateDepSchema>;
 	}
@@ -44,7 +44,7 @@
 
 	const form = superForm(updateDepForm, {
 		validators: zodClient(updateDepSchema),
-		id: crypto.randomUUID(),
+		id: uuidv4(),
 		onUpdate: async ({ result }) => {
 			const { status, data } = result;
 

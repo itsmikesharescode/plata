@@ -9,7 +9,7 @@
 	import ReqLoader from '$lib/components/general/spinners/req-loader.svelte';
 	import { urlParamReducer } from '$lib/utils';
 	import { page } from '$app/state';
-
+	import { v4 as uuidv4 } from 'uuid';
 	interface Props {
 		updateChairpersonPwdForm: SuperValidated<UpdateChairpersonPwdSchema>;
 	}
@@ -20,7 +20,7 @@
 
 	const form = superForm(updateChairpersonPwdForm, {
 		validators: zodClient(updateChairpersonPwdSchema),
-		id: crypto.randomUUID(),
+		id: uuidv4(),
 		onUpdate: async ({ result }) => {
 			const { status, data } = result;
 

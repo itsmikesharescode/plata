@@ -14,6 +14,7 @@
 	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 	import { urlParamReducer } from '$lib/utils';
 	import { untrack } from 'svelte';
+	import { v4 as uuidv4 } from 'uuid';
 
 	interface Props {
 		updateSubForm: SuperValidated<UpdateSubSchema>;
@@ -45,7 +46,7 @@
 
 	const form = superForm(updateSubForm, {
 		validators: zodClient(updateSubSchema),
-		id: crypto.randomUUID(),
+		id: uuidv4(),
 		onUpdate: async ({ result }) => {
 			const { status, data } = result;
 

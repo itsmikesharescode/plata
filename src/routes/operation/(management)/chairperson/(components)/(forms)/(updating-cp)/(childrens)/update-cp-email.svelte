@@ -11,6 +11,7 @@
 	import { urlParamReducer } from '$lib/utils';
 	import { page } from '$app/state';
 	import { useRowState } from '$lib/states/row-state.svelte';
+	import { v4 as uuidv4 } from 'uuid';
 	interface Props {
 		stateProp: {
 			user_id: string | undefined;
@@ -26,7 +27,7 @@
 
 	const form = superForm(updateChairpersonEmailForm, {
 		validators: zodClient(updateChairpersonEmailSchema),
-		id: crypto.randomUUID(),
+		id: uuidv4(),
 		onUpdate: async ({ result }) => {
 			const { status, data } = result;
 

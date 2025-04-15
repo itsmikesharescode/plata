@@ -13,7 +13,7 @@
 	import { academicRanks } from '$lib';
 	import type { DepartmentDropdown, ProgramDropdown } from '../../../../../+layout.svelte';
 	import { page } from '$app/state';
-
+	import { v4 as uuidv4 } from 'uuid';
 	interface Props {
 		createChairpersonForm: SuperValidated<CreateChairpersonSchema>;
 	}
@@ -29,7 +29,7 @@
 
 	const form = superForm(createChairpersonForm, {
 		validators: zodClient(createChairpersonSchema),
-		id: crypto.randomUUID(),
+		id: uuidv4(),
 		onUpdate: async ({ result }) => {
 			const { status, data } = result;
 

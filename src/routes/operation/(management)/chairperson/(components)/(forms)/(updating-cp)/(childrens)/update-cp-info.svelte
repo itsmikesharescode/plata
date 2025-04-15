@@ -14,7 +14,7 @@
 	import { page } from '$app/state';
 	import type { DepartmentDropdown, ProgramDropdown } from '../../../../../../+layout.svelte';
 	import { useRowState } from '$lib/states/row-state.svelte';
-
+	import { v4 as uuidv4 } from 'uuid';
 	interface Props {
 		stateProp: {
 			user_id: string | undefined;
@@ -37,7 +37,7 @@
 
 	const form = superForm(updateChairpersonInfoForm, {
 		validators: zodClient(updateChairpersonInfoSchema),
-		id: crypto.randomUUID(),
+		id: uuidv4(),
 		onUpdate: async ({ result }) => {
 			const { status, data } = result;
 

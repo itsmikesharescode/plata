@@ -6,15 +6,12 @@
 	import { zodClient } from 'sveltekit-superforms/adapters';
 	import { type SuperValidated, superForm } from 'sveltekit-superforms';
 	import ReqLoader from '$lib/components/general/spinners/req-loader.svelte';
-	import { useRowState } from '$lib/states/row-state.svelte';
-	import type { ScheduleTable } from '../../(table)/schema';
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
 	import { toast } from 'svelte-sonner';
 	import { urlParamReducer } from '$lib/utils';
 	import { untrack } from 'svelte';
-
-	//TODO: implement a fetch call if activeRow is null at visit
+	import { v4 as uuidv4 } from 'uuid';
 
 	interface Props {
 		deleteScheduleForm: SuperValidated<DeleteScheduleSchema>;
@@ -29,7 +26,7 @@
 
 	const form = superForm(deleteScheduleForm, {
 		validators: zodClient(deleteScheduleSchema),
-		id: crypto.randomUUID(),
+		id: uuidv4(),
 		onUpdate: async ({ result }) => {
 			const { status, data } = result;
 

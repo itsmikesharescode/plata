@@ -15,6 +15,7 @@
 	import { urlParamReducer } from '$lib/utils';
 	import { untrack } from 'svelte';
 	import type { DepartmentDropdown } from '../../../../../+layout.svelte';
+	import { v4 as uuidv4 } from 'uuid';
 	interface Props {
 		updateProgramForm: SuperValidated<UpdateProgramSchema>;
 	}
@@ -45,7 +46,7 @@
 
 	const form = superForm(updateProgramForm, {
 		validators: zodClient(updateProgramSchema),
-		id: crypto.randomUUID(),
+		id: uuidv4(),
 		onUpdate: async ({ result }) => {
 			const { status, data } = result;
 
