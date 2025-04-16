@@ -3,7 +3,6 @@
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import { MediaQuery } from 'svelte/reactivity';
 	import * as Pagination from '$lib/components/ui/pagination/index.js';
-	import { Skeleton } from '$lib/components/ui/skeleton/index.js';
 	import { page } from '$app/state';
 	import { urlParamReducer, urlParamStacker } from '$lib/utils';
 	import { goto } from '$app/navigation';
@@ -16,6 +15,8 @@
 
 	const isDesktop = new MediaQuery('(min-width: 768px)');
 	const siblingCount = $derived(isDesktop.current ? 1 : 0);
+
+	let curPage = $derived(Number(page.url.searchParams.get('page') ?? 1));
 </script>
 
 <Pagination.Root
@@ -29,6 +30,7 @@
 			await goto(urlParamStacker('page', String(pageValue), page));
 		}
 	}}
+	page={curPage}
 >
 	{#snippet children({ pages, currentPage })}
 		<Pagination.Content>
@@ -45,10 +47,7 @@
 					</Pagination.Item>
 				{:else}
 					<Pagination.Item>
-						<Pagination.Link
-							page={p}
-							isActive={Number(page.url.searchParams.get('page') ?? 1) === p.value}
-						>
+						<Pagination.Link page={p} isActive={curPage === p.value}>
 							{p.value}
 						</Pagination.Link>
 					</Pagination.Item>
