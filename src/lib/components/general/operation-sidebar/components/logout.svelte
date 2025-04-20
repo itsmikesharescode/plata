@@ -1,19 +1,27 @@
 <script lang="ts" module>
 	import * as AlertDialog from '$lib/components/ui/alert-dialog/index.js';
+	import Button from '$lib/components/ui/button/button.svelte';
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
 	import LogOut from 'lucide-svelte/icons/log-out';
-	import { page } from '$app/state';
-	import { goto } from '$app/navigation';
 	import { toast } from 'svelte-sonner';
+	import { invalidateAll } from '$app/navigation';
+	const handleLogout = async () => {
+		const res = await fetch('/api', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ sample: 'WTF' })
+		});
+
+		if (res.ok) {
+			toast.success('Logged out successfully');
+			await invalidateAll();
+		}
+	};
 </script>
 
 <script lang="ts">
-	const handleLogout = async () => {
-		if (!page.data.supabase) return;
-		await page.data.supabase.auth.signOut();
-		toast.success('Logged out successfully');
-		await goto('/');
-	};
 </script>
 
 <AlertDialog.Root>
@@ -28,9 +36,8 @@
 		</AlertDialog.Header>
 		<AlertDialog.Footer>
 			<AlertDialog.Cancel>Cancel</AlertDialog.Cancel>
-			<AlertDialog.Action onclick={handleLogout} class={buttonVariants({ variant: 'destructive' })}
-				>Logout</AlertDialog.Action
-			>
+
+			<Button onclick={handleLogout}>Continue</Button>
 		</AlertDialog.Footer>
 	</AlertDialog.Content>
 </AlertDialog.Root>
