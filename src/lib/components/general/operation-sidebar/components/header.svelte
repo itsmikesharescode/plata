@@ -18,8 +18,10 @@
 
 <script lang="ts">
 	const user = $derived(page.data.user);
-
-	let program = $state<Awaited<ReturnType<typeof getProgram>> | null>(null);
+	const matchedProgram = $derived(
+		page.data.programsDropdown.find((x: any) => x.id === user?.user_metadata.program_id)
+	);
+	/* let program = $state<Awaited<ReturnType<typeof getProgram>> | null>(null);
 
 	$effect(() => {
 		untrack(() => {
@@ -29,7 +31,7 @@
 				});
 			}
 		});
-	});
+	}); */
 </script>
 
 <header class="flex items-center gap-2">
@@ -44,7 +46,7 @@
 		<div class="grid flex-1 text-left text-sm leading-tight">
 			<span class="truncate text-base font-semibold">{user?.user_metadata.fullname}</span>
 			<span class="truncate text-xs font-bold text-muted-foreground">
-				({program?.program_code}) {program?.program_name}
+				({matchedProgram?.program_code}) {matchedProgram?.program_name}
 			</span>
 		</div>
 	{/if}
