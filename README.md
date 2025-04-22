@@ -16,18 +16,15 @@ Ifugao State University Management System
 supabase stop && supabase start
 ```
 
-2. Database setup:
+2. Database setup and Create admin account:
 
    - Run `schema.sql` in Supabase SQL Editor
-   - Execute `trigger_on_auth_change.sql` in SQL Editor
-   - Follow `cold_start.sql` instructions
-
-3. Create admin account:
-
    - Navigate to Supabase Authentication page
    - Manually create initial admin user
+   - Follow `cold_start.sql` instructions
+   - Execute `trigger_on_auth_change.sql` in SQL Editor
 
-4. Start development server:
+3. Start development server:
 
 ```bash
 npm install
