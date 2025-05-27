@@ -6,6 +6,7 @@
 		calculateTotalUnits
 	} from './+layout.svelte';
 	import { getLeaders } from './+layout.svelte';
+	import { timestampToSelectedTime } from '$lib/components/general/custom-pickers/time-picker.svelte';
 	const transformSchedulesToFormattedType = (schedules: any): any => {
 		const formattedSchedules: any = [];
 
@@ -34,9 +35,9 @@
 			// Transform each assigned subject into the required format
 			schedule.assigned_subjects.forEach((subject: any) => {
 				// Format the schedule time
-				const startHour = new Date(subject.start_time).getHours();
-				const endHour = new Date(subject.end_time).getHours();
-				const scheduleTime = `${subject.day} ${startHour}-${endHour}`;
+				const startTime = timestampToSelectedTime(subject.start_time);
+				const endTime = timestampToSelectedTime(subject.end_time);
+				const scheduleTime = `${subject.day} ${startTime.hour}:${startTime.minute} ${startTime.ampm} - ${endTime.hour}:${endTime.minute} ${endTime.ampm}`;
 
 				// Create the subject display data
 				const subjectDisplay: any = {
