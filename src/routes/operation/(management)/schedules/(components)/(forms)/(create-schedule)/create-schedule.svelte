@@ -29,6 +29,7 @@
 		YearLevelsAndSectionsDropdown
 	} from '../../../../../+layout.svelte';
 	import { page } from '$app/state';
+	import { timestampToSelectedTime } from '$lib/components/general/custom-pickers/time-picker.svelte';
 
 	interface Props {
 		createScheduleForm: SuperValidated<CreateScheduleSchema>;
@@ -101,6 +102,12 @@
 
 	const detectedClassroom = (id: string) => {
 		return classroomsDropdown?.find((v) => v.id === id);
+	};
+
+	const formatUtcTime = (isoString: string | undefined) => {
+		if (!isoString) return '';
+		const time = timestampToSelectedTime(isoString);
+		return `${time.hour}:${time.minute}:${time.second} ${time.ampm}`;
 	};
 </script>
 
@@ -415,13 +422,9 @@
 
 												{#if $formData.assigned_subjects[index].start_time && $formData.assigned_subjects[index].end_time}
 													<span class="hidden text-lg text-muted-foreground md:block">
-														{new Date(
-															$formData.assigned_subjects[index].start_time
-														).toLocaleTimeString()}
+														{formatUtcTime($formData.assigned_subjects[index].start_time)}
 														-
-														{new Date(
-															$formData.assigned_subjects[index].end_time
-														).toLocaleTimeString()}
+														{formatUtcTime($formData.assigned_subjects[index].end_time)}
 													</span>
 												{/if}
 

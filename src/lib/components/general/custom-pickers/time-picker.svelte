@@ -22,34 +22,46 @@
 		minute: string,
 		second: string,
 		ampm: string
-	) => {
-		// Convert 12-hour format to 24-hour format
-		if (ampm === 'PM' && hour !== '12') {
-			hour = (parseInt(hour) + 12).toString();
-		} else if (ampm === 'AM' && hour === '12') {
-			hour = '00';
+	): string => {
+		let h = parseInt(hour, 10);
+		// Convert 12-hour format to 24-hour format for UTC
+		if (ampm === 'PM' && h !== 12) {
+			h += 12;
+		} else if (ampm === 'AM' && h === 12) {
+			// 12 AM is 00 hours
+			h = 0;
 		}
 
-		// Create Date object with current date and selected time
-		const date = new Date();
-		date.setHours(parseInt(hour), parseInt(minute), parseInt(second), 0);
+		const now = new Date(); // Used to get current UTC date components
+		// Create a Date object using UTC components for date, and selected time as UTC time
+		const utcDate = new Date(
+			Date.UTC(
+				now.getUTCFullYear(),
+				now.getUTCMonth(), // 0-indexed
+				now.getUTCDate(),
+				h, // The selected hour, interpreted as UTC hour
+				parseInt(minute, 10),
+				parseInt(second, 10),
+				0 // milliseconds
+			)
+		);
 
-		return date.toISOString(); // ISO 8601 format with timezone
+		return utcDate.toISOString(); // ISO 8601 format, e.g., "2025-05-27T10:00:00.000Z"
 	};
 
 	export const timestampToSelectedTime = (isoString: string) => {
 		const date = new Date(isoString);
-		let hours = date.getHours();
-		const minutes = date.getMinutes().toString().padStart(2, '0');
-		const seconds = date.getSeconds().toString().padStart(2, '0');
+		let hours = date.getUTCHours(); // Use UTC hours
+		const minutes = date.getUTCMinutes().toString().padStart(2, '0'); // Use UTC minutes
+		const seconds = date.getUTCSeconds().toString().padStart(2, '0'); // Use UTC seconds
 
-		// Convert to 12-hour format
+		// Convert 24-hour UTC time to 12-hour format with AM/PM
 		const ampm = hours >= 12 ? 'PM' : 'AM';
-		hours = hours % 12;
-		hours = hours || 12; // Convert 0 to 12 for 12-hour format
+		let displayHours = hours % 12;
+		displayHours = displayHours || 12; // Convert 0 to 12 (e.g., 00:00 -> 12 AM, 12:00 -> 12 PM)
 
 		return {
-			hour: hours.toString().padStart(2, '0'),
+			hour: displayHours.toString().padStart(2, '0'),
 			minute: minutes,
 			second: seconds,
 			ampm: ampm

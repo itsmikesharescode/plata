@@ -54,8 +54,8 @@ BEGIN
             -- Extract all needed values to variables first
             current_subject_id := (current_subject->>'subject_id')::UUID;
             current_day := current_subject->>'day';
-            current_start_time := substring(current_subject->>'start_time', 12, 5);
-            current_end_time := substring(current_subject->>'end_time', 12, 5);
+            current_start_time := TO_CHAR((current_subject->>'start_time')::timestamptz, 'HH12:MI AM');
+            current_end_time := TO_CHAR((current_subject->>'end_time')::timestamptz, 'HH12:MI AM');
             current_classroom_id := (current_subject->>'classroom_id')::UUID;
             
             -- Get subject name for better error messages
@@ -74,8 +74,8 @@ BEGIN
                 -- Extract all needed values to variables first
                 other_subject_id := (other_subject->>'subject_id')::UUID;
                 other_day := other_subject->>'day';
-                other_start_time := substring(other_subject->>'start_time', 12, 5);
-                other_end_time := substring(other_subject->>'end_time', 12, 5);
+                other_start_time := TO_CHAR((other_subject->>'start_time')::timestamptz, 'HH12:MI AM');
+                other_end_time := TO_CHAR((other_subject->>'end_time')::timestamptz, 'HH12:MI AM');
                 other_classroom_id := (other_subject->>'classroom_id')::UUID;
                 
                 -- Get subject name for better error messages

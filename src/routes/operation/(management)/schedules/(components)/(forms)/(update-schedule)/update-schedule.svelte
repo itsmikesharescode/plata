@@ -33,6 +33,7 @@
 	import { urlParamReducer } from '$lib/utils';
 	import { handleSchedConflict } from '../../../../../+layout.svelte';
 	import { v4 as uuidv4 } from 'uuid';
+	import { timestampToSelectedTime } from '$lib/components/general/custom-pickers/time-picker.svelte';
 	interface Props {
 		updateScheduleForm: SuperValidated<UpdateScheduleSchema>;
 	}
@@ -141,6 +142,12 @@
 	};
 
 	let showConflict = $state(false);
+
+	const formatUtcTime = (isoString: string | undefined) => {
+		if (!isoString) return '';
+		const time = timestampToSelectedTime(isoString);
+		return `${time.hour}:${time.minute}:${time.second} ${time.ampm}`;
+	};
 </script>
 
 {#snippet readOnlyTemplate(title: string, description: string | number | undefined)}
@@ -469,13 +476,9 @@
 
 												{#if $formData.assigned_subjects[index].start_time && $formData.assigned_subjects[index].end_time}
 													<span class="hidden text-lg text-muted-foreground md:block">
-														{new Date(
-															$formData.assigned_subjects[index].start_time
-														).toLocaleTimeString()}
+														{formatUtcTime($formData.assigned_subjects[index].start_time)}
 														-
-														{new Date(
-															$formData.assigned_subjects[index].end_time
-														).toLocaleTimeString()}
+														{formatUtcTime($formData.assigned_subjects[index].end_time)}
 													</span>
 												{/if}
 
